@@ -39,8 +39,6 @@ const months = [
   "Desember",
 ];
 
-type PickerStep = "none" | "year" | "month";
-
 interface CalendarEvent {
   title: string;
   start: Date;
@@ -51,13 +49,14 @@ interface CalendarEvent {
 
 const GetAbsen = () => {
   const now = new Date();
-  const [tahun, setTahun] = useState<number>(now.getFullYear());
-  const [currentDate, setCurrentDate] = useState<Date>(now);
-  const [pickerStep, setPickerStep] = useState<PickerStep>("none");
+  const [tahun, setTahun] = useState(now.getFullYear());
+  const [currentDate, setCurrentDate] = useState(now);
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
+  const [showYearPicker, setShowYearPicker] = useState(false);
 
   const { dataAbsen } = useGetAbsen(currentDate.getMonth() + 1, tahun);
 
-  const events = useMemo<CalendarEvent[]>(() => {
+  const events = useMemo(() => {
     if (!dataAbsen) return [];
 
     return dataAbsen.map((absen: IAbsenByGenerus) => {
@@ -93,23 +92,56 @@ const GetAbsen = () => {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
         <div className="relative flex gap-2">
+          {/* BULAN */}
           <button
-            onClick={() =>
-              setPickerStep(pickerStep === "none" ? "year" : "none")
-            }
+            onClick={() => {
+              setShowMonthPicker(!showMonthPicker);
+              setShowYearPicker(false);
+            }}
             className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 font-medium"
           >
-            {months[currentDate.getMonth()]}, {tahun}
+            {months[currentDate.getMonth()]}
           </button>
 
-          {/* COMBINED MONTH + YEAR PICKER */}
-          {pickerStep === "year" && (
-            <div className="absolute left-2 w-72 top-14 bg-white border-2 border-gray-200 rounded-lg shadow-lg p-4 z-20">
-              <div className="text-sm font-semibold mb-3 text-gray-600">
-                Pilih Tahun
-              </div>
+          {/* TAHUN */}
+          <button
+            onClick={() => {
+              setShowYearPicker(!showYearPicker);
+              setShowMonthPicker(false);
+            }}
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 font-medium"
+          >
+            {tahun}
+          </button>
 
-              <div className="grid grid-cols-3 gap-2">
+          {/* MONTH PICKER */}
+          {showMonthPicker && (
+            <div className="absolute left-2 w-72 top-14 bg-white border-2 border-gray-200 rounded-lg shadow-lg p-4 z-20">
+              <div className="grid grid-cols-3 gap-2 p-2">
+                {months.map((m, i) => (
+                  <button
+                    key={m}
+                    onClick={() => {
+                      setCurrentDate(setMonth(currentDate, i));
+                      setShowMonthPicker(false);
+                    }}
+                    className={`py-2 rounded-lg text-sm font-medium ${
+                      currentDate.getMonth() === i
+                        ? "bg-blue-600 text-white"
+                        : "hover:bg-blue-100"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* YEAR PICKER */}
+          {showYearPicker && (
+            <div className="absolute left-2 w-72 top-14 bg-white border-2 border-gray-200 rounded-lg shadow-lg p-4 z-20">
+              <div className="grid grid-cols-3 gap-2 p-2">
                 {Array.from({ length: 12 }, (_, i) => tahun - 6 + i).map(
                   (y) => (
                     <button
@@ -117,7 +149,7 @@ const GetAbsen = () => {
                       onClick={() => {
                         setTahun(y);
                         setCurrentDate(setYear(currentDate, y));
-                        setPickerStep("month");
+                        setShowYearPicker(false);
                       }}
                       className={`py-2 rounded-lg text-sm font-medium ${
                         y === tahun
@@ -132,38 +164,7 @@ const GetAbsen = () => {
               </div>
             </div>
           )}
-          {pickerStep === "month" && (
-            <div className="absolute left-2 w-72 top-14 bg-white border-2 border-gray-200 rounded-lg shadow-lg p-4 z-20">
-              <div className="text-sm font-semibold mb-3 text-gray-600">
-                Pilih Bulan
-              </div>
-
-              <div className="grid grid-cols-3 gap-2">
-                {months.map((m, i) => (
-                  <button
-                    key={m}
-                    onClick={() => {
-                      setCurrentDate(setMonth(currentDate, i));
-                      setPickerStep("none");
-                    }}
-                    className={`py-2 rounded-lg text-sm font-medium ${
-                      currentDate.getMonth() === i
-                        ? "bg-blue-600 text-white"
-                        : "hover:bg-blue-100"
-                    }`}
-                  >
-                    {m}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
-      </div>
-      <div className="flex justify-center mb-4">
-        <span className="font-semibold text-gray-700">
-          {months[currentDate.getMonth()]}, {tahun}
-        </span>
       </div>
 
       {/* CALENDAR */}
@@ -176,7 +177,6 @@ const GetAbsen = () => {
         views={["month"]}
         style={{ height: 600 }}
         eventPropGetter={getEventStyle}
-        toolbar={false}
       />
     </div>
   );

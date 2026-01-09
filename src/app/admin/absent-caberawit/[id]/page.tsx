@@ -4,7 +4,7 @@ import React from "react";
 
 const DetailKegiatanPage = () => {
   return (
-    <DashboardLayout type="ADMIN" title="Absn">
+    <DashboardLayout type="ADMIN" title="Kalender Absensi">
       <GetAbsen />
     </DashboardLayout>
   );
