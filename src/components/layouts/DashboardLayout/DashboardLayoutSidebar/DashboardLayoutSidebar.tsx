@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { IUser } from "@/types/User";
 import { ChevronDown } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 interface SidebarItem {
   key: string;
@@ -83,6 +84,18 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
               )}
             >
               {section.items.map((item) => {
+                if (item.key === "logout") {
+                  return (
+                    <button
+                      key={item.key}
+                      onClick={() => signOut({ callbackUrl: "/auth/login" })}
+                      className="flex w-full items-center gap-3 rounded-sm px-3 py-2 text-[13px] font-medium text-red-600 hover:bg-red-50"
+                    >
+                      <span className="text-sm">{item.icon}</span>
+                      {!forceHideLabel && !collapsed ? item.label : null}
+                    </button>
+                  );
+                }
                 const hasChildren = Array.isArray(item.children);
 
                 // ======================

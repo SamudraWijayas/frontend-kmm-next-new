@@ -27,47 +27,61 @@ const KehadiranTab = ({ dataKegiatan, isLoading = false }: PropTypes) => {
   const kegiatan = dataKegiatan?.kegiatan;
   const peserta = dataKegiatan?.peserta || [];
 
+  type StatusAbsen = "HADIR" | "TERLAMBAT" | "TIDAK_HADIR";
+  interface Item {
+    status: StatusAbsen;
+  }
+  const statusColorMap: Record<StatusAbsen, "success" | "warning" | "danger"> =
+    {
+      HADIR: "success",
+      TERLAMBAT: "warning",
+      TIDAK_HADIR: "danger",
+    };
+
   // 🔹 renderCell sesuai kolom
-  const renderCell = useCallback((item: Peserta, columnKey: React.Key) => {
-    const cellValue = item[columnKey as keyof Peserta];
+  const renderCell = useCallback(
+    (item: Peserta, columnKey: React.Key) => {
+      const cellValue = item[columnKey as keyof Peserta];
 
-    switch (columnKey) {
-      case "foto":
-        return item.foto ? (
-          <Avatar src={item.foto} alt={item.nama} size="md" radius="full" />
-        ) : (
-          <Avatar
-            name={item.nama?.charAt(0) ?? "?"}
-            size="md"
-            radius="full"
-            color="default"
-          />
-        );
+      switch (columnKey) {
+        case "foto":
+          return item.foto ? (
+            <Avatar src={item.foto} alt={item.nama} size="md" radius="full" />
+          ) : (
+            <Avatar
+              name={item.nama?.charAt(0) ?? "?"}
+              size="md"
+              radius="full"
+              color="default"
+            />
+          );
 
-      case "jenjang":
-        return item.jenjang?.name || "-";
+        case "jenjang":
+          return item.jenjang?.name || "-";
 
-      case "kelompok":
-        return item.kelompok?.name || "-";
+        case "kelompok":
+          return item.kelompok?.name || "-";
 
-      case "desa":
-        return item.desa?.name || "-";
+        case "desa":
+          return item.desa?.name || "-";
 
-      case "status":
-        return (
-          <Chip
-            color={item.status === "HADIR" ? "success" : "danger"}
-            variant="flat"
-            size="sm"
-          >
-            {item.status}
-          </Chip>
-        );
+        case "status":
+          return (
+            <Chip
+              color={statusColorMap[item.status as keyof typeof statusColorMap]}
+              variant="flat"
+              size="sm"
+            >
+              {item.status}
+            </Chip>
+          );
 
-      default:
-        return cellValue as ReactNode;
-    }
-  }, []);
+        default:
+          return cellValue as ReactNode;
+      }
+    },
+    [statusColorMap]
+  );
 
   return (
     <div className="py-6 space-y-8">

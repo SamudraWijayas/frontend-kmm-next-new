@@ -29,10 +29,10 @@ export async function middleware(request: NextRequest) {
       } else if (daerahRoles.includes(role)) {
         return NextResponse.redirect(new URL("/daerah/dashboard", request.url));
       } else if (desaRoles.includes(role)) {
-        return NextResponse.redirect(new URL("/desa/dashboard", request.url));
+        return NextResponse.redirect(new URL("/village/dashboard", request.url));
       } else if (kelompokRoles.includes(role)) {
         return NextResponse.redirect(
-          new URL("/kelompok/dashboard", request.url)
+          new URL("/group/dashboard", request.url)
         );
       }
     }
@@ -69,7 +69,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 🔒 Proteksi halaman DESA
-  if (pathname.startsWith("/desa")) {
+  if (pathname.startsWith("/village")) {
     if (!token) {
       const url = new URL("/auth/login", request.url);
       url.searchParams.set("callbackUrl", encodeURI(request.url));
@@ -78,13 +78,13 @@ export async function middleware(request: NextRequest) {
     if (!desaRoles.includes(token?.user?.role ?? "")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
-    if (pathname === "/desa") {
-      return NextResponse.redirect(new URL("/desa/dashboard", request.url));
+    if (pathname === "/village") {
+      return NextResponse.redirect(new URL("/village/dashboard", request.url));
     }
   }
 
   // 🔒 Proteksi halaman KELOMPOK
-  if (pathname.startsWith("/kelompok")) {
+  if (pathname.startsWith("/group")) {
     if (!token) {
       const url = new URL("/auth/login", request.url);
       url.searchParams.set("callbackUrl", encodeURI(request.url));
@@ -93,8 +93,8 @@ export async function middleware(request: NextRequest) {
     if (!kelompokRoles.includes(token?.user?.role ?? "")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
-    if (pathname === "/kelompok") {
-      return NextResponse.redirect(new URL("/kelompok/dashboard", request.url));
+    if (pathname === "/group") {
+      return NextResponse.redirect(new URL("/group/dashboard", request.url));
     }
   }
 }
@@ -105,7 +105,7 @@ export const config = {
     "/auth/:path*",
     "/admin/:path*",
     "/daerah/:path*",
-    "/desa/:path*",
+    "/village/:path*",
     "/kelompok/:path*",
   ],
 };

@@ -10,12 +10,20 @@ import {
   CardBody,
   Chip,
 } from "@heroui/react";
-import { Search, Calendar, MapPin, Target, ChevronRight } from "lucide-react";
+import {
+  Search,
+  Calendar,
+  MapPin,
+  Target,
+  ChevronRight,
+  Trash2,
+} from "lucide-react";
 import useKegiatan from "./useKegiatan";
 import { IKegiatan } from "@/types/Kegiatan";
 import { useRouter } from "next/navigation";
 import AddKegiatanModal from "./AddKegiatanModal";
 import { QRCodeSVG } from "qrcode.react";
+import DeleteKegiatan from "./DeleteKegiatan/DeleteKegiatan";
 
 // Tentukan status
 const statusColor: Record<
@@ -61,8 +69,16 @@ const formatTanggal = (dateString?: string | Date): string => {
 const Kegiatan = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const { dataKegiatan, isLoadingKegiatan, refetchKegiatan } = useKegiatan();
+  const {
+    dataKegiatan,
+    isLoadingKegiatan,
+    refetchKegiatan,
+
+    selectedId,
+    setSelectedId,
+  } = useKegiatan();
   const addKegiatan = useDisclosure();
+  const deleteKegiatan = useDisclosure();
 
   const kegiatanList: IKegiatan[] = Array.isArray(dataKegiatan?.data)
     ? dataKegiatan.data
@@ -79,6 +95,44 @@ const Kegiatan = () => {
       </div>
     );
   }
+  const downloadQR = (id: string, filename: string) => {
+    const el = document.getElementById(`qr-${id}`);
+
+    if (!el || !(el instanceof SVGSVGElement)) {
+      console.error("QR SVG element not found");
+      return;
+    }
+
+    const svg = el;
+
+    const serializer = new XMLSerializer();
+    const svgStr = serializer.serializeToString(svg);
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+
+    const svgBlob = new Blob([svgStr], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx?.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      const pngUrl = canvas.toDataURL("image/png");
+
+      const a = document.createElement("a");
+      a.href = pngUrl;
+      a.download = `${filename}.png`;
+      a.click();
+    };
+
+    img.src = url;
+  };
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -123,11 +177,27 @@ const Kegiatan = () => {
                   onClick={() => router.push(`/admin/kegiatan/${item.id}`)}
                 >
                   {/* Left: Thumbnail */}
-                  <QRCodeSVG
-                    id={`qr-${item.id}`} // pakai _id biar unik
-                    value={item.id ?? ""}
-                    size={100}
-                  />
+                  <div
+                    className="flex flex-col items-center gap-2"
+                    onClick={(e) => e.stopPropagation()} // biar tidak ikut navigate
+                  >
+                    <QRCodeSVG
+                      id={`qr-${item.id}`}
+                      value={item.id ?? ""}
+                      size={100}
+                    />
+
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color="primary"
+                      onPress={() =>
+                        downloadQR(item.id!, item.name ?? "qr-kegiatan")
+                      }
+                    >
+                      Download
+                    </Button>
+                  </div>
 
                   {/* Middle: Info */}
                   <div className="flex-1 min-w-0 space-y-2">
@@ -185,7 +255,26 @@ const Kegiatan = () => {
                   </div>
 
                   {/* Right: Icon */}
-                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                  {/* Right: Action */}
+                  <div
+                    className="flex items-center gap-2"
+                    onClick={(e) => e.stopPropagation()} // cegah navigate
+                  >
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      color="danger"
+                      onPress={() => {
+                        setSelectedId(item);
+                        deleteKegiatan.onOpen();
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                  </div>
                 </div>
               );
             })
@@ -199,6 +288,12 @@ const Kegiatan = () => {
 
       {/* Modal Tambah Kegiatan */}
       <AddKegiatanModal {...addKegiatan} refetchKegiatan={refetchKegiatan} />
+      <DeleteKegiatan
+        {...deleteKegiatan}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+        refetchKegiatan={refetchKegiatan}
+      />
 
       <style jsx>{`
         .animate-fadeIn {

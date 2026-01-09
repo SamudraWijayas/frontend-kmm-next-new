@@ -1,7 +1,10 @@
 import kegiatanServices from "@/services/kegiatan.service";
+import { IKegiatan } from "@/types/Kegiatan";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const useKegiatan = () => {
+  const [selectedId, setSelectedId] = useState<IKegiatan | null>(null);
   const getKegiatan = async () => {
     const res = await kegiatanServices.getKegiatan();
     const { data } = res;
@@ -23,6 +26,9 @@ const useKegiatan = () => {
     isLoadingKegiatan,
     isRefetchingKegiatan,
     refetchKegiatan,
+
+    selectedId,
+    setSelectedId,
   };
 };
 

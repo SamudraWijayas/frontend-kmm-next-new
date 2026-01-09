@@ -16,6 +16,7 @@ const endpoint = {
   TAHUN_AJARAN: "/tahunajaran",
   MAPEL: "/mapel",
   KATE: "/kategori-indikator",
+  ABSEN: "/absen",
 };
 
 export default endpoint;

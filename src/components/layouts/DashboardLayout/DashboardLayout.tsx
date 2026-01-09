@@ -12,11 +12,20 @@ import { cn } from "@/utils/cn";
 import useDashboardLayout from "./useDashboardLayout";
 import { Avatar, Skeleton } from "@heroui/react";
 import { useSession } from "next-auth/react";
+import {
+  Group,
+  LayoutDashboard,
+  LogOut,
+  User,
+  UserPen,
+  Users,
+} from "lucide-react";
+import { IKelompok } from "@/types/Kelompok";
 
 interface SidebarItem {
   key: string;
   label: string;
-  href?: string; // ← jadikan optional
+  href?: string;
   icon: ReactNode;
   children?: {
     key: string;
@@ -42,7 +51,13 @@ interface DashboardLayoutProps {
   collapsed?: boolean;
 }
 const DashboardLayout = (props: DashboardLayoutProps) => {
-  const { dataProfile } = useDashboardLayout();
+  const {
+    dataProfile,
+    dataKelompok,
+    isLoadingKelompok,
+    isRefetchingKelompok,
+    refetchKelompok,
+  } = useDashboardLayout();
   const session = useSession();
   const isLoadingSession = session.status === "loading";
 
@@ -92,8 +107,73 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
       sidebarItems = SIDEBAR_DAERAH;
       break;
     case "DESA":
-      sidebarItems = SIDEBAR_DESA;
+      sidebarItems = [
+        {
+          group: "Dashboard",
+          items: [
+            {
+              key: "dashboard",
+              label: "Dashboard",
+              href: "/village/dashboard",
+              icon: <LayoutDashboard />,
+            },
+            {
+              key: "user",
+              label: "Users",
+              href: "/admin/users",
+              icon: <User />,
+            },
+          ],
+        },
+        {
+          group: "Generus & Kelompok",
+          items: [
+            {
+              key: "kelompok",
+              label: "Generus Kelompok",
+              icon: <Group />,
+              children: isLoadingKelompok
+                ? [
+                    {
+                      key: "loading",
+                      label: "Loading...",
+                      href: "#",
+                    },
+                  ]
+                : dataKelompok?.data.map((item: IKelompok) => ({
+                    key: item.id,
+                    label: item.name,
+                    href: `/village/kelompok/${item.id}`,
+                  })) || [],
+            },
+            {
+              key: "mahasiswa",
+              label: "Mahasiswa",
+              icon: <Users />,
+              href: "/village/student",
+            },
+          ],
+        },
+        {
+          group: "KEAMANAN",
+          items: [
+            {
+              key: "profile",
+              label: "Profile",
+              href: "/admin/profile",
+              icon: <UserPen />,
+            },
+            {
+              key: "logout",
+              label: "Logout",
+              href: "/lo",
+              icon: <LogOut />,
+            },
+          ],
+        },
+      ];
       break;
+
     case "KELOMPOK":
       sidebarItems = SIDEBAR_KELOMPOK;
       break;

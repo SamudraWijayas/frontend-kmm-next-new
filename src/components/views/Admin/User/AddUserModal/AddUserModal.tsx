@@ -19,6 +19,7 @@ import { Controller } from "react-hook-form";
 import { useEffect } from "react";
 import { IDaerah } from "@/types/Daerah";
 import { IDesa } from "@/types/Desa";
+import { IKelompok } from "@/types/Kelompok";
 
 interface PropTypes {
   isOpen: boolean;
@@ -206,18 +207,23 @@ const AddUserModal = ({
                 <Controller
                   name="kelompokId"
                   control={control}
-                  render={({ field }) => (
-                    <Input
+                  render={({ field: { onChange, ...field } }) => (
+                    <Autocomplete
                       {...field}
-                      type="number"
-                      label="Kelompok ID"
-                      isInvalid={!!errors.kelompokId}
+                      defaultItems={dataKelompok?.data.data || []}
+                      label="Kelompok"
+                      variant="bordered"
+                      isInvalid={errors.kelompokId !== undefined}
                       errorMessage={errors.kelompokId?.message}
-                      value={
-                        field.value !== undefined ? String(field.value) : ""
-                      }
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
+                      onSelectionChange={(value) => onChange(value)}
+                      placeholder="Search kelompok here..."
+                    >
+                      {(kelompok: IKelompok) => (
+                        <AutocompleteItem key={`${kelompok.id}`}>
+                          {kelompok.name}
+                        </AutocompleteItem>
+                      )}
+                    </Autocomplete>
                   )}
                 />
               )}

@@ -3,8 +3,12 @@ import endpoint from "@/services/endpoint.constant";
 import { IKelompok } from "@/types/Kelompok";
 
 const kelompokServices = {
-  getKelompok: (params?: string) => instance.get(`${endpoint.KELOMPOK}?${params}`),
-  addKelompok: (payload: IKelompok) => instance.post(endpoint.KELOMPOK, payload),
+  getKelompok: (params?: string) =>
+    instance.get(`${endpoint.KELOMPOK}?${params}`),
+  getKelompokByDesa: (desaId: string) =>
+    instance.get(`${endpoint.KELOMPOK}/${desaId}`),
+  addKelompok: (payload: IKelompok) =>
+    instance.post(endpoint.KELOMPOK, payload),
   getKelompokById: (id: string) => instance.get(`${endpoint.KELOMPOK}/${id}`),
   deleteKelompok: (id: string) => instance.delete(`${endpoint.KELOMPOK}/${id}`),
   updateKelompok: (id: string, payload: IKelompok) =>

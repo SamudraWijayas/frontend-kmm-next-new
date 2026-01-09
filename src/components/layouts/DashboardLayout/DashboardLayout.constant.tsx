@@ -10,6 +10,7 @@ import {
   User,
   Book,
   CircleGauge,
+  UserPen,
 } from "lucide-react";
 
 const SIDEBAR_ADMIN = [
@@ -79,6 +80,12 @@ const SIDEBAR_ADMIN = [
         href: "/admin/kegiatan",
         icon: <Activity />,
       },
+      {
+        key: "absen",
+        label: "Absen Caberawit",
+        href: "/admin/absent-caberawit",
+        icon: <Activity />,
+      },
     ],
   },
   {
@@ -129,10 +136,10 @@ const SIDEBAR_ADMIN = [
     group: "KEAMANAN",
     items: [
       {
-        key: "password",
-        label: "Ubah Password",
-        href: "/ubah-password",
-        icon: <KeyRound />,
+        key: "profile",
+        label: "Profile",
+        href: "/admin/profile",
+        icon: <UserPen />,
       },
       {
         key: "logout",
@@ -230,8 +237,36 @@ const SIDEBAR_KELOMPOK = [
       {
         key: "dashboard",
         label: "Dashboard",
-        href: "/dashboard",
+        href: "/group/dashboard",
         icon: <LayoutDashboard />,
+      },
+    ],
+  },
+  {
+    group: "Lainnya",
+    items: [
+      {
+        key: "generus",
+        label: "Generus",
+        href: "/group/generus",
+        icon: <Users />,
+      },
+    ],
+  },
+  {
+    group: "KEAMANAN",
+    items: [
+      {
+        key: "password",
+        label: "Ubah Password",
+        href: "/ubah-password",
+        icon: <KeyRound />,
+      },
+      {
+        key: "logout",
+        label: "Logout",
+        href: "/",
+        icon: <LogOut />,
       },
     ],
   },
