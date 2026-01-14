@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IGenerus } from "@/types/Generus";
 import { useSearchParams } from "next/navigation";
 import useAbsenCaberawit from "../useAbsenCaberawit";
@@ -11,6 +11,41 @@ import useAbsenByTanggal from "./useAbsenByTanggal";
 type StatusAbsen = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
 const STATUS_LIST: StatusAbsen[] = ["HADIR", "IZIN", "SAKIT", "ALPA"];
+
+const STATUS_META: Record<
+  StatusAbsen,
+  {
+    label: string;
+    short: string;
+    active: string;
+    inactive: string;
+  }
+> = {
+  HADIR: {
+    label: "Hadir",
+    short: "H",
+    active: "bg-green-600 border-green-600 text-white",
+    inactive: "border-green-300 text-green-600",
+  },
+  IZIN: {
+    label: "Izin",
+    short: "I",
+    active: "bg-purple-600 border-purple-600 text-white",
+    inactive: "border-purple-300 text-purple-600",
+  },
+  SAKIT: {
+    label: "Sakit",
+    short: "S",
+    active: "bg-yellow-500 border-yellow-500 text-white",
+    inactive: "border-yellow-300 text-yellow-600",
+  },
+  ALPA: {
+    label: "Alpa",
+    short: "A",
+    active: "bg-red-600 border-red-600 text-white",
+    inactive: "border-red-300 text-red-600",
+  },
+};
 
 const Absen: React.FC = () => {
   const searchParams = useSearchParams();
@@ -23,25 +58,20 @@ const Absen: React.FC = () => {
 
   const [attendance, setAttendance] = useState<Record<number, StatusAbsen>>({});
 
-  // 🔒 biar tidak reset pas refetch
-  const initializedRef = useRef(false);
-
   /* =========================
-     INIT ABSEN (ONCE)
+     INIT ABSEN
   ========================= */
   useEffect(() => {
     if (!dataGenerus?.data) return;
 
     const initial: Record<number, StatusAbsen> = {};
 
-    // 1️⃣ default ALPA
     dataGenerus.data.forEach((g: IGenerus) => {
       if (!g.id) return;
       initial[g.id] = "ALPA";
     });
 
     const absenList = dataAbsen?.data?.data;
-
     if (Array.isArray(absenList)) {
       absenList.forEach((absen: AbsenItem) => {
         if (absen.caberawitId) {
@@ -70,7 +100,7 @@ const Absen: React.FC = () => {
     if (!tanggal) return;
 
     const payload: IAbsen = {
-      tanggal: searchParams.get("tanggal")!,
+      tanggal,
       list: Object.entries(attendance).map(([id, status]) => ({
         caberawitId: Number(id),
         status,
@@ -82,23 +112,32 @@ const Absen: React.FC = () => {
 
   if (!hasParams) return null;
 
+  const formatTanggal = (dateStr: string) => {
+    const date = new Date(dateStr);
+
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <h1 className="text-xl font-semibold mb-1">Absen Caberawit</h1>
+    <div className="min-h-screen bg-gray-50">
       <p className="text-sm text-gray-500 mb-4">
-        Tanggal: <b>{tanggal}</b>
+        Tanggal: <b>{formatTanggal(tanggal!)}</b>
       </p>
 
       {isLoadingGenerus ? (
         <p>Loading...</p>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-lg shadow">
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-100 text-sm">
+        <div className="overflow-x-auto bg-white rounded-xl shadow">
+          <table className="w-full min-w-[700px]">
+            <thead className="bg-gray-50 text-sm text-gray-600">
               <tr>
-                <th className="border p-2 text-left">Nama</th>
-                <th className="border p-2 text-left">Jenjang</th>
-                <th className="border p-2 text-center">Kehadiran</th>
+                <th className="px-4 py-3 text-left font-medium">Nama</th>
+                <th className="px-4 py-3 text-left font-medium">Jenjang</th>
+                <th className="px-4 py-3 text-center font-medium">Kehadiran</th>
               </tr>
             </thead>
 
@@ -109,26 +148,39 @@ const Absen: React.FC = () => {
                 const current = attendance[g.id] ?? "ALPA";
 
                 return (
-                  <tr key={g.id} className="hover:bg-gray-50">
-                    <td className="border p-2">{g.nama ?? "-"}</td>
-                    <td className="border p-2">{g.jenjang?.name ?? "-"}</td>
-                    <td className="border p-2">
-                      <div className="flex justify-center gap-4">
-                        {STATUS_LIST.map((status) => (
-                          <label
-                            key={status}
-                            className="flex items-center gap-1 cursor-pointer text-sm"
-                          >
-                            <input
-                              type="radio"
-                              name={`absen-${g.id}`}
-                              checked={current === status}
-                              onChange={() => onChangeStatus(g.id!, status)}
-                            />
+                  <tr
+                    key={g.id}
+                    className="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition"
+                  >
+                    <td className="px-4 py-3">{g.nama ?? "-"}</td>
+                    <td className="px-4 py-3">{g.jenjang?.name ?? "-"}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-center gap-3">
+                        {STATUS_LIST.map((status) => {
+                          const meta = STATUS_META[status];
+                          const isActive = current === status;
 
-                            {status}
-                          </label>
-                        ))}
+                          return (
+                            <button
+                              key={status}
+                              type="button"
+                              title={meta.label}
+                              onClick={() => onChangeStatus(g.id!, status)}
+                              className={`
+                                w-9 h-9 rounded-full border-2
+                                flex items-center justify-center
+                                text-sm font-semibold transition
+                                ${
+                                  isActive
+                                    ? meta.active
+                                    : `bg-white ${meta.inactive} hover:bg-gray-50`
+                                }
+                              `}
+                            >
+                              {meta.short}
+                            </button>
+                          );
+                        })}
                       </div>
                     </td>
                   </tr>
@@ -140,20 +192,24 @@ const Absen: React.FC = () => {
       )}
 
       {/* ACTION */}
-      <div className="mt-4 flex justify-end">
+      <div className="mt-6 flex justify-end">
         <button
           onClick={handleSubmit}
           disabled={isPending}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          className="px-6 py-2.5 bg-blue-600 text-white rounded-lg
+            hover:bg-blue-700 active:scale-95 transition
+            disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isPending ? "Menyimpan..." : "Simpan Absen"}
         </button>
       </div>
 
-      {/* DEBUG */}
-      <pre className="mt-4 text-xs bg-black text-green-400 p-3 rounded">
-        {JSON.stringify(attendance, null, 2)}
-      </pre>
+      {/* DEBUG (DEV ONLY) */}
+      {/* {process.env.NODE_ENV === "development" && (
+        <pre className="mt-4 text-xs bg-black text-green-400 p-3 rounded">
+          {JSON.stringify(attendance, null, 2)}
+        </pre>
+      )} */}
     </div>
   );
 };

@@ -145,31 +145,30 @@ const AbsenCaberawit = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-xl font-semibold">Mark Attendance</h1>
-          <p className="text-sm text-gray-500">
+          {/* <p className="text-sm text-gray-500">
             Basics of User Research (BB5012)
-          </p>
+          </p> */}
         </div>
 
         <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded-md text-sm">
-            Download Excel
-          </button>
           {hasTanggal && (
             <Link
               href={`/admin/absent-caberawit/absent?tanggal=${tanggal}`}
               className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 rounded-md text-sm"
             >
-              Save Attendance
+              Absen
             </Link>
           )}
         </div>
       </div>
 
       {/* Content */}
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Sidebar */}
-        <div className="col-span-3 bg-white rounded-lg shadow p-4">
-          <h2 className="font-semibold mb-3">Pilih Tanggal</h2>
+        <div className="lg:col-span-3 bg-white rounded-lg shadow p-4">
+          <h2 className="font-semibold mb-3 text-center lg:text-left">
+            Pilih Tanggal
+          </h2>
 
           {/* BULAN & TAHUN */}
           <div className="flex gap-2 mb-4">
@@ -248,7 +247,7 @@ const AbsenCaberawit = () => {
           </div>
         </div>
 
-        <section className="col-span-9">
+        <section className="lg:col-span-9">
           <div className="flex flex-col gap-4 mb-3">
             {/* Search + Filter Button */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
