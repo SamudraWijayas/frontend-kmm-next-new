@@ -2,7 +2,7 @@
 
 import React from "react";
 import useDashboard from "./useDashboard";
-import { MapPin, Home, Users } from "lucide-react";
+import { MapPin, Home, Users, ArrowUpRight } from "lucide-react";
 import useDashboardLayout from "@/components/layouts/DashboardLayout/useDashboardLayout";
 import Image from "next/image";
 import StatistikGenerusDesaByJenjang from "@/components/ui/Charts/StatistikGenerusDesaByJenjang";
@@ -28,24 +28,51 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
         {/* Left Content */}
         <div className="md:w-1/2 w-full">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-            <Image
-              src="/images/Group.png"
-              alt="image"
-              width={100}
-              height={100}
-              className="w-48 md:w-56"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {/* Total Daerah */}
+            <div className="rounded-2xl bg-[#FFF4E5] p-5 shadow-sm relative">
+              <ArrowUpRight
+                className="absolute top-4 right-4 text-gray-400"
+                size={18}
+              />
+              <p className="text-gray-500 text-sm mb-2">Total Daerah</p>
+              <h2 className="text-3xl font-bold text-gray-800">
+                {totalDaerah}
+              </h2>
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <MapPin size={16} />
+                <span>Data wilayah</span>
+              </div>
+            </div>
 
-            <div className="flex flex-col text-center md:text-left">
-              <h1 className="text-2xl font-semibold text-gray-800">
-                Hello, {dataProfile?.fullName}
-              </h1>
-              <p className="mt-1 text-gray-500 text-sm md:text-base leading-relaxed">
-                Saat ini Anda sedang Beramal Sholih untuk MengUpdate data
-                Generus Jamaah, dimohon untuk bisa semangat dalam Beramal
-                Sholih.
-              </p>
+            {/* Total Desa */}
+            <div className="rounded-2xl bg-[#EAF7EC] p-5 shadow-sm relative">
+              <ArrowUpRight
+                className="absolute top-4 right-4 text-gray-400"
+                size={18}
+              />
+              <p className="text-gray-500 text-sm mb-2">Total Desa</p>
+              <h2 className="text-3xl font-bold text-gray-800">{totalDesa}</h2>
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <Home size={16} />
+                <span>Data desa</span>
+              </div>
+            </div>
+
+            {/* Total Kelompok */}
+            <div className="rounded-2xl bg-[#EEF2FF] p-5 shadow-sm relative">
+              <ArrowUpRight
+                className="absolute top-4 right-4 text-gray-400"
+                size={18}
+              />
+              <p className="text-gray-500 text-sm mb-2">Total Kelompok</p>
+              <h2 className="text-3xl font-bold text-gray-800">
+                {totalKelompok}
+              </h2>
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <Users size={16} />
+                <span>Data kelompok</span>
+              </div>
             </div>
           </div>
         </div>

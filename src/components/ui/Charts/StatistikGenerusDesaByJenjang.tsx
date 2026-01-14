@@ -4,23 +4,19 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Tooltip,
   Legend,
-  Filler,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Tooltip,
-  Legend,
-  Filler
+  Legend
 );
 
 interface StatistikItem {
@@ -40,113 +36,100 @@ const StatistikGenerusDesaByJenjang = ({ data, loading }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 600);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const resize = () => setIsMobile(window.innerWidth < 640);
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 animate-pulse space-y-4">
-        <div className="h-4 bg-gray-200 rounded w-1/3" />
-        <div className="h-48 bg-gray-200 rounded" />
+      <div className="bg-white rounded-2xl border p-6 animate-pulse space-y-4">
+        <div className="h-4 w-1/3 bg-gray-200 rounded" />
+        <div className="h-48 bg-gray-200 rounded-xl" />
       </div>
     );
   }
 
   if (!data || data.length === 0) {
-    return <p className="text-gray-400">Data statistik belum tersedia</p>;
+    return (
+      <div className="bg-white rounded-2xl border p-6 text-gray-400 text-sm">
+        Data statistik belum tersedia
+      </div>
+    );
   }
 
-  // X-axis → jenjang
-  const jenjangLabels = Array.from(
-    new Set(data.map((item) => item.jenjangNama))
-  );
+  // Labels X (Jenjang)
+  const jenjangLabels = [...new Set(data.map((d) => d.jenjangNama))];
 
-  // garis → kelompok
-  const kelompokList = Array.from(
-    new Set(data.map((item) => item.kelompokNama))
-  );
+  // Dataset (Kelompok)
+  const kelompokList = [...new Set(data.map((d) => d.kelompokNama))];
 
-  // 🎨 warna persis seperti LineVillage
-  const borderColors = [
-    "rgba(255, 99, 132, 0.6)",
-    "rgba(54, 162, 235, 0.6)",
-    "rgba(255, 206, 86, 0.6)",
-    "rgba(75, 192, 192, 0.6)",
-    "rgba(153, 102, 255, 0.6)",
+  const colors = [
+    "rgba(99,102,241,0.8)",
+    "rgba(16,185,129,0.8)",
+    "rgba(234,179,8,0.8)",
+    "rgba(239,68,68,0.8)",
   ];
 
-  const backgroundColors = [
-    "rgba(255, 99, 132, 0.1)",
-    "rgba(54, 162, 235, 0.1)",
-    "rgba(255, 206, 86, 0.1)",
-    "rgba(75, 192, 192, 0.1)",
-    "rgba(153, 102, 255, 0.1)",
-  ];
-
-  const datasets = kelompokList.map((kelompok, index) => ({
+  const datasets = kelompokList.map((kelompok, i) => ({
     label: kelompok,
-    data: jenjangLabels.map((jenjang) => {
-      const found = data.find(
-        (d) => d.kelompokNama === kelompok && d.jenjangNama === jenjang
-      );
-      return found ? found.total : 0;
-    }),
-    borderColor: borderColors[index % borderColors.length],
-    backgroundColor: backgroundColors[index % backgroundColors.length],
-    fill: true,
-    tension: 0.3,
-    pointRadius: 4,
+    data: jenjangLabels.map(
+      (jenjang) =>
+        data.find(
+          (d) =>
+            d.kelompokNama === kelompok && d.jenjangNama === jenjang
+        )?.total ?? 0
+    ),
+    backgroundColor: colors[i % colors.length],
+    borderRadius: 8,
+    barThickness: isMobile ? 14 : 22,
   }));
 
-  const chartData = {
-    labels: jenjangLabels,
-    datasets,
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: "top" as const,
-      },
-      tooltip: {
-        mode: "index" as const,
-        intersect: false,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1,
-          font: {
-            size: isMobile ? 10 : 12,
-          },
-        },
-      },
-      x: {
-        ticks: {
-          display: !isMobile,
-          autoSkip: false,
-          maxRotation: 45,
-          minRotation: 0,
-          font: {
-            size: isMobile ? 0 : 12,
-          },
-        },
-      },
-    },
-  };
-
   return (
-    <div>
-      <Line data={chartData} options={options} />
+    <div className="bg-white rounded-2xl shadow-sm p-4">
+      <h3 className="text-sm font-semibold text-gray-700 mb-4">
+        Statistik Generus per Jenjang
+      </h3>
+
+      <Bar
+        data={{ labels: jenjangLabels, datasets }}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              position: isMobile ? "bottom" : "top",
+              labels: {
+                boxWidth: 12,
+                font: { size: 11 },
+              },
+            },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: { size: 11 },
+              },
+              grid: {
+                color: "rgba(0,0,0,0.05)",
+              },
+            },
+            x: {
+              ticks: {
+                font: { size: 11 },
+                maxRotation: isMobile ? 45 : 0,
+              },
+              grid: { display: false },
+            },
+          },
+        }}
+      />
     </div>
   );
 };

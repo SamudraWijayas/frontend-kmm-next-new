@@ -2,11 +2,12 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { IGenerus } from "@/types/Generus";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useAbsenCaberawit from "../useAbsenCaberawit";
 import useAbsenMassal from "./useAbsenMassal";
 import { IAbsen, AbsenItem } from "@/types/Absen";
 import useAbsenByTanggal from "./useAbsenByTanggal";
+import { ChevronLeft } from "lucide-react";
 
 type StatusAbsen = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
@@ -24,31 +25,32 @@ const STATUS_META: Record<
   HADIR: {
     label: "Hadir",
     short: "H",
-    active: "bg-green-600 border-green-600 text-white",
+    active: "bg-green-100 border-green-600 text-green-600",
     inactive: "border-green-300 text-green-600",
   },
   IZIN: {
     label: "Izin",
     short: "I",
-    active: "bg-purple-600 border-purple-600 text-white",
+    active: "bg-purple-100 border-purple-600 text-purple-600",
     inactive: "border-purple-300 text-purple-600",
   },
   SAKIT: {
     label: "Sakit",
     short: "S",
-    active: "bg-yellow-500 border-yellow-500 text-white",
+    active: "bg-yellow-100 border-yellow-500 text-yellow-600",
     inactive: "border-yellow-300 text-yellow-600",
   },
   ALPA: {
     label: "Alpa",
     short: "A",
-    active: "bg-red-600 border-red-600 text-white",
+    active: "bg-red-100 border-red-600 text-red-600",
     inactive: "border-red-300 text-red-600",
   },
 };
 
 const Absen: React.FC = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const tanggal = searchParams.get("tanggal") ?? undefined;
   const hasParams = !!tanggal;
 
@@ -124,9 +126,20 @@ const Absen: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <p className="text-sm text-gray-500 mb-4">
-        Tanggal: <b>{formatTanggal(tanggal!)}</b>
-      </p>
+      <div className="flex items-center gap-3 mb-4">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="flex items-center gap-2 p-1 rounded-lg bg-gray-200 text-sm text-gray-600
+      hover:text-blue-600 transition"
+        >
+          <ChevronLeft />
+        </button>
+
+        <p className="text-sm text-gray-500">
+          Tanggal: <b>{formatTanggal(tanggal!)}</b>
+        </p>
+      </div>
 
       {isLoadingGenerus ? (
         <p>Loading...</p>
@@ -167,7 +180,7 @@ const Absen: React.FC = () => {
                               title={meta.label}
                               onClick={() => onChangeStatus(g.id!, status)}
                               className={`
-                                w-9 h-9 rounded-full border-2
+                                w-9 h-9 rounded-full border
                                 flex items-center justify-center
                                 text-sm font-semibold transition
                                 ${
