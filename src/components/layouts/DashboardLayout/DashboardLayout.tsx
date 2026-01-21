@@ -120,7 +120,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
             {
               key: "user",
               label: "Users",
-              href: "/admin/users",
+              href: "/village/users",
               icon: <User />,
             },
           ],

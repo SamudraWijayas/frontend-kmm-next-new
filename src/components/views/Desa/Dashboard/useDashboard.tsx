@@ -22,37 +22,41 @@ const useDashboard = () => {
   });
   const idDesa = dataProfile?.desaId;
 
-  const totalDaerah = async () => {
-    const res = await countServices.CountDaerahForAdmin();
-    return res.data.data;
-  };
-
-  const { data: dataTotalDaerah, isLoading: isLoadingTotalDaerah } = useQuery({
-    queryKey: ["TotalDaerah"],
-    queryFn: totalDaerah,
-  });
-
-  // desa
-  const totalDesa = async () => {
-    const res = await countServices.CountDesaForAdmin();
-    return res.data.data;
-  };
-
-  const { data: dataTotalDesa, isLoading: isLoadingTotalDesa } = useQuery({
-    queryKey: ["TotalDesa"],
-    queryFn: totalDesa,
-  });
-
   //   kelompok
   const totalKelompok = async () => {
-    const res = await countServices.CountKelompokForAdmin();
+    const query = `desaId=${idDesa}`;
+    const res = await countServices.CountKelompokByDesa(query);
     return res.data.data;
   };
 
   const { data: dataTotalKelompok, isLoading: isLoadingTotalKelompok } =
     useQuery({
-      queryKey: ["TotalKelompok"],
+      queryKey: ["TotalKelompok", idDesa],
       queryFn: totalKelompok,
+    });
+
+  //   mumi
+  const totalMumi = async () => {
+    const query = `desaId=${idDesa}`;
+    const res = await countServices.CountMumi(query);
+    return res.data.data;
+  };
+
+  const { data: dataTotalMumi, isLoading: isLoadingTotalMumi } = useQuery({
+    queryKey: ["TotalMumi", idDesa],
+    queryFn: totalMumi,
+  });
+  //   caberawit
+  const totalCaberawit = async () => {
+    const query = `desaId=${idDesa}`;
+    const res = await countServices.CountCaberawit(query);
+    return res.data.data;
+  };
+
+  const { data: dataTotalCaberawit, isLoading: isLoadingTotalCaberawit } =
+    useQuery({
+      queryKey: ["TotalCaberawit", idDesa],
+      queryFn: totalCaberawit,
     });
 
   // desa
@@ -69,14 +73,13 @@ const useDashboard = () => {
     });
 
   return {
-    dataTotalDaerah,
-    isLoadingTotalDaerah,
-    dataTotalDesa,
-    isLoadingTotalDesa,
+    dataTotalCaberawit,
     dataTotalKelompok,
     isLoadingTotalKelompok,
     dataStatistikByDesa,
     isLoadingStatistikByDesa,
+    dataTotalMumi,
+    isLoadingTotalMumi,
   };
 };
 

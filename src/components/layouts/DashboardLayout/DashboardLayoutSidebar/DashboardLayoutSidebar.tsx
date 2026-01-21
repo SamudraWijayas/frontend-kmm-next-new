@@ -132,7 +132,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                       {/* SUBMENU */}
                       <div
                         className={cn(
-                          "ml-6 mt-1 overflow-hidden transition-all duration-300",
+                          "ml-6 mt-1 overflow-hidden transition-all duration-500",
                           isOpen ? "max-h-96" : "max-h-0"
                         )}
                       >

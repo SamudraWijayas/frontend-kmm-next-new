@@ -44,7 +44,7 @@ const StatistikGenerusDesaByJenjang = ({ data, loading }: Props) => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border p-6 animate-pulse space-y-4">
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 animate-pulse space-y-4">
         <div className="h-4 w-1/3 bg-gray-200 rounded" />
         <div className="h-48 bg-gray-200 rounded-xl" />
       </div>
@@ -53,7 +53,7 @@ const StatistikGenerusDesaByJenjang = ({ data, loading }: Props) => {
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border p-6 text-gray-400 text-sm">
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 text-gray-400 text-sm">
         Data statistik belum tersedia
       </div>
     );
@@ -88,9 +88,9 @@ const StatistikGenerusDesaByJenjang = ({ data, loading }: Props) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4">
-      <h3 className="text-sm font-semibold text-gray-700 mb-4">
+      {/* <h3 className="text-sm font-semibold text-gray-700 mb-4">
         Statistik Generus per Jenjang
-      </h3>
+      </h3> */}
 
       <Bar
         data={{ labels: jenjangLabels, datasets }}

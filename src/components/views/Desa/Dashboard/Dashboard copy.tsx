@@ -25,59 +25,66 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen py-5">
       {/* Header */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6 items-stretch">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
         {/* Left Content */}
-        <div className="md:w-1/2 w-full flex">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full flex-1">
-            <DashboardBox
-              title="Total Muda-Mudi"
-              count={
-                isLoadingTotalMumi ? (
-                  <Skeleton className="h-6 w-20 rounded-md" />
-                ) : (
-                  totalMumi
-                )
-              }
-              colors={["#16325B", "#4066B8"]}
-              icon={<User size={36} />}
-            />
+        <div className="md:w-1/2 w-full">
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {/* Total Daerah */}
+            <div className="rounded-2xl bg-[#FFF4E5] p-5 shadow-sm relative">
+              <ArrowUpRight
+                className="absolute top-4 right-4 text-gray-400"
+                size={18}
+              />
+              <p className="text-gray-500 text-sm mb-2">Total Muda-Mudi</p>
+              <h2 className="text-3xl font-bold text-gray-800">{totalMumi}</h2>
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <MapPin size={16} />
+                <span>Data wilayah</span>
+              </div>
+            </div>
 
-            <DashboardBox
-              title="Total Caberawit"
-              count={
-                isLoadingTotalMumi ? (
-                  <Skeleton className="h-6 w-20 rounded-md" />
-                ) : (
-                  totalMumi
-                )
-              }
-              colors={["#E1AE3E", "#F6CD46"]}
-              icon={<User size={36} />}
-            />
+            {/* Total Desa */}
+            <div className="rounded-2xl bg-[#EAF7EC] p-5 shadow-sm relative">
+              <ArrowUpRight
+                className="absolute top-4 right-4 text-gray-400"
+                size={18}
+              />
+              <p className="text-gray-500 text-sm mb-2">Total Caberawit</p>
+              <h2 className="text-3xl font-bold text-gray-800">
+                {totalCaberawit}
+              </h2>
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <Home size={16} />
+                <span>Data desa</span>
+              </div>
+            </div>
 
-            <DashboardBox
-              title="Total Kelompok"
-              count={
-                isLoadingTotalMumi ? (
-                  <Skeleton className="h-6 w-20 rounded-md" />
-                ) : (
-                  totalKelompok
-                )
-              }
-              colors={["#E14862", "#F34F7D"]}
-              icon={<User size={36} />}
-            />
+            {/* Total Kelompok */}
+            <div className="rounded-2xl bg-[#EEF2FF] p-5 shadow-sm relative">
+              <ArrowUpRight
+                className="absolute top-4 right-4 text-gray-400"
+                size={18}
+              />
+              <p className="text-gray-500 text-sm mb-2">Total Kelompok</p>
+              <h2 className="text-3xl font-bold text-gray-800">
+                {totalKelompok}
+              </h2>
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <Users size={16} />
+                <span>Data kelompok</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Right Content */}
-        <div className="md:w-1/2 w-full flex">
-          <div className="w-full flex-1">
-            <StatistikGenerusDesaByJenjang
-              data={dataStatistikByDesa}
-              loading={isLoadingStatistikByDesa}
-            />
-          </div>
+        <div className="md:w-1/2 w-full">
+          {/* {new Date().toDateString()} */}
+          <StatistikGenerusDesaByJenjang
+            data={dataStatistikByDesa}
+            loading={isLoadingStatistikByDesa}
+          />
         </div>
       </div>
 
