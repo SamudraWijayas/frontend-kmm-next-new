@@ -7,7 +7,7 @@ const cabrawitServices = {
     instance.get(`${endpoint.CABERAWIT}?${params}`),
   getCaberawitByKelompok: (kelompokId: string, params?: string) =>
     instance.get(
-      `${endpoint.CABERAWIT}/${kelompokId}?${params ? `?${params}` : ""}`
+      `${endpoint.CABERAWIT}/${kelompokId}${params ? `?${params}` : ""}`
     ),
   addcaberawit: (payload: ICaberawit) =>
     instance.post(endpoint.CABERAWIT, payload),

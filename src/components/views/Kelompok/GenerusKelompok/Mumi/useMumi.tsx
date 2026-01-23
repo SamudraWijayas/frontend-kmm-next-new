@@ -1,18 +1,15 @@
 import useChangeUrl from "@/hooks/useChangeUrls";
 import { IGenerus } from "@/types/Generus";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import generusServices from "@/services/generus.service";
 import { useQuery } from "@tanstack/react-query";
 import jenjangServices from "@/services/jenjang.service";
-import { useParams } from "next/navigation";
-import authServices from "@/services/auth.service";
+import useProfile from "@/hooks/useProfile";
 
 const useMumi = () => {
-  const [isReady, setIsReady] = useState(false);
-  useEffect(() => {
-    // Di App Router, router selalu tersedia, jadi ini opsional
-    setIsReady(true);
-  }, []);
+  const { profile } = useProfile();
+  const idKelompok = profile?.kelompokId;
+
   const [selectedId, setSelectedId] = useState<IGenerus | null>(null);
   const [filter, setFilter] = useState({
     jenis_kelamin: "",
@@ -20,17 +17,6 @@ const useMumi = () => {
     maxUsia: "",
     jenjang: "",
   });
-  const getProfile = async () => {
-    const { data } = await authServices.getProfile();
-    return data.data;
-  };
-
-  const { data: dataProfile } = useQuery({
-    queryKey: ["Profile"],
-    queryFn: getProfile,
-    enabled: isReady,
-  });
-  const id = dataProfile?.kelompokId;
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
 
@@ -45,7 +31,7 @@ const useMumi = () => {
     if (filter.minUsia) params += `&minUsia=${filter.minUsia}`;
     if (filter.maxUsia) params += `&maxUsia=${filter.maxUsia}`;
 
-    const res = await generusServices.getGenerusByKelompok(id, params);
+    const res = await generusServices.getGenerusByKelompok(idKelompok, params);
     const { data } = res;
     return data;
   };
@@ -77,7 +63,7 @@ const useMumi = () => {
       filter.maxUsia,
     ],
     queryFn: getMumi,
-    enabled: !!id && isParamsReady && !!currentPage && !!currentLimit,
+    enabled: !!idKelompok && isParamsReady && !!currentPage && !!currentLimit,
   });
 
   return {

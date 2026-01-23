@@ -2,7 +2,7 @@
 
 import React from "react";
 import useDashboard from "./useDashboard";
-import { MapPin, Home, Users, ArrowUpRight, User } from "lucide-react";
+import { MapPin, Home, Users, ArrowUpRight, User, Group } from "lucide-react";
 import StatistikGenerusDesaByJenjang from "@/components/ui/Charts/StatistikGenerusDesaByJenjang";
 import DashboardBox from "@/components/ui/DashboardBox/DashboardBox";
 import { Skeleton } from "@heroui/react";
@@ -48,7 +48,7 @@ const Dashboard = () => {
                 isLoadingTotalMumi ? (
                   <Skeleton className="h-6 w-20 rounded-md" />
                 ) : (
-                  totalMumi
+                  totalCaberawit
                 )
               }
               colors={["#E1AE3E", "#F6CD46"]}
@@ -65,7 +65,7 @@ const Dashboard = () => {
                 )
               }
               colors={["#E14862", "#F34F7D"]}
-              icon={<User size={36} />}
+              icon={<Group  size={36} />}
             />
           </div>
         </div>

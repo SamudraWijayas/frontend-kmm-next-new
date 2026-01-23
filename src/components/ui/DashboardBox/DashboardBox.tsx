@@ -24,7 +24,7 @@ const DashboardBox = ({ colors, count, title, icon }: Props) => {
       {/* Content */}
       <div className="relative z-[2] flex items-center justify-between">
         <div className="space-y-1">
-          <h4 className="text-white text-base md:text-lg font-medium">
+          <h4 className="text-white text-base md:text-xl font-medium">
             {title}
           </h4>
           <span className="block text-white text-3xl md:text-4xl font-bold leading-none">

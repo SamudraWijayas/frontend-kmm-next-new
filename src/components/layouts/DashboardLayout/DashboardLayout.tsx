@@ -13,6 +13,7 @@ import useDashboardLayout from "./useDashboardLayout";
 import { Avatar, Skeleton } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import {
+  Activity,
   Group,
   LayoutDashboard,
   LogOut,
@@ -123,6 +124,12 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
               href: "/village/users",
               icon: <User />,
             },
+            {
+              key: "kegiatan",
+              label: "Kegiatan",
+              href: "/village/activity",
+              icon: <Activity />,
+            },
           ],
         },
         {
@@ -199,9 +206,9 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
           open
             ? "ml-0"
             : collapsed
-            ? "lg:ml-[80px]"
-            : widthHeader || "lg:ml-[260px]",
-          forceHideLabel && "lg:ml-[340px]"
+              ? "lg:ml-[80px]"
+              : widthHeader || "lg:ml-[260px]",
+          forceHideLabel && "lg:ml-[340px]",
         )}
       >
         {/* Header */}

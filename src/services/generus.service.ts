@@ -15,12 +15,14 @@ const generusServices = {
     ),
   getGenerusByMahasiswaKelompok: (kelompokId: string, params?: string) =>
     instance.get(
-      `${endpoint.GENERUS}/${kelompokId}/mahasiswa/kelompok ${params ? `?${params}` : ""}`
+      `${endpoint.GENERUS}/${kelompokId}/mahasiswa/kelompok${params ? `?${params}` : ""}`
     ),
   addGenerus: (payload: IGenerus) => instance.post(endpoint.GENERUS, payload),
   getGenerusById: (id: string) => instance.get(`${endpoint.GENERUS}/${id}`),
   getStatistikByDesa: (desaId: string) =>
     instance.get(`${endpoint.GENERUS}/statistik/jenjang/desa/${desaId}`),
+  getStatistikByKelompok: (kelompokId: string) =>
+    instance.get(`${endpoint.GENERUS}/statistik/jenjang/kelompok/${kelompokId}`),
   deleteGenerus: (id: string) => instance.delete(`${endpoint.GENERUS}/${id}`),
   updateGenerus: (id: string, payload: IGenerus) =>
     instance.put(`${endpoint.GENERUS}/${id}`, payload),

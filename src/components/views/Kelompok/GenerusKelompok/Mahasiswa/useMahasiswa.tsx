@@ -6,13 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import jenjangServices from "@/services/jenjang.service";
 import { useParams } from "next/navigation";
 import authServices from "@/services/auth.service";
+import useProfile from "@/hooks/useProfile";
 
 const useMahasiswa = () => {
-  const [isReady, setIsReady] = useState(false);
-  useEffect(() => {
-    // Di App Router, router selalu tersedia, jadi ini opsional
-    setIsReady(true);
-  }, []);
+  const { profile } = useProfile();
+  const idKelompok = profile?.kelompokId;
   const [selectedId, setSelectedId] = useState<IGenerus | null>(null);
   const [filter, setFilter] = useState({
     jenis_kelamin: "",
@@ -20,8 +18,6 @@ const useMahasiswa = () => {
     maxUsia: "",
     jenjang: "",
   });
-  const params = useParams();
-  const id = params?.id as string;
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
 
@@ -36,7 +32,7 @@ const useMahasiswa = () => {
     if (filter.minUsia) params += `&minUsia=${filter.minUsia}`;
     if (filter.maxUsia) params += `&maxUsia=${filter.maxUsia}`;
 
-    const res = await generusServices.getGenerusByMahasiswaKelompok(id, params);
+    const res = await generusServices.getGenerusByMahasiswaKelompok(idKelompok, params);
     const { data } = res;
     return data;
   };
@@ -68,7 +64,7 @@ const useMahasiswa = () => {
       filter.maxUsia,
     ],
     queryFn: getMumi,
-    enabled: !!id && isParamsReady && !!currentPage && !!currentLimit,
+    enabled: !!idKelompok && isParamsReady && !!currentPage && !!currentLimit,
   });
 
   return {

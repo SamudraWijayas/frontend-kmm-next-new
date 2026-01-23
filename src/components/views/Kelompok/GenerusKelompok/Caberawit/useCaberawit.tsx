@@ -6,8 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import jenjangServices from "@/services/jenjang.service";
 import { useParams } from "next/navigation";
 import cabrawitServices from "@/services/caberawit.service";
+import useProfile from "@/hooks/useProfile";
 
 const useCaberawit = () => {
+  const { profile } = useProfile();
+  const idKelompok = profile?.kelompokId;
+  console.log("lef", idKelompok);
   const [selectedId, setSelectedId] = useState<IGenerus | null>(null);
   const [filter, setFilter] = useState({
     jenis_kelamin: "",
@@ -15,8 +19,7 @@ const useCaberawit = () => {
     maxUsia: "",
     jenjang: "",
   });
-  const params = useParams();
-  const id = params?.id as string;
+
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
 
@@ -31,7 +34,10 @@ const useCaberawit = () => {
     if (filter.minUsia) params += `&minUsia=${filter.minUsia}`;
     if (filter.maxUsia) params += `&maxUsia=${filter.maxUsia}`;
 
-    const res = await cabrawitServices.getCaberawitByKelompok(id, params);
+    const res = await cabrawitServices.getCaberawitByKelompok(
+      idKelompok,
+      params,
+    );
     const { data } = res;
     return data;
   };
@@ -53,7 +59,7 @@ const useCaberawit = () => {
     refetch: refetchGenerus,
   } = useQuery({
     queryKey: [
-      "Generus",
+      "Caberawit",
       currentLimit,
       currentPage,
       currentSearch,
@@ -63,7 +69,7 @@ const useCaberawit = () => {
       filter.maxUsia,
     ],
     queryFn: getMumi,
-    enabled: !!id && isParamsReady && !!currentPage && !!currentLimit,
+    enabled: !!idKelompok && isParamsReady && !!currentPage && !!currentLimit,
   });
 
   return {

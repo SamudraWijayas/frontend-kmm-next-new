@@ -7,56 +7,57 @@ import { useEffect, useState } from "react";
 
 const useDashboard = () => {
   const { profile } = useProfile();
-  const idDesa = profile?.desaId;
+  const idKelompok = profile?.kelompokId;
+  console.log("kelompk", idKelompok)
 
   //   kelompok
   const totalKelompok = async () => {
-    const query = `desaId=${idDesa}`;
+    const query = `desaId=${idKelompok}`;
     const res = await countServices.CountKelompokByDesa(query);
     return res.data.data;
   };
 
   const { data: dataTotalKelompok, isLoading: isLoadingTotalKelompok } =
     useQuery({
-      queryKey: ["TotalKelompok", idDesa],
+      queryKey: ["TotalKelompok", idKelompok],
       queryFn: totalKelompok,
     });
 
   //   mumi
   const totalMumi = async () => {
-    const query = `desaId=${idDesa}`;
+    const query = `kelompokId=${idKelompok}`;
     const res = await countServices.CountMumi(query);
     return res.data.data;
   };
 
   const { data: dataTotalMumi, isLoading: isLoadingTotalMumi } = useQuery({
-    queryKey: ["TotalMumi", idDesa],
+    queryKey: ["TotalMumi", idKelompok],
     queryFn: totalMumi,
   });
   //   caberawit
   const totalCaberawit = async () => {
-    const query = `desaId=${idDesa}`;
+    const query = `kelompokId=${idKelompok}`;
     const res = await countServices.CountCaberawit(query);
     return res.data.data;
   };
 
   const { data: dataTotalCaberawit, isLoading: isLoadingTotalCaberawit } =
     useQuery({
-      queryKey: ["TotalCaberawit", idDesa],
+      queryKey: ["TotalCaberawit", idKelompok],
       queryFn: totalCaberawit,
     });
 
   // desa
   const StatistikByDesa = async () => {
-    const res = await generusServices.getStatistikByDesa(idDesa);
+    const res = await generusServices.getStatistikByKelompok(idKelompok);
     return res.data.data;
   };
 
   const { data: dataStatistikByDesa, isLoading: isLoadingStatistikByDesa } =
     useQuery({
-      queryKey: ["StatistikByDesa", idDesa],
+      queryKey: ["StatistikByKelompok", idKelompok],
       queryFn: StatistikByDesa,
-      enabled: !!idDesa,
+      enabled: !!idKelompok,
     });
 
   return {
