@@ -32,20 +32,32 @@ export interface IRaporGenerus {
   }[];
 }
 
-export interface ITA {
-  id?: string;
-  name?: string;
+export interface IRapor {
+  caberawitId: number;
+  semester: "GANJIL" | "GENAP";
+  raporItems: {
+    indikatorKelasId: string;
+    kelasJenjangId: string;
+    nilaiPengetahuan: number | null;
+    nilaiKeterampilan: number | null;
+  }[];
 }
 
-export interface IRapor {
-  caberawitId?: number;
-  kelasJenjangId?: string;
-  tahunAjaran?: string;
-  semester?: string;
-  rapor: {
-    indikatorKelasId?: string;
-    status?: string;
+export interface RaporFormValues {
+  semester: "GANJIL" | "GENAP";
+  raporItems?: {
+    indikatorKelasId: string;
     nilaiPengetahuan?: number | null;
     nilaiKeterampilan?: number | null;
   }[];
 }
+
+
+export interface RaporItem  {
+  id_indikator: string;
+  indikator: string;
+  semester: "GANJIL" | "GENAP";
+  status: "TUNTAS" | "TIDAK_TUNTAS";
+  nilaiPengetahuan: number | null;
+  nilaiKeterampilan: number | null;
+};

@@ -100,6 +100,9 @@ const Generus = () => {
             </div>
           );
 
+        case "kelasJenjang":
+          return generus.kelasJenjang?.name || "-";
+
         case "daerah":
           return generus.daerah?.name || "-";
 

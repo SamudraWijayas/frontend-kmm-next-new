@@ -1,149 +1,127 @@
-import { useForm, useFieldArray } from "react-hook-form";
-import { IRapor } from "@/types/Rapor";
-import { ToasterContext } from "@/contexts/ToasterContext";
-import raporServices from "@/services/rapor.service";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useContext, useEffect, useRef } from "react";
+import indikatorServices from "@/services/indikator.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import React, { useContext } from "react";
+import useRapotCaberawit from "../useRapotCaberawit";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { IRapor } from "@/types/Rapor";
+import raporServices from "@/services/rapor.service";
+import { ToasterContext } from "@/contexts/ToasterContext";
 
-const schema = yup.object().shape({
-  kelasJenjangId: yup.string().required("Kelas Jenjang wajib diisi"),
-  tahunAjaran: yup.string().required("Tahun Ajaran wajib diisi"),
-  semester: yup.string().required("Semester wajib diisi"),
-  rapor: yup
-    .array()
-    .of(
-      yup.object().shape({
-        indikatorKelasId: yup.string().required("Indikator Kelas wajib diisi"),
-        nilaiPengetahuan: yup.number().nullable(),
-        nilaiKeterampilan: yup.number().nullable(),
-      })
-    )
-    .required(),
+const schema = yup.object({
+  semester: yup
+    .string()
+    .oneOf(["GANJIL", "GENAP"])
+    .required("Semester wajib diisi"),
+  raporItems: yup.array().of(
+    yup.object({
+      indikatorKelasId: yup.string().required("Indikator wajib diisi"),
+      nilaiPengetahuan: yup
+        .number()
+        .nullable()
+        .min(0, "Nilai minimal 0")
+        .max(100, "Nilai maksimal 100"),
+      nilaiKeterampilan: yup
+        .number()
+        .nullable()
+        .min(0, "Nilai minimal 0")
+        .max(100, "Nilai maksimal 100"),
+    }),
+  ),
 });
 
 const useAddRapor = () => {
   const { setToaster } = useContext(ToasterContext);
+  const { dataGenerus } = useRapotCaberawit();
   const params = useParams();
   const id = params?.id as string;
+  const idKelas = dataGenerus?.data.kelasJenjangId;
+  const getIndikator = async () => {
+    const res = await indikatorServices.getIndikatorByKelas(idKelas);
+    const { data } = res;
+    return data;
+  };
 
-  const { data: dataIndikator } = useQuery({
-    queryKey: ["Indikator", id],
-    queryFn: async () => {
-      const res = await raporServices.getRaporLengkapByCaberawit(id);
-      return res.data;
-    },
+  const {
+    data: dataIndikator,
+    isLoading: isLoadingIndikator,
+    isRefetching: isRefetchingIndikator,
+    refetch: refetchIndikator,
+  } = useQuery({
+    queryKey: ["Indikator", idKelas],
+    queryFn: getIndikator,
+    enabled: !!idKelas,
   });
 
-  const { data: dataTA } = useQuery({
-    queryKey: ["TA"],
-    queryFn: async () => {
-      const res = await raporServices.getTA();
-      return res.data.data;
-    },
-  });
+  // add rapor
 
   const {
     control,
-    handleSubmit,
+    handleSubmit: handleSubmitForm,
     formState: { errors },
     reset,
+    getValues,
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: {
-      kelasJenjangId: "",
-      tahunAjaran: "",
-      semester: "",
-      rapor: [],
-    },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "rapor",
-  });
-
-  const populatedRef = useRef(false);
-
-  // Auto-populate rapor dari indikator backend
-  useEffect(() => {
-    if (!dataIndikator || populatedRef.current) return;
-
-    const kategoriList = dataIndikator?.data?.indikator || [];
-    const semuaIndikator = kategoriList.flatMap(
-      (kategori: any) => kategori.indikator
-    );
-
-    populatedRef.current = true;
-    remove();
-
-    semuaIndikator.forEach((ind: any) => {
-      append({
-        indikatorKelasId: ind.indikatorId,
-        nilaiPengetahuan: ind.nilaiPengetahuan ?? null,
-        nilaiKeterampilan: ind.nilaiKeterampilan ?? null,
-      });
-    });
-  }, [append, dataIndikator, remove]);
+  const addRapor = async (payload: IRapor) => {
+    const res = await raporServices.addRapor(payload);
+    return res;
+  };
 
   const {
     mutate: mutateAddRapor,
-    isPending,
-    isSuccess,
-    isError,
+    isPending: isPendingMutateAddRapor,
+    isSuccess: isSuccessMutateAddRapor,
   } = useMutation({
-    mutationFn: async (payload: IRapor) => {
-      return await raporServices.addRapor(payload);
-    },
-    onError: (err) => {
+    mutationFn: addRapor,
+    onError: (error) => {
       setToaster({
         type: "error",
-        message: err.message || "Gagal menambah rapor",
+        message: error.message,
       });
     },
     onSuccess: () => {
-      setToaster({ type: "success", message: "Berhasil menambah rapor" });
+      setToaster({
+        type: "success",
+        message: "Success add category",
+      });
       reset();
     },
   });
 
-  const handleAddRapor = (data: IRapor) => {
-    const caberawitId = Number(id) || dataIndikator?.data?.caberawit?.id;
-    if (!caberawitId) {
-      setToaster({ type: "error", message: "caberawitId tidak ditemukan" });
-      return;
-    }
-
-    const payload = {
-      ...data,
-      caberawitId: caberawitId,
-      kelasJenjangId: String(data.kelasJenjangId),
-      tahunAjaran: String(data.tahunAjaran),
-      semester: String(data.semester),
-      rapor: (data.rapor as IRapor["rapor"]).map((item) => ({
+  const handleAddRapor = (data: any) => {
+    const payload: IRapor & { caberawitId: number } = {
+      caberawitId: Number(id),
+      semester: data.semester,
+      raporItems: (data.raporItems ?? []).map((item: any) => ({
         indikatorKelasId: item.indikatorKelasId,
-        nilaiPengetahuan: Number(item.nilaiPengetahuan ?? null),
-        nilaiKeterampilan: Number(item.nilaiKeterampilan ?? null),
+        kelasJenjangId: idKelas,
+        nilaiPengetahuan: item.nilaiPengetahuan ?? null,
+        nilaiKeterampilan: item.nilaiKeterampilan ?? null,
       })),
     };
 
-    console.log("Submitting payload:", payload);
     mutateAddRapor(payload);
   };
 
   return {
-    control,
-    handleSubmit,
-    errors,
-    isPendingMutateAddRapor: isPending,
-    isSuccessMutateAddRapor: isSuccess,
-    isErrorMutateAddRapor: isError,
-    handleAddRapor,
-    raporFields: fields,
     dataIndikator,
-    dataTA,
+    isLoadingIndikator,
+
+    mutateAddRapor,
+    isPendingMutateAddRapor,
+    isSuccessMutateAddRapor,
+    control,
+    handleSubmitForm,
+    errors,
+    getValues,
+    setValue,
+    handleAddRapor,
   };
 };
 

@@ -15,6 +15,11 @@ interface IGenerus {
     id?: string;
     name?: string;
   };
+  kelasJenjangId?: string;
+  kelasJenjang?: {
+    id?: string;
+    name?: string;
+  };
   kelompokId?: string;
   kelompok?: {
     id?: string;

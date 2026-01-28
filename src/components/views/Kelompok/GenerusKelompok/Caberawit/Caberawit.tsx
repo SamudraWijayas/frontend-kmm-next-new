@@ -8,6 +8,9 @@ import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import useCaberawit from "./useCaberawit";
 import { COLUMN_LIST_GENERUS } from "./Caberawit.constant";
+import AddGenerus from "../AddGenerus";
+import DeleteGenerus from "../DeleteGenerus";
+import DetailGenerus from "./DetailGenerus";
 
 const Caberawit = () => {
   const searchParams = useSearchParams();
@@ -32,6 +35,7 @@ const Caberawit = () => {
     filter,
     setFilter,
     dataJenjang,
+    
   } = useCaberawit();
 
   const { setUrl } = useChangeUrl();
@@ -257,7 +261,7 @@ const Caberawit = () => {
           }
         />
       )}
-      {/* <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
+      <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
       <DeleteGenerus
         {...deleteGenerus}
         selectedId={selectedId}
@@ -269,7 +273,7 @@ const Caberawit = () => {
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
-      /> */}
+      />
     </section>
   );
 };

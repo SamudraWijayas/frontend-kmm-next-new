@@ -8,6 +8,9 @@ import useChangeUrl from "@/hooks/useChangeUrls";
 import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import { COLUMN_LIST_GENERUS } from "./Mumi.constant";
+import AddGenerus from "../AddGenerus";
+import DeleteGenerus from "../DeleteGenerus";
+import DetailGenerus from "../DetailGenerus";
 
 const Mumi = () => {
   const searchParams = useSearchParams();
@@ -257,7 +260,7 @@ const Mumi = () => {
           }
         />
       )}
-      {/* <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
+      <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
       <DeleteGenerus
         {...deleteGenerus}
         selectedId={selectedId}
@@ -269,7 +272,7 @@ const Mumi = () => {
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
-      /> */}
+      />
     </section>
   );
 };

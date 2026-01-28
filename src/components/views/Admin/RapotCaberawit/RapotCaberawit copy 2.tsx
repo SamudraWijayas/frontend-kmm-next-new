@@ -12,10 +12,13 @@ const RapotCaberawit = () => {
     isLoadingGenerus,
     dataIndikator,
     isLoadingIndikator,
+    isRefetchingIndikator,
     dataRapor,
+    isLoadingRapor,
     refetchRapor,
   } = useRapotCaberawit();
   const addRapor = useDisclosure();
+  console.log("data", dataRapor);
 
   const caberawit = dataGenerus?.data;
 
@@ -27,15 +30,25 @@ const RapotCaberawit = () => {
 
     source.forEach((item) => {
       const mata = item.kategoriIndikator.mataPelajaran;
+
       if (!map.has(mata.id)) {
-        map.set(mata.id, { id: mata.id, name: mata.name, kategori: [] });
+        map.set(mata.id, {
+          id: mata.id,
+          name: mata.name,
+          kategori: [],
+        });
       }
+
       const rw = map.get(mata.id)!;
       const kategori = item.kategoriIndikator;
 
       let cat = rw.kategori.find((x) => x.id === kategori.id);
       if (!cat) {
-        cat = { id: kategori.id, name: kategori.name, indikator: [] };
+        cat = {
+          id: kategori.id,
+          name: kategori.name,
+          indikator: [],
+        };
         rw.kategori.push(cat);
       }
 
@@ -58,6 +71,7 @@ const RapotCaberawit = () => {
 
   const raporMap = React.useMemo(() => {
     const list: RaporItem[] = dataRapor?.data ?? [];
+
     return new Map<string, RaporValue>(
       list.map((r) => [
         r.id_indikator,
@@ -74,51 +88,25 @@ const RapotCaberawit = () => {
     return <p className="text-sm text-gray-500">Loading...</p>;
   }
 
-  const getStatusBadge = (status?: string) => {
-    switch (status) {
-      case "TUNTAS":
-        return (
-          <span className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">
-            Tuntas
-          </span>
-        );
-      case "TIDAK_TUNTAS":
-        return (
-          <span className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">
-            Tidak Tuntas
-          </span>
-        );
-      default:
-        return (
-          <span className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 rounded-full">
-            -
-          </span>
-        );
-    }
-  };
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Card Info Caberawit */}
-      <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">
-          Penilaian Caberawit
-        </h2>
+      <div className="bg-white p-5 rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Rapor Caberawit</h2>
 
         {caberawit ? (
-          <div className="flex items-center justify-between text-gray-700">
-            <div className="space-y-1">
-              <p>
-                <span className="font-semibold">Nama:</span> {caberawit.nama}
-              </p>
-              <p>
-                <span className="font-semibold">Jenjang:</span>{" "}
+          <div className="text-sm text-gray-700 space-y-2">
+            <p>
+              Nama: <span className="font-semibold">{caberawit.nama}</span>
+            </p>
+            <p>
+              Jenjang:{" "}
+              <span className="font-semibold">
                 {caberawit.jenjang?.name || "-"}
-              </p>
-            </div>
-
+              </span>
+            </p>
             <Button color="primary" variant="solid" onPress={addRapor.onOpen}>
-              Isi Nilai
+              Tambah Rapot
             </Button>
           </div>
         ) : (
@@ -128,32 +116,33 @@ const RapotCaberawit = () => {
         )}
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-xl shadow-md">
-        <table className="min-w-full bg-white divide-y divide-gray-200 rounded-xl text-sm">
-          <thead className="bg-gray-200">
+      {/* Tabel */}
+      <div className="overflow-x-auto ">
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg text-sm divide-y divide-gray-200 ">
+          <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-gray-600 font-semibold w-10">
+              <th className="border-b border-gray-200 px-4 py-2 w-10 text-left">
                 NO
               </th>
-              <th className="px-4 py-3 text-left text-gray-600 font-semibold">
+              <th className="border-b border-gray-200 px-4 py-2 text-left">
                 MATERI PENGAJIAN
               </th>
-              <th className="px-4 py-3 text-center text-gray-600 font-semibold w-24">
+              <th className="border-b border-gray-200 px-4 py-2 w-24 text-center">
                 PENGETAHUAN
               </th>
-              <th className="px-4 py-3 text-center text-gray-600 font-semibold w-24">
+              <th className="border-b border-gray-200 px-4 py-2 w-24 text-center">
                 KETERAMPILAN
               </th>
-              <th className="px-4 py-3 text-center text-gray-600 font-semibold">
+              <th className="border-b border-gray-200 px-4 py-2  text-center">
                 STATUS
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+
+          <tbody className="divide-y divide-gray-200">
             {groupedIndikator.map((mata, i) => (
               <React.Fragment key={mata.id}>
-                <tr className="bg-gray-100">
+                <tr className="bg-cyan-100">
                   <td className="px-4 py-2 font-bold text-center">{i + 1}</td>
                   <td className="px-4 py-2 font-bold uppercase" colSpan={4}>
                     {mata.name}
@@ -162,7 +151,7 @@ const RapotCaberawit = () => {
 
                 {mata.kategori.map((kat) => (
                   <React.Fragment key={kat.id}>
-                    <tr className="bg-gray-50 font-semibold">
+                    <tr className="bg-cyan-50 font-semibold">
                       <td></td>
                       <td className="px-4 py-2" colSpan={4}>
                         {kat.name}
@@ -172,22 +161,42 @@ const RapotCaberawit = () => {
                     {kat.indikator.map((ind, idx) => (
                       <tr
                         key={ind.id}
-                        className="hover:bg-gray-100 transition-colors"
+                        className="hover:bg-gray-50 transition-colors"
                       >
                         <td></td>
                         <td className="px-4 py-2 flex gap-1">
                           <span>{String.fromCharCode(97 + idx)}.</span>
                           <span>{ind.name}</span>
                         </td>
-                        <td className="px-4 py-2 text-center">
-                          {raporMap.get(ind.id)?.nilaiPengetahuan ?? "-"}
-                        </td>
-                        <td className="px-4 py-2 text-center">
-                          {raporMap.get(ind.id)?.nilaiKeterampilan ?? "-"}
-                        </td>
-                        <td className="px-4 py-2 text-center">
-                          {getStatusBadge(raporMap.get(ind.id)?.status)}
-                        </td>
+                        {(() => {
+                          const rapor = raporMap.get(ind.id);
+
+                          return (
+                            <>
+                              <td className="px-4 py-2 text-center">
+                                {rapor?.nilaiPengetahuan ?? "-"}
+                              </td>
+
+                              <td className="px-4 py-2 text-center">
+                                {rapor?.nilaiKeterampilan ?? "-"}
+                              </td>
+
+                              <td
+                                className={`px-4 py-2 text-center font-semibold ${
+                                  rapor?.status === "TUNTAS"
+                                    ? "text-green-600"
+                                    : rapor?.status === "TIDAK_TUNTAS"
+                                      ? "text-red-600"
+                                      : "text-gray-500"
+                                }`}
+                              >
+                                {rapor?.status
+                                  ? rapor.status.replace("_", " ")
+                                  : "-"}
+                              </td>
+                            </>
+                          );
+                        })()}
                       </tr>
                     ))}
                   </React.Fragment>
@@ -197,7 +206,6 @@ const RapotCaberawit = () => {
           </tbody>
         </table>
       </div>
-
       <AddRapor {...addRapor} refetchRapor={refetchRapor} />
     </div>
   );

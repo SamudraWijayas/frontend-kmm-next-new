@@ -82,49 +82,10 @@ const Dashboard = () => {
       </div>
 
       {/* Top Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {/* Total Daerah */}
-        <div className="bg-white shadow-sm border border-gray-200 rounded-xl p-5 flex items-center justify-between transition hover:shadow-md">
-          <div>
-            <p className="text-gray-500 text-sm">Total Daerah</p>
-            <h2 className="text-2xl font-semibold text-gray-800">
-              {totalMumi}
-            </h2>
-          </div>
-          <div className="bg-green-100 p-3 rounded-full text-green-600">
-            <MapPin size={24} />
-          </div>
-        </div>
-
-        {/* Total Desa */}
-        <div className="bg-white shadow-sm border border-gray-200 rounded-xl p-5 flex items-center justify-between transition hover:shadow-md">
-          <div>
-            <p className="text-gray-500 text-sm">Total Desa</p>
-            <h2 className="text-2xl font-semibold text-gray-800">
-              {totalCaberawit}
-            </h2>
-          </div>
-          <div className="bg-blue-100 p-3 rounded-full text-blue-600">
-            <Home size={24} />
-          </div>
-        </div>
-
-        {/* Total Kelompok */}
-        <div className="bg-white shadow-sm border border-gray-200 rounded-xl p-5 flex items-center justify-between transition hover:shadow-md">
-          <div>
-            <p className="text-gray-500 text-sm">Total Kelompok</p>
-            <h2 className="text-2xl font-semibold text-gray-800">
-              {totalKelompok}
-            </h2>
-          </div>
-          <div className="bg-purple-100 p-3 rounded-full text-purple-600">
-            <Users size={24} />
-          </div>
-        </div>
-      </div>
+      
 
       {/* Current Tasks */}
-      <div className="bg-white border rounded-xl p-6">
+      {/* <div className="bg-white border rounded-xl p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-medium">Current Tasks</h2>
           <span className="text-gray-500 text-sm">Done 30%</span>
@@ -159,7 +120,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

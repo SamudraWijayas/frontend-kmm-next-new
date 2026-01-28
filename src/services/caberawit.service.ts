@@ -11,7 +11,7 @@ const cabrawitServices = {
     ),
   addcaberawit: (payload: ICaberawit) =>
     instance.post(endpoint.CABERAWIT, payload),
-  getcaberawitById: (id: string) => instance.get(`${endpoint.CABERAWIT}/${id}`),
+  getcaberawitById: (id: string) => instance.get(`${endpoint.CABERAWIT}-one/${id}`),
   deletecaberawit: (id: string) =>
     instance.delete(`${endpoint.CABERAWIT}/${id}`),
   updatecaberawit: (id: string, payload: ICaberawit) =>

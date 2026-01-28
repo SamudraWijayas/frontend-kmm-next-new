@@ -34,6 +34,7 @@ interface ICaberawit {
     id?: string;
     name?: string;
   };
+  waliId?: string;
 }
 
 export type { ICaberawit };

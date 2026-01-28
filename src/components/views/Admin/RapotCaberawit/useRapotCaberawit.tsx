@@ -1,25 +1,58 @@
+import cabrawitServices from "@/services/caberawit.service";
+import indikatorServices from "@/services/indikator.service";
 import raporServices from "@/services/rapor.service";
 import { useQuery } from "@tanstack/react-query";
-
 import { useParams } from "next/navigation";
+import React from "react";
 
-interface Filter {
-  semester?: number | "";
-  tahunAjaran?: string;
-}
-
-const useRaporCaberawit = (filter: Filter = {}) => {
+const useRapotCaberawit = () => {
   const params = useParams();
   const id = params?.id as string;
 
-  const getRapor = async () => {
-    let query = "";
-    if (filter.semester) query += `semester=${filter.semester}&`;
-    if (filter.tahunAjaran) query += `tahunAjaranId=${filter.tahunAjaran}&`;
-    if (query.endsWith("&")) query = query.slice(0, -1); // hapus '&' terakhir
+  const getGenerus = async () => {
+    const res = await cabrawitServices.getcaberawitById(id);
+    const { data } = res;
+    return data;
+  };
 
-    const res = await raporServices.getRaporLengkapByCaberawit(id, query);
-    return res.data;
+  const {
+    data: dataGenerus,
+    isLoading: isLoadingGenerus,
+    isRefetching: isRefetchingGenerus,
+    refetch: refetchGenerus,
+  } = useQuery({
+    queryKey: ["Generus", id],
+    queryFn: getGenerus,
+    enabled: !!id,
+  });
+
+  const idKelas = dataGenerus?.data.kelasJenjangId;
+
+  // indikator
+
+  const getIndikator = async () => {
+    const res = await indikatorServices.getIndikatorByKelas(idKelas);
+    const { data } = res;
+    return data;
+  };
+
+  const {
+    data: dataIndikator,
+    isLoading: isLoadingIndikator,
+    isRefetching: isRefetchingIndikator,
+    refetch: refetchIndikator,
+  } = useQuery({
+    queryKey: ["Indikator", idKelas],
+    queryFn: getIndikator,
+    enabled: !!idKelas,
+  });
+
+  // Rapor
+
+  const getRapor = async () => {
+    const res = await raporServices.getRapor(id);
+    const { data } = res;
+    return data;
   };
 
   const {
@@ -28,30 +61,21 @@ const useRaporCaberawit = (filter: Filter = {}) => {
     isRefetching: isRefetchingRapor,
     refetch: refetchRapor,
   } = useQuery({
-    queryKey: ["Rapor", id, filter.semester, filter.tahunAjaran],
+    queryKey: ["Rapor", id],
     queryFn: getRapor,
-    enabled: !!id, // Only run query if id is available
+    enabled: !!id,
   });
-
-  const getTA = async () => {
-    const { data } = await raporServices.getTA();
-    return data.data;
-  };
-
-  const { data: dataTA } = useQuery({
-    queryKey: ["TA"],
-    queryFn: getTA,
-  });
-
-  // addd
 
   return {
+    dataGenerus,
+    isLoadingGenerus,
+    dataIndikator,
+    isLoadingIndikator,
+    isRefetchingIndikator,
     dataRapor,
     isLoadingRapor,
-    isRefetchingRapor,
-    refetchRapor,
-    dataTA,
+    refetchRapor
   };
 };
 
-export default useRaporCaberawit;
+export default useRapotCaberawit;

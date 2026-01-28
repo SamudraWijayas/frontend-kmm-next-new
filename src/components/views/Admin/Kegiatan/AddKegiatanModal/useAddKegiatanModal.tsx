@@ -11,22 +11,52 @@ import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-const schema = yup.object().shape({
+const schema = yup.object({
   name: yup.string().required("Nama kegiatan wajib diisi"),
   startDate: yup.date().required("Tanggal mulai wajib diisi"),
   endDate: yup.date().required("Tanggal akhir wajib diisi"),
+
   tingkat: yup
     .string()
     .oneOf(["DAERAH", "DESA", "KELOMPOK"])
     .required("Tingkat wajib diisi"),
+
+  targetType: yup
+    .string()
+    .oneOf(["JENJANG", "MAHASISWA", "USIA"])
+    .required("Target wajib dipilih"),
+
   daerahId: yup.string().nullable(),
   desaId: yup.string().nullable(),
   kelompokId: yup.string().nullable(),
+
   jenjangIds: yup
     .array()
-    .of(yup.string().defined())
-    .min(1, "Minimal pilih satu jenjang sasaran")
-    .required("Pilih minimal satu jenjang"),
+    .of(yup.string().required()) // penting!
+    .when("targetType", {
+      is: "JENJANG",
+      then: (schema) =>
+        schema
+          .min(1, "Minimal pilih satu jenjang sasaran")
+          .required("Pilih minimal satu jenjang"),
+      otherwise: (schema) => schema.optional(),
+    }),
+
+  minUsia: yup
+    .number()
+    .nullable()
+    .when("targetType", {
+      is: "USIA",
+      then: (s) => s.required("Usia minimal wajib diisi"),
+    }),
+
+  maxUsia: yup
+    .number()
+    .nullable()
+    .when("targetType", {
+      is: "USIA",
+      then: (s) => s.required("Usia maksimal wajib diisi"),
+    }),
 });
 
 const useAddKegiatanModal = () => {

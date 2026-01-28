@@ -6,10 +6,10 @@ import { useState } from "react";
 
 const useActivity = () => {
   const { profile } = useProfile();
-  const idDesa = profile?.desaId;
+  const idKelompok = profile?.kelompokId;
   const [selectedId, setSelectedId] = useState<IKegiatan | null>(null);
   const getKegiatan = async () => {
-    const query = `desaId=${idDesa}`;
+    const query = `kelompokId=${idKelompok}`;
     const res = await kegiatanServices.getKegiatanByFilter(query);
     const { data } = res;
     return data;
@@ -21,7 +21,7 @@ const useActivity = () => {
     isRefetching: isRefetchingKegiatan,
     refetch: refetchKegiatan,
   } = useQuery({
-    queryKey: ["Kegiatan", idDesa],
+    queryKey: ["Kegiatan", idKelompok],
     queryFn: getKegiatan,
   });
 

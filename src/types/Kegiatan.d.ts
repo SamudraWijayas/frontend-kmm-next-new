@@ -2,26 +2,35 @@ import { DateValue } from "@nextui-org/react";
 
 interface IKegiatanForm {
   id?: string;
+
   name: string;
   startDate: DateValue;
   endDate: DateValue;
-  tingkat: string;
-  kelompokId?: string | null;
-  kelompok?: {
-    id?: string;
-    name?: string;
-  };
-  desaId?: string | null;
-  desa?: {
-    id?: string;
-    name?: string;
-  };
+
+  tingkat: "DAERAH" | "DESA" | "KELOMPOK";
+
+  targetType: "JENJANG" | "MAHASISWA" | "USIA";
+
   daerahId?: string | null;
+  desaId?: string | null;
+  kelompokId?: string | null;
+
   daerah?: {
     id?: string;
     name?: string;
   };
-  jenjangIds: string[];
+  desa?: {
+    id?: string;
+    name?: string;
+  };
+  kelompok?: {
+    id?: string;
+    name?: string;
+  };
+
+  jenjangIds?: string[];
+  minUsia?: number | null; 
+  maxUsia?: number | null; 
 }
 
 interface IKegiatan {

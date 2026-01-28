@@ -19,7 +19,8 @@ const raporServices = {
 
   getTA: () => instance.get(`${endpoint.TAHUN_AJARAN}`),
   addRapor: (payload: IRapor) => instance.post(endpoint.RAPOR, payload),
-
+    getRapor: (caberawitId: string) => instance.get(`${endpoint.RAPOR}/caberawit/${caberawitId}`),
+  
   getKelompokById: (id: string) => instance.get(`${endpoint.KELOMPOK}/${id}`),
   deleteKelompok: (id: string) => instance.delete(`${endpoint.KELOMPOK}/${id}`),
   updateKelompok: (id: string, payload: IKelompok) =>

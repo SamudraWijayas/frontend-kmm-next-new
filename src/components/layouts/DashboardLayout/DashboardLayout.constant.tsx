@@ -12,6 +12,7 @@ import {
   CircleGauge,
   UserPen,
   ActivityIcon,
+  BookText,
 } from "lucide-react";
 
 const SIDEBAR_ADMIN = [
@@ -257,6 +258,12 @@ const SIDEBAR_KELOMPOK = [
         label: "Kegiatan",
         href: "/group/activity",
         icon: <ActivityIcon />,
+      },
+      {
+        key: "murid",
+        label: "Murid",
+        href: "/group/studentx",
+        icon: <BookText  />,
       },
     ],
   },

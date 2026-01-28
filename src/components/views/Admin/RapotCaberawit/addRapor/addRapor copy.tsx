@@ -78,15 +78,13 @@ const AddRapor = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60">
       <div className="relative z-[10001] flex h-full w-full flex-col overflow-x-hidden bg-gray-100 shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 z-[100] flex items-center justify-between bg-white p-4 shadow-md">
           <h2 className="text-lg font-semibold text-gray-900">
-            Penilaian Generus
+            Tambah Generus
           </h2>
           <div className="flex items-center gap-3">
             <button
@@ -104,14 +102,14 @@ const AddRapor = ({
               {isPendingMutateAddRapor ? (
                 <Spinner size="sm" color="white" />
               ) : (
-                "Nilai"
+                "Tambah Rapor"
               )}
             </button>
           </div>
         </div>
 
         {/* Body */}
-        <div className="mx-auto w-full max-w-6xl p-6">
+       <div className="mx-auto w-full max-w-6xl p-6">
           <form
             id="addRaporForm"
             onSubmit={handleSubmitForm(handleAddRapor)}
@@ -123,26 +121,25 @@ const AddRapor = ({
               </h3>
               <Divider className="my-4" />
 
-              <div className="py-4">
-                <Controller
-                  name="semester"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      label="Semester"
-                      variant="bordered"
-                      labelPlacement="outside"
-                      selectedKeys={[field.value]}
-                      onSelectionChange={(value) =>
-                        field.onChange(Array.from(value)[0])
-                      }
-                    >
-                      <SelectItem key="GANJIL">GANJIL</SelectItem>
-                      <SelectItem key="GENAP">GENAP</SelectItem>
-                    </Select>
-                  )}
-                />
-              </div>
+              {/* Semester */}
+              <Controller
+                name="semester"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Semester"
+                    variant="bordered"
+                    labelPlacement="outside"
+                    selectedKeys={[field.value]}
+                    onSelectionChange={(value) =>
+                      field.onChange(Array.from(value)[0])
+                    }
+                  >
+                    <SelectItem key="GANJIL">GANJIL</SelectItem>
+                    <SelectItem key="GENAP">GENAP</SelectItem>
+                  </Select>
+                )}
+              />
 
               {/* Indikator Table */}
               {isLoadingIndikator ? (
@@ -158,74 +155,64 @@ const AddRapor = ({
                   <table className="w-full text-sm text-left border-collapse">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-2 border-b border-gray-200">
-                          No
-                        </th>
-                        <th className="px-4 py-2 border-b border-gray-200">
-                          Indikator
-                        </th>
-                        <th className="px-4 py-2 border-b border-gray-200 text-center">
+                        <th className="px-4 py-2 border-b">No</th>
+                        <th className="px-4 py-2 border-b">Indikator</th>
+                        <th className="px-4 py-2 border-b text-center">
                           Nilai Pengetahuan
                         </th>
-                        <th className="px-4 py-2 border-b border-gray-200 text-center">
+                        <th className="px-4 py-2 border-b text-center">
                           Nilai Keterampilan
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {indikatorList.map(
-                        (item: IndikatorItem, index: number) => (
-                          <tr
-                            key={item.id}
-                            className="hover:bg-blue-50 transition-colors"
-                          >
-                            <td className="px-4 py-2 border-b border-gray-200">
-                              {index + 1}
-                            </td>
-                            <td className="px-4 py-2 border-b border-gray-200">
-                              {item.indikator}
-                              <Controller
-                                name={`raporItems.${index}.indikatorKelasId`}
-                                control={control}
-                                defaultValue={item.id}
-                                render={({ field }) => (
-                                  <input type="hidden" {...field} />
-                                )}
-                              />
-                            </td>
-                            <td className="px-4 py-2 border-b border-gray-200 text-center">
-                              <Controller
-                                name={`raporItems.${index}.nilaiPengetahuan`}
-                                control={control}
-                                render={({ field }) => (
-                                  <input
-                                    {...field}
-                                    type="number"
-                                    placeholder="Nilai"
-                                    value={field.value ?? ""}
-                                    className="w-30  rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-                                  />
-                                )}
-                              />
-                            </td>
-                            <td className="px-4 py-2 border-b border-gray-200 text-center">
-                              <Controller
-                                name={`raporItems.${index}.nilaiKeterampilan`}
-                                control={control}
-                                render={({ field }) => (
-                                  <input
-                                    {...field}
-                                    type="number"
-                                    placeholder="Nilai"
-                                    value={field.value ?? ""}
-                                    className="w-30 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-                                  />
-                                )}
-                              />
-                            </td>
-                          </tr>
-                        ),
-                      )}
+                      {indikatorList.map((item: IndikatorItem, index: number) => (
+                        <tr
+                          key={item.id}
+                          className="hover:bg-blue-50 transition-colors"
+                        >
+                          <td className="px-4 py-2 border-b">{index + 1}</td>
+                          <td className="px-4 py-2 border-b">
+                            {item.indikator}
+                            <Controller
+                              name={`raporItems.${index}.indikatorKelasId`}
+                              control={control}
+                              defaultValue={item.id}
+                              render={({ field }) => <input type="hidden" {...field} />}
+                            />
+                          </td>
+                          <td className="px-4 py-2 border-b text-center">
+                            <Controller
+                              name={`raporItems.${index}.nilaiPengetahuan`}
+                              control={control}
+                              render={({ field }) => (
+                                <input
+                                  {...field}
+                                  type="number"
+                                  placeholder="Nilai"
+                                  value={field.value ?? ""}
+                                  className="w-20 text-center rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                                />
+                              )}
+                            />
+                          </td>
+                          <td className="px-4 py-2 border-b text-center">
+                            <Controller
+                              name={`raporItems.${index}.nilaiKeterampilan`}
+                              control={control}
+                              render={({ field }) => (
+                                <input
+                                  {...field}
+                                  type="number"
+                                  placeholder="Nilai"
+                                  value={field.value ?? ""}
+                                  className="w-20 text-center rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                                />
+                              )}
+                            />
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
