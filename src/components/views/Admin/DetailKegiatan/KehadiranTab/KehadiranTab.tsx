@@ -18,8 +18,10 @@ const COLUMN_LIST_PESERTA = [
   { name: "NAMA", uid: "nama" },
   { name: "JENJANG", uid: "jenjang" },
   { name: "JENIS KELAMIN", uid: "jenis_kelamin" },
+  { name: "USIA", uid: "usia" },
   { name: "KELOMPOK", uid: "kelompok" },
   { name: "DESA", uid: "desa" },
+  { name: "STATUS MAHASISWA", uid: "mahasiswa" },
   { name: "STATUS", uid: "status" },
 ];
 
@@ -31,57 +33,79 @@ const KehadiranTab = ({ dataKegiatan, isLoading = false }: PropTypes) => {
   interface Item {
     status: StatusAbsen;
   }
-  const statusColorMap: Record<StatusAbsen, "success" | "warning" | "danger"> =
-    {
+  // 🔹 renderCell sesuai kolom
+  const renderCell = useCallback((item: Peserta, columnKey: React.Key) => {
+    const cellValue = item[columnKey as keyof Peserta];
+
+    const statusColorMap: Record<
+      StatusAbsen,
+      "success" | "warning" | "danger"
+    > = {
       HADIR: "success",
       TERLAMBAT: "warning",
       TIDAK_HADIR: "danger",
     };
 
-  // 🔹 renderCell sesuai kolom
-  const renderCell = useCallback(
-    (item: Peserta, columnKey: React.Key) => {
-      const cellValue = item[columnKey as keyof Peserta];
+    switch (columnKey) {
+      case "foto":
+        return item.foto ? (
+          <Avatar src={item.foto} alt={item.nama} size="md" radius="full" />
+        ) : (
+          <Avatar
+            name={item.nama?.charAt(0) ?? "?"}
+            size="md"
+            radius="full"
+            color="default"
+          />
+        );
 
-      switch (columnKey) {
-        case "foto":
-          return item.foto ? (
-            <Avatar src={item.foto} alt={item.nama} size="md" radius="full" />
-          ) : (
-            <Avatar
-              name={item.nama?.charAt(0) ?? "?"}
-              size="md"
-              radius="full"
-              color="default"
-            />
-          );
+      case "jenjang":
+        return item.jenjang?.name || "-";
 
-        case "jenjang":
-          return item.jenjang?.name || "-";
+      case "kelompok":
+        return item.kelompok?.name || "-";
 
-        case "kelompok":
-          return item.kelompok?.name || "-";
+      case "desa":
+        return item.desa?.name || "-";
 
-        case "desa":
-          return item.desa?.name || "-";
+      case "usia":
+        return (
+          <span className="text-xs text-gray-500">
+            {item.tgl_lahir
+              ? `${Math.floor(
+                  (Date.now() - new Date(item.tgl_lahir).getTime()) /
+                    (1000 * 60 * 60 * 24 * 365),
+                )} tahun`
+              : "-"}
+          </span>
+        );
 
-        case "status":
-          return (
-            <Chip
-              color={statusColorMap[item.status as keyof typeof statusColorMap]}
-              variant="flat"
-              size="sm"
-            >
-              {item.status}
-            </Chip>
-          );
+      case "mahasiswa":
+        return (
+          <Chip
+            color={cellValue === true ? "success" : "danger"}
+            variant="flat"
+            size="sm"
+          >
+            {cellValue === true ? "Aktif" : "Tidak Aktif"}
+          </Chip>
+        );
 
-        default:
-          return cellValue as ReactNode;
-      }
-    },
-    [statusColorMap]
-  );
+      case "status":
+        return (
+          <Chip
+            color={statusColorMap[item.status as keyof typeof statusColorMap]}
+            variant="flat"
+            size="sm"
+          >
+            {item.status}
+          </Chip>
+        );
+
+      default:
+        return cellValue as ReactNode;
+    }
+  }, []);
 
   return (
     <div className="py-6 space-y-8">
@@ -140,7 +164,7 @@ const KehadiranTab = ({ dataKegiatan, isLoading = false }: PropTypes) => {
         renderCell={
           renderCell as unknown as (
             item: Record<string, unknown>,
-            columnKey: React.Key
+            columnKey: React.Key,
           ) => ReactNode
         } // ✅ cast biar cocok sama prop
         emptyContent="Belum ada peserta terdaftar."

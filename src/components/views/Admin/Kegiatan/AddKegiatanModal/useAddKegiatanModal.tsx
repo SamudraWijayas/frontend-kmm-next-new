@@ -15,6 +15,7 @@ const schema = yup.object({
   name: yup.string().required("Nama kegiatan wajib diisi"),
   startDate: yup.date().required("Tanggal mulai wajib diisi"),
   endDate: yup.date().required("Tanggal akhir wajib diisi"),
+  jenisKelamin: yup.string().required("Jenis Kelamin wajib diisi"),
 
   tingkat: yup
     .string()

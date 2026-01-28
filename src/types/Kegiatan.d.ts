@@ -6,6 +6,7 @@ interface IKegiatanForm {
   name: string;
   startDate: DateValue;
   endDate: DateValue;
+  jenisKelamin: string;
 
   tingkat: "DAERAH" | "DESA" | "KELOMPOK";
 
@@ -29,8 +30,8 @@ interface IKegiatanForm {
   };
 
   jenjangIds?: string[];
-  minUsia?: number | null; 
-  maxUsia?: number | null; 
+  minUsia?: number | null;
+  maxUsia?: number | null;
 }
 
 interface IKegiatan {
@@ -70,6 +71,7 @@ interface Peserta {
   nama: string;
   jenis_kelamin: string;
   gol_darah: string;
+  tgl_lahir: string;
   nama_ortu: string;
   mahasiswa: boolean;
   foto: string | null;

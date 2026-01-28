@@ -7,11 +7,12 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
-  Chip,
   Divider,
   Input,
   Radio,
   RadioGroup,
+  Select,
+  SelectItem,
   Spinner,
 } from "@heroui/react";
 import { IDaerah } from "@/types/Daerah";
@@ -38,7 +39,6 @@ const AddKegiatanModal = ({ isOpen, onClose, refetchKegiatan }: PropTypes) => {
     dataDesa,
     dataKelompok,
     dataJenjang,
-    refetchJenjang,
     isPendingJenjang,
     isRefetchingJenjang,
   } = useAddKegiatanModal();
@@ -209,6 +209,26 @@ const AddKegiatanModal = ({ isOpen, onClose, refetchKegiatan }: PropTypes) => {
                 />
               )}
 
+              <Controller
+                name="jenisKelamin"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Jenis Kelamin"
+                    variant="bordered"
+                    labelPlacement="outside"
+                    selectedKeys={[field.value]}
+                    onSelectionChange={(value) =>
+                      field.onChange(Array.from(value)[0])
+                    }
+                  >
+                    <SelectItem key="LAKI_LAKI">Laki-laki</SelectItem>
+                    <SelectItem key="PEREMPUAN">Perempuan</SelectItem>
+                    <SelectItem key="SEMUA">Semua</SelectItem>
+                  </Select>
+                )}
+              />
+
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm font-bold">Start Date</p>
@@ -295,7 +315,7 @@ const AddKegiatanModal = ({ isOpen, onClose, refetchKegiatan }: PropTypes) => {
                     render={({ field }) => (
                       <div className="flex w-1/2 flex-col gap-1">
                         <label className="text-sm font-medium text-gray-700">
-                          Maksimal Diskon (Opsional)
+                          Manimal usia
                         </label>
                         <input
                           {...field}
@@ -321,7 +341,7 @@ const AddKegiatanModal = ({ isOpen, onClose, refetchKegiatan }: PropTypes) => {
                     render={({ field }) => (
                       <div className="flex w-1/2 flex-col gap-1">
                         <label className="text-sm font-medium text-gray-700">
-                          Maksimal Diskon (Opsional)
+                          Maksimal Usia
                         </label>
                         <input
                           {...field}
