@@ -17,6 +17,7 @@ const endpoint = {
   MAPEL: "/mapel",
   KATE: "/kategori-indikator",
   ABSEN: "/absen",
+  CATATAN: "/catatan-wali",
 };
 
 export default endpoint;

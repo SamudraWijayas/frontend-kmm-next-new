@@ -1,9 +1,10 @@
 import cabrawitServices from "@/services/caberawit.service";
+import absenServices from "@/services/absen.service";
 import indikatorServices from "@/services/indikator.service";
 import raporServices from "@/services/rapor.service";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React from "react";
+import catatanServices from "@/services/catatan.service";
 
 const useRapotCaberawit = () => {
   const params = useParams();
@@ -58,12 +59,20 @@ const useRapotCaberawit = () => {
   const {
     data: dataRapor,
     isLoading: isLoadingRapor,
-    isRefetching: isRefetchingRapor,
     refetch: refetchRapor,
   } = useQuery({
     queryKey: ["Rapor", id],
     queryFn: getRapor,
     enabled: !!id,
+  });
+
+  const { data: RekapAbsen } = useQuery({
+    queryKey: ["RekapAbsen", id],
+    queryFn: () => absenServices.getAbsenRekap(id),
+  });
+  const { data: Catatan } = useQuery({
+    queryKey: ["CatatanWali", id],
+    queryFn: () => catatanServices.getCatatan(id),
   });
 
   return {
@@ -74,7 +83,9 @@ const useRapotCaberawit = () => {
     isRefetchingIndikator,
     dataRapor,
     isLoadingRapor,
-    refetchRapor
+    refetchRapor,
+    RekapAbsen,
+    Catatan,
   };
 };
 

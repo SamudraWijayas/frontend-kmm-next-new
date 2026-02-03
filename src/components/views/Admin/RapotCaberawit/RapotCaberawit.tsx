@@ -5,6 +5,7 @@ import { GroupedIndikator, IndikatorItem } from "@/types/Indikator";
 import { Button, useDisclosure } from "@heroui/react";
 import AddRapor from "./addRapor/addRapor";
 import { RaporItem } from "@/types/Rapor";
+import { exportRapotStyledExcel } from "@/utils/exportRapotToExcel";
 
 const RapotCaberawit = () => {
   const {
@@ -14,8 +15,16 @@ const RapotCaberawit = () => {
     isLoadingIndikator,
     dataRapor,
     refetchRapor,
+    RekapAbsen,
+    Catatan,
   } = useRapotCaberawit();
+  const Rekap = RekapAbsen?.data.data ?? 0;
+  const CatatanWali = Catatan?.data.data ?? "";
   const addRapor = useDisclosure();
+
+  const handleExportExcel = () => {
+    exportRapotStyledExcel(groupedIndikator, raporMap);
+  };
 
   const caberawit = dataGenerus?.data;
 
@@ -120,12 +129,47 @@ const RapotCaberawit = () => {
             <Button color="primary" variant="solid" onPress={addRapor.onOpen}>
               Isi Nilai
             </Button>
+            <Button
+              color="secondary"
+              variant="flat"
+              onPress={handleExportExcel}
+            >
+              Export Excel
+            </Button>
           </div>
         ) : (
           <p className="text-gray-500 text-sm">
             Data caberawit tidak ditemukan
           </p>
         )}
+      </div>
+
+      <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
+        <div className="flex-1 px-4 py-3 text-center">
+          <p className="text-xs text-gray-500">Hadir</p>
+          <p className="text-xl font-semibold text-gray-800">{Rekap.HADIR}</p>
+        </div>
+
+        <div className="w-px bg-gray-200" />
+
+        <div className="flex-1 px-4 py-3 text-center">
+          <p className="text-xs text-gray-500">Sakit</p>
+          <p className="text-xl font-semibold text-gray-800">{Rekap.SAKIT}</p>
+        </div>
+
+        <div className="w-px bg-gray-200" />
+
+        <div className="flex-1 px-4 py-3 text-center">
+          <p className="text-xs text-gray-500">Izin</p>
+          <p className="text-xl font-semibold text-gray-800">{Rekap.IZIN}</p>
+        </div>
+
+        <div className="w-px bg-gray-200" />
+
+        <div className="flex-1 px-4 py-3 text-center">
+          <p className="text-xs text-red-500">Tidak hadir</p>
+          <p className="text-xl font-semibold text-red-600">{Rekap.ALPA}</p>
+        </div>
       </div>
 
       {/* Table */}
@@ -196,6 +240,25 @@ const RapotCaberawit = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="max-w-xl border border-gray-200 bg-white rounded-md p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+        <p className="mb-2 font-medium text-gray-800">Catatan Wali Kelas</p>
+
+        <div className="mb-4">
+          {CatatanWali.catatan || (
+            <span className="italic text-gray-400">
+              Belum ada catatan dari wali kelas
+            </span>
+          )}
+        </div>
+
+        <div className="pt-2 border-t border-gray-300 text-right text-xs text-gray-500">
+          Wali Kelas,
+          <br />
+          <span className="font-medium text-gray-700">
+            {caberawit?.wali?.fullName || "Belum ada guru"}
+          </span>
+        </div>
       </div>
 
       <AddRapor {...addRapor} refetchRapor={refetchRapor} />

@@ -9,8 +9,10 @@ const cabrawitServices = {
     instance.get(`${endpoint.ABSEN}?tanggal=${tanggal}`),
   getAbsenByCaberawit: (caberawitId: string, params?: string) =>
     instance.get(
-      `${endpoint.ABSEN}/caberawit/bulanan/${caberawitId}?${params}`
+      `${endpoint.ABSEN}/caberawit/bulanan/${caberawitId}?${params}`,
     ),
+  getAbsenRekap: (caberawitId: string) =>
+    instance.get(`${endpoint.ABSEN}/caberawit/rekap/${caberawitId}`),
 };
 
 export default cabrawitServices;

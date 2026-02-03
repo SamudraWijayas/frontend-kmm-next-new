@@ -1,8 +1,8 @@
 import useChangeUrl from "@/hooks/useChangeUrls";
 import cabrawitServices from "@/services/caberawit.service";
+import absenServices from "@/services/absen.service";
 import daerahServices from "@/services/daerah.service";
 import desaServices from "@/services/desa.service";
-import absenServices from "@/services/absen.service";
 import { IGenerus } from "@/types/Generus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
