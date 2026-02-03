@@ -21,12 +21,22 @@ const RapotCaberawit = () => {
   const Rekap = RekapAbsen?.data.data ?? 0;
   const CatatanWali = Catatan?.data.data ?? "";
   const addRapor = useDisclosure();
+  const semester = dataIndikator?.data?.[0];
+  console.log("semster", semester);
 
+  const Caberawit = dataGenerus?.data;
   const handleExportExcel = () => {
-    exportRapotStyledExcel(groupedIndikator, raporMap);
-  };
+    if (!Caberawit) return;
 
-  const caberawit = dataGenerus?.data;
+    exportRapotStyledExcel(
+      groupedIndikator,
+      raporMap,
+      Caberawit,
+      Rekap,
+      CatatanWali,
+      semester,
+    );
+  };
 
   const groupedIndikator: GroupedIndikator[] = React.useMemo(() => {
     const source = dataIndikator?.data as IndikatorItem[] | undefined;
@@ -114,15 +124,15 @@ const RapotCaberawit = () => {
           Penilaian Caberawit
         </h2>
 
-        {caberawit ? (
+        {Caberawit ? (
           <div className="flex items-center justify-between text-gray-700">
             <div className="space-y-1">
               <p>
-                <span className="font-semibold">Nama:</span> {caberawit.nama}
+                <span className="font-semibold">Nama:</span> {Caberawit.nama}
               </p>
               <p>
                 <span className="font-semibold">Jenjang:</span>{" "}
-                {caberawit.jenjang?.name || "-"}
+                {Caberawit.jenjang?.name || "-"}
               </p>
             </div>
 
@@ -139,7 +149,7 @@ const RapotCaberawit = () => {
           </div>
         ) : (
           <p className="text-gray-500 text-sm">
-            Data caberawit tidak ditemukan
+            Data Caberawit tidak ditemukan
           </p>
         )}
       </div>
@@ -256,7 +266,7 @@ const RapotCaberawit = () => {
           Wali Kelas,
           <br />
           <span className="font-medium text-gray-700">
-            {caberawit?.wali?.fullName || "Belum ada guru"}
+            {Caberawit?.wali?.fullName || "Belum ada guru"}
           </span>
         </div>
       </div>
