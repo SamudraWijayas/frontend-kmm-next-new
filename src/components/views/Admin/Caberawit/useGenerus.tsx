@@ -1,6 +1,7 @@
 import useChangeUrl from "@/hooks/useChangeUrls";
 import cabrawitServices from "@/services/caberawit.service";
 import jenjangServices from "@/services/jenjang.service";
+import kelasJenjangServices from "@/services/kelasJenjang.service";
 import { IGenerus } from "@/types/Generus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -11,7 +12,7 @@ const useGenerus = () => {
     jenis_kelamin: "",
     minUsia: "",
     maxUsia: "",
-    jenjang: "",
+    kelasjenjang: "",
   });
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
@@ -23,7 +24,7 @@ const useGenerus = () => {
     }
     if (filter.jenis_kelamin)
       params += `&jenis_kelamin=${filter.jenis_kelamin}`;
-    if (filter.jenjang) params += `&jenjang=${filter.jenjang}`;
+    if (filter.kelasjenjang) params += `&kelasjenjang=${filter.kelasjenjang}`;
     if (filter.minUsia) params += `&minUsia=${filter.minUsia}`;
     if (filter.maxUsia) params += `&maxUsia=${filter.maxUsia}`;
 
@@ -32,19 +33,16 @@ const useGenerus = () => {
     return data;
   };
 
-  const getJenjang = async () => {
-    const { data } = await jenjangServices.getJenjang();
+  const getKelas = async () => {
+    const { data } = await kelasJenjangServices.getKelas();
     return data.data;
   };
 
   const {
-    data: dataJenjang,
-    refetch: refetchJenjang,
-    isPending: isPendingJenjang,
-    isRefetching: isRefetchingJenjang,
+    data: dataKelas,
   } = useQuery({
-    queryKey: ["Jenjangs"],
-    queryFn: getJenjang,
+    queryKey: ["Kelass"],
+    queryFn: getKelas,
   });
 
   const {
@@ -59,7 +57,7 @@ const useGenerus = () => {
       currentPage,
       currentSearch,
       filter.jenis_kelamin,
-      filter.jenjang,
+      filter.kelasjenjang,
       filter.minUsia,
       filter.maxUsia,
     ],
@@ -77,7 +75,7 @@ const useGenerus = () => {
 
     filter,
     setFilter,
-    dataJenjang,
+    dataKelas,
   };
 };
 

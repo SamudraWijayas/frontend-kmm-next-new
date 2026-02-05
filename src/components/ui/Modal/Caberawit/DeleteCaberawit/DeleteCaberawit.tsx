@@ -20,7 +20,7 @@ interface PropTypes {
   setSelectedId: Dispatch<SetStateAction<IGenerus | null>>;
 }
 
-const DeleteGenerus = (props: PropTypes) => {
+const DeleteCaberawit = (props: PropTypes) => {
   const {
     isOpen,
     onClose,
@@ -75,7 +75,7 @@ const DeleteGenerus = (props: PropTypes) => {
             type="submit"
             disabled={isPendingMutateDeleteGenerus}
             onPress={() => {
-              mutateDeleteGenerus(selectedId?.id || "");
+              mutateDeleteGenerus(selectedId?.id?.toString() || "");
               refetchGenerus();
               onClose();
             }}
@@ -92,4 +92,4 @@ const DeleteGenerus = (props: PropTypes) => {
   );
 };
 
-export default DeleteGenerus;
+export default DeleteCaberawit;

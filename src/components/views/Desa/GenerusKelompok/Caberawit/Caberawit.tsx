@@ -2,12 +2,15 @@ import { useSearchParams } from "next/navigation";
 import React, { ReactNode, useCallback, useEffect } from "react";
 import { IGenerus } from "@/types/Generus";
 import DropdownAction from "@/components/commons/DropdownAction";
-import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
+import { Avatar,  Select, SelectItem, useDisclosure } from "@heroui/react";
 import useChangeUrl from "@/hooks/useChangeUrls";
-import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import useCaberawit from "./useCaberawit";
 import { COLUMN_LIST_GENERUS } from "./Caberawit.constant";
+import { IKelasJenjang } from "@/types/KelasJenjang";
+import AddCaberawit from "@/components/ui/Modal/Caberawit/AddCaberawit/AddGenerus";
+import DeleteCaberawit from "@/components/ui/Modal/Caberawit/DeleteCaberawit/DeleteCaberawit";
+import DetailCaberawit from "@/components/ui/Modal/Caberawit/DetailCaberawit/DetailCaberawit";
 
 const Caberawit = () => {
   const searchParams = useSearchParams();
@@ -31,7 +34,7 @@ const Caberawit = () => {
 
     filter,
     setFilter,
-    dataJenjang,
+    dataKelas,
   } = useCaberawit();
 
   const { setUrl } = useChangeUrl();
@@ -85,7 +88,7 @@ const Caberawit = () => {
                   {generus.tgl_lahir
                     ? `${Math.floor(
                         (Date.now() - new Date(generus.tgl_lahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 365)
+                          (1000 * 60 * 60 * 24 * 365),
                       )} tahun`
                     : "-"}
                 </span>
@@ -111,21 +114,13 @@ const Caberawit = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )
                 : "-"}
             </span>
           );
-        case "mahasiswa":
-          return (
-            <Chip
-              color={cellValue === true ? "success" : "danger"}
-              variant="flat"
-              size="sm"
-            >
-              {cellValue === true ? "Aktif" : "Tidak Aktif"}
-            </Chip>
-          );
+        case "kelasJenjang":
+          return generus.kelasJenjang?.name || "-";
         case "actions":
           return (
             <DropdownAction
@@ -145,7 +140,7 @@ const Caberawit = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus]
+    [deleteGenerus, setSelectedId, updateGenerus],
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
@@ -167,7 +162,7 @@ const Caberawit = () => {
               {/* Filter Jenis Kelamin */}
               <div className="flex flex-col">
                 <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Gender
+                  Jenis Kelamin
                 </label>
                 <Select
                   selectedKeys={
@@ -192,24 +187,24 @@ const Caberawit = () => {
 
               {/* filter jenjang */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Jenjang
-                </label>
+                <label className="text-xs text-gray-500 ml-1 mb-1">Kelas</label>
                 <Select
-                  selectedKeys={filter.jenjang ? [filter.jenjang] : []}
+                  selectedKeys={
+                    filter.kelasjenjang ? [filter.kelasjenjang] : []
+                  }
                   onChange={(e) =>
                     setFilter((prev) => ({
                       ...prev,
-                      jenjang: e.target.value,
+                      kelasjenjang: e.target.value,
                     }))
                   }
                   className="w-full sm:w-40 min-w-[100px]"
                   size="sm"
-                  placeholder="Jenjang"
+                  placeholder="Kelas"
                   variant="flat"
                 >
                   <SelectItem key="">Semua</SelectItem>
-                  {dataJenjang?.map((item: IJenjang) => (
+                  {dataKelas?.map((item: IKelasJenjang) => (
                     <SelectItem key={item.id}>{item.name}</SelectItem>
                   ))}
                 </Select>
@@ -257,19 +252,19 @@ const Caberawit = () => {
           }
         />
       )}
-      {/* <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
-      <DeleteGenerus
+      <AddCaberawit {...addGenerus} refetchGenerus={refetchGenerus} />
+      <DeleteCaberawit
         {...deleteGenerus}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
       />
-      <DetailGenerus
+      <DetailCaberawit
         {...updateGenerus}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
-      /> */}
+      />
     </section>
   );
 };

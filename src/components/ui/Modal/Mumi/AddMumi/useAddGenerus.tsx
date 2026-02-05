@@ -1,3 +1,9 @@
+import { useEffect, useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import * as yup from "yup";
+
 import { ToasterContext } from "@/contexts/ToasterContext";
 import useMediaHandling from "@/hooks/useMediaHandling";
 import daerahServices from "@/services/daerah.service";
@@ -6,11 +12,7 @@ import generusServices from "@/services/generus.service";
 import jenjangServices from "@/services/jenjang.service";
 import kelompokServices from "@/services/kelompok.service";
 import { IGenerus } from "@/types/Generus";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+import kelasJenjangServices from "@/services/kelasJenjang.service";
 
 const schema = yup.object().shape({
   nama: yup.string().required("Please input name"),
@@ -19,18 +21,21 @@ const schema = yup.object().shape({
   kelompokId: yup.string().required("Please select kelompok"),
   tgl_lahir: yup.string().required("Please input tanggal lahir"),
   jenjangId: yup.string().required("Please select jenjang"),
+  kelasJenjangId: yup.string().required("Please select kelas Jenjang"),
   jenis_kelamin: yup.string().required("Please select jenis kelamin"),
   gol_darah: yup.string().required("Please select golongan darah"),
   nama_ortu: yup.string().required("Please input nama orang tua"),
   mahasiswa: yup.boolean().required("Please select status mahasiswa"),
-  foto: yup.mixed<FileList | string>().required("Please input Foto"),
+  foto: yup.mixed<FileList | string>().nullable(),
 });
 
-const useDetailGenerus = (id: string) => {
+const useAddGenerus = () => {
   const { setToaster } = useContext(ToasterContext);
   const [selectedDaerahId, setSelectedDaerahId] = useState<string | null>(null);
   const [selectedDesaId, setSelectedDesaId] = useState<string | null>(null);
-
+  const [selectedJenjangId, setSelectedJenjangId] = useState<string | null>(
+    null,
+  );
   const {
     handleUploadFile,
     isPendingMutateUploadFile,
@@ -45,7 +50,7 @@ const useDetailGenerus = (id: string) => {
     reset,
     watch,
     getValues,
-    setValue: setValueUpdateGenerus,
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -54,23 +59,41 @@ const useDetailGenerus = (id: string) => {
   useEffect(() => {
     if (selectedDaerahId) {
       // Reset desa & kelompok saat daerah berubah
-      setValueUpdateGenerus("desaId", "");
-      setValueUpdateGenerus("kelompokId", "");
+      setValue("desaId", "");
+      setValue("kelompokId", "");
       setSelectedDesaId(null);
     }
-  }, [selectedDaerahId, setValueUpdateGenerus]);
+  }, [selectedDaerahId, setValue]);
 
   useEffect(() => {
     if (selectedDesaId) {
       // Reset kelompok saat desa berubah
-      setValueUpdateGenerus("kelompokId", "");
+      setValue("kelompokId", "");
     }
-  }, [selectedDesaId, setValueUpdateGenerus]);
+  }, [selectedDesaId, setValue]);
+
+  useEffect(() => {
+    if (selectedJenjangId) {
+      // Reset kelasJenjangId saat jenjangId berubah
+      setValue("kelasJenjangId", "");
+    }
+  }, [selectedJenjangId, setValue]);
 
   // Queries
   const { data: dataJenjang } = useQuery({
     queryKey: ["Jenjang"],
     queryFn: () => jenjangServices.getJenjang(),
+  });
+
+  const { data: dataKelasJenjang } = useQuery({
+    queryKey: ["KelasJenjang", , selectedJenjangId],
+    queryFn: async () => {
+      if (!selectedJenjangId) return { data: { data: [] } };
+      return await kelasJenjangServices.getKelas(
+        `jenjangId=${selectedJenjangId}`,
+      );
+    },
+    enabled: !!selectedJenjangId,
   });
 
   const { data: dataDaerah } = useQuery({
@@ -99,10 +122,7 @@ const useDetailGenerus = (id: string) => {
   const preview = watch("foto");
   const fileUrl = getValues("foto");
   const previewUrl =
-    typeof preview === "string" &&
-    preview.trim() !== "" &&
-    preview !== "null" &&
-    preview !== "undefined"
+    typeof preview === "string"
       ? `${
           process.env.NEXT_PUBLIC_IMAGE || process.env.NEXT_PUBLIC_API
         }${preview}`
@@ -110,17 +130,17 @@ const useDetailGenerus = (id: string) => {
 
   const handleUploadFoto = (
     files: FileList,
-    onChange: (value: string | FileList | null | undefined) => void
+    onChange: (value: string | FileList | null | undefined) => void,
   ) => {
     handleUploadFile(files, onChange, (fileUrl: string | undefined) => {
       if (fileUrl) {
-        setValueUpdateGenerus("foto", fileUrl);
+        setValue("foto", fileUrl);
       }
     });
   };
 
   const handleDeleteFoto = (
-    onChange: (value: string | FileList | null | undefined) => void
+    onChange: (value: string | FileList | null | undefined) => void,
   ) => {
     handleDeleteFile(fileUrl, () => onChange(undefined));
   };
@@ -132,17 +152,17 @@ const useDetailGenerus = (id: string) => {
     });
   };
 
-  const updateGenerus = async (payload: IGenerus) => {
-    const res = await generusServices.updateGenerus(id, payload);
+  const addGenerus = async (payload: IGenerus) => {
+    const res = await generusServices.addGenerus(payload);
     return res;
   };
 
   const {
-    mutate: mutateUpdateGenerus,
-    isPending: isPendingMutateUpdateGenerus,
-    isSuccess: isSuccessMutateUpdateGenerus,
+    mutate: mutateAddGenerus,
+    isPending: isPendingMutateAddGenerus,
+    isSuccess: isSuccessMutateAddGenerus,
   } = useMutation({
-    mutationFn: updateGenerus,
+    mutationFn: addGenerus,
     onError: (error) => {
       setToaster({
         type: "error",
@@ -152,25 +172,27 @@ const useDetailGenerus = (id: string) => {
     onSuccess: () => {
       setToaster({
         type: "success",
-        message: "Success update Generus",
+        message: "Success add category",
       });
+      reset();
     },
   });
 
-  const handleUpdateGenerus = (data: IGenerus) => {
-    mutateUpdateGenerus(data);
+  const handleAddGenerus = (data: IGenerus) => {
+    const payload = {
+      ...data,
+      foto: data.foto ?? undefined,
+    };
+    mutateAddGenerus(payload);
   };
 
   return {
     control,
     handleSubmitForm,
     errors,
-    reset,
-    setValueUpdateGenerus,
-    updateGenerus,
-    isPendingMutateUpdateGenerus,
-    isSuccessMutateUpdateGenerus,
-    handleUpdateGenerus,
+    isPendingMutateAddGenerus,
+    isSuccessMutateAddGenerus,
+    handleAddGenerus,
 
     preview: previewUrl,
     handleUploadFoto,
@@ -189,9 +211,13 @@ const useDetailGenerus = (id: string) => {
 
     selectedDaerahId,
     setSelectedDaerahId,
+    dataKelasJenjang,
+    selectedJenjangId,
+    setSelectedJenjangId,
 
+    setValue,
     watch,
   };
 };
 
-export default useDetailGenerus;
+export default useAddGenerus;

@@ -10,6 +10,8 @@ import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import useMahasiswa from "./useMahasiswa";
 import { COLUMN_LIST_GENERUS } from "./Mahasiswa.constant";
+import DeleteMumi from "@/components/ui/Modal/Mumi/DeleteMumi/DeleteMumi";
+import DetailMumi from "@/components/ui/Modal/Mumi/DetailMumi/DetailMumi";
 
 const Mahasiswa = () => {
   const searchParams = useSearchParams();
@@ -156,7 +158,6 @@ const Mahasiswa = () => {
     <section>
       {hasParams && (
         <DataTable
-          buttonTopContentLabel="Create Generus"
           columns={COLUMN_LIST_GENERUS}
           data={dataGenerus?.data || []}
           emptyContent="Generus is empty"
@@ -259,19 +260,18 @@ const Mahasiswa = () => {
           }
         />
       )}
-      {/* <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
-      <DeleteGenerus
+      <DeleteMumi
         {...deleteGenerus}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
       />
-      <DetailGenerus
+      <DetailMumi
         {...updateGenerus}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
-      /> */}
+      />
     </section>
   );
 };

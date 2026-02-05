@@ -1,4 +1,5 @@
 import useChangeUrl from "@/hooks/useChangeUrls";
+import desaServices from "@/services/desa.service";
 import generusServices from "@/services/generus.service";
 import jenjangServices from "@/services/jenjang.service";
 import { IGenerus } from "@/types/Generus";
@@ -12,6 +13,7 @@ const useGenerus = () => {
     minUsia: "",
     maxUsia: "",
     jenjang: "",
+    desa: "",
   });
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
@@ -24,6 +26,7 @@ const useGenerus = () => {
     if (filter.jenis_kelamin)
       params += `&jenis_kelamin=${filter.jenis_kelamin}`;
     if (filter.jenjang) params += `&jenjang=${filter.jenjang}`;
+    if (filter.desa) params += `&desa=${filter.desa}`;
     if (filter.minUsia) params += `&minUsia=${filter.minUsia}`;
     if (filter.maxUsia) params += `&maxUsia=${filter.maxUsia}`;
 
@@ -37,14 +40,19 @@ const useGenerus = () => {
     return data.data;
   };
 
-  const {
-    data: dataJenjang,
-    refetch: refetchJenjang,
-    isPending: isPendingJenjang,
-    isRefetching: isRefetchingJenjang,
-  } = useQuery({
+  const { data: dataJenjang } = useQuery({
     queryKey: ["Jenjangs"],
     queryFn: getJenjang,
+  });
+
+  const getDesa = async () => {
+    const { data } = await desaServices.getDesa();
+    return data.data;
+  };
+
+  const { data: dataDesa } = useQuery({
+    queryKey: ["DesaFilter"],
+    queryFn: getDesa,
   });
 
   const {
@@ -62,6 +70,7 @@ const useGenerus = () => {
       filter.jenjang,
       filter.minUsia,
       filter.maxUsia,
+      filter.desa,
     ],
     queryFn: getGenerus,
     enabled: isParamsReady && !!currentPage && !!currentLimit,
@@ -78,6 +87,7 @@ const useGenerus = () => {
     filter,
     setFilter,
     dataJenjang,
+    dataDesa,
   };
 };
 

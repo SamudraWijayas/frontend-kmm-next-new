@@ -9,10 +9,12 @@ import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
 import useGenerus from "./useGenerus";
 import { COLUMN_LIST_GENERUS } from "./Generus.constant";
 import { IGenerus } from "@/types/Generus";
-import AddGenerus from "./AddGenerus";
-import DeleteGenerus from "./DeleteGenerus";
-import DetailGenerus from "./DetailGenerus";
+
 import { IJenjang } from "@/types/Jenjang";
+import { IDesa } from "@/types/Desa";
+import DetailMumi from "@/components/ui/Modal/Mumi/DetailMumi/DetailMumi";
+import DeleteMumi from "@/components/ui/Modal/Mumi/DeleteMumi/DeleteMumi";
+import AddMumi from "@/components/ui/Modal/Mumi/AddMumi/AddMumi";
 
 const Generus = () => {
   const searchParams = useSearchParams();
@@ -37,6 +39,7 @@ const Generus = () => {
     filter,
     setFilter,
     dataJenjang,
+    dataDesa,
   } = useGenerus();
   console.log("jenjang", dataJenjang);
 
@@ -91,7 +94,7 @@ const Generus = () => {
                   {generus.tgl_lahir
                     ? `${Math.floor(
                         (Date.now() - new Date(generus.tgl_lahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 365)
+                          (1000 * 60 * 60 * 24 * 365),
                       )} tahun`
                     : "-"}
                 </span>
@@ -117,7 +120,7 @@ const Generus = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )
                 : "-"}
             </span>
@@ -151,7 +154,7 @@ const Generus = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus]
+    [deleteGenerus, setSelectedId, updateGenerus],
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
@@ -161,10 +164,10 @@ const Generus = () => {
     <section>
       {hasParams && (
         <DataTable
-          buttonTopContentLabel="Create Generus"
+          buttonTopContentLabel="Tambah Muda Mudi"
           columns={COLUMN_LIST_GENERUS}
           data={dataGenerus?.data || []}
-          emptyContent="Generus is empty"
+          emptyContent="Muda - Mudi is empty"
           isLoading={isLoadingGenerus || isRefetchingGenerus}
           onClickButtonTopContent={addGenerus.onOpen}
           renderCell={renderCell}
@@ -174,7 +177,7 @@ const Generus = () => {
               {/* Filter Jenis Kelamin */}
               <div className="flex flex-col">
                 <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Gender
+                  Jenis Kelamin
                 </label>
                 <Select
                   selectedKeys={
@@ -186,6 +189,7 @@ const Generus = () => {
                       jenis_kelamin: e.target.value,
                     }))
                   }
+                  placeholder="Jenis Kelamin"
                   className="w-full sm:w-40 min-w-[100px]"
                   size="sm"
                   variant="flat"
@@ -216,6 +220,30 @@ const Generus = () => {
                 >
                   <SelectItem key="">Semua</SelectItem>
                   {dataJenjang?.map((item: IJenjang) => (
+                    <SelectItem key={item.id}>{item.name}</SelectItem>
+                  ))}
+                </Select>
+              </div>
+              {/* filter desa */}
+              <div className="flex flex-col">
+                <label className="text-xs text-gray-500 ml-1 mb-1">
+                  Desa
+                </label>
+                <Select
+                  selectedKeys={filter.desa ? [filter.desa] : []}
+                  onChange={(e) =>
+                    setFilter((prev) => ({
+                      ...prev,
+                      desa: e.target.value,
+                    }))
+                  }
+                  className="w-full sm:w-40 min-w-[100px]"
+                  size="sm"
+                  placeholder="Desa "
+                  variant="flat"
+                >
+                  <SelectItem key="">Semua</SelectItem>
+                  {dataDesa?.map((item: IDesa) => (
                     <SelectItem key={item.id}>{item.name}</SelectItem>
                   ))}
                 </Select>
@@ -263,14 +291,14 @@ const Generus = () => {
           }
         />
       )}
-      <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
-      <DeleteGenerus
+      <AddMumi {...addGenerus} refetchGenerus={refetchGenerus} />
+      <DeleteMumi
         {...deleteGenerus}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchGenerus={refetchGenerus}
       />
-      <DetailGenerus
+      <DetailMumi
         {...updateGenerus}
         selectedId={selectedId}
         setSelectedId={setSelectedId}

@@ -27,7 +27,7 @@ interface PropTypes {
   refetchGenerus: () => void;
 }
 
-const AddGenerus = ({
+const AddMumi = ({
   isOpen,
   onClose,
   onOpenChange,
@@ -50,14 +50,14 @@ const AddGenerus = ({
     dataDesa,
     dataKelompok,
     dataJenjang,
-    dataKelas,
     selectedDesaId,
     setSelectedDesaId,
-    selectedJenjangId,
-    setSelectedJenjangId,
     selectedDaerahId,
     setSelectedDaerahId,
-    setValue,
+    dataKelasJenjang,
+
+    selectedJenjangId,
+    setSelectedJenjangId,
   } = useAddGenerus();
 
   useEffect(() => {
@@ -217,6 +217,43 @@ const AddGenerus = ({
                     )}
                   />
                 </div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2 rounded-md bg-yellow-50 p-3 text-sm text-yellow-700">
+                    <AlertTriangle size={18} />
+                    <span>
+                      Jika masih kuliah, pilih status <b>Aktif</b>.
+                    </span>
+                  </div>
+                  <Controller
+                    name="mahasiswa"
+                    control={control}
+                    render={({ field }) => {
+                      // jika field.value belum ada, default ke "true"
+                      const valueKey =
+                        field.value === undefined
+                          ? "true"
+                          : field.value
+                            ? "true"
+                            : "false";
+
+                      return (
+                        <Select
+                          label="Status Mahasiswa"
+                          variant="bordered"
+                          disallowEmptySelection
+                          selectedKeys={[valueKey]}
+                          onSelectionChange={(value) => {
+                            const selected = Array.from(value)[0]; // "true" atau "false"
+                            field.onChange(selected === "true"); // convert ke boolean
+                          }}
+                        >
+                          <SelectItem key="true">Aktif</SelectItem>
+                          <SelectItem key="false">Tidak Aktif</SelectItem>
+                        </Select>
+                      );
+                    }}
+                  />
+                </div>
               </section>
 
               {/* Lokasi & Kelompok */}
@@ -332,15 +369,15 @@ const AddGenerus = ({
                     </Autocomplete>
                   )}
                 />
-
+                
                 <Controller
                   name="kelasJenjangId"
                   control={control}
                   render={({ field: { onChange, ...field } }) => (
                     <Autocomplete
                       {...field}
-                      defaultItems={dataKelas?.data.data || []}
-                      label="Kelas"
+                      defaultItems={dataKelasJenjang?.data.data || []}
+                      label="Kelas Jenjang"
                       variant="bordered"
                       onSelectionChange={(value) => onChange(value)} // ✅ FIX
                       placeholder={
@@ -349,10 +386,12 @@ const AddGenerus = ({
                           : "Pilih kelas..."
                       }
                       isDisabled={!selectedJenjangId}
+                      isInvalid={!!errors.kelasJenjangId}
+                      errorMessage={errors.kelasJenjangId?.message}
                     >
-                      {(kelas: IKelasJenjang) => (
-                        <AutocompleteItem key={`${kelas.id}`}>
-                          {kelas.name}
+                      {(kelasjenjang: IKelasJenjang) => (
+                        <AutocompleteItem key={kelasjenjang.id}>
+                          {kelasjenjang.name}
                         </AutocompleteItem>
                       )}
                     </Autocomplete>
@@ -394,4 +433,4 @@ const AddGenerus = ({
   );
 };
 
-export default AddGenerus;
+export default AddMumi;

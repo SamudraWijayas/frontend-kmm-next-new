@@ -21,6 +21,7 @@ const schema = yup.object().shape({
   tgl_lahir: yup.string().required("Please input tanggal lahir"),
   jenjangId: yup.string().required("Please select jenjang"),
   kelasJenjangId: yup.string().required("Please select kelas Jenjang"),
+
   jenis_kelamin: yup.string().required("Please select jenis kelamin"),
   gol_darah: yup.string().required("Please select golongan darah"),
   nama_ortu: yup.string().required("Please input nama orang tua"),
@@ -77,6 +78,7 @@ const useDetailGenerus = (id: string) => {
     queryKey: ["Jenjang"],
     queryFn: () => jenjangServices.getJenjang(),
   });
+
   const { data: dataKelasJenjang } = useQuery({
     queryKey: ["KelasJenjang"],
     queryFn: () => kelasJenjangServices.getKelas(),
@@ -195,10 +197,10 @@ const useDetailGenerus = (id: string) => {
 
     selectedDesaId,
     setSelectedDesaId,
+    dataKelasJenjang,
 
     selectedDaerahId,
     setSelectedDaerahId,
-    dataKelasJenjang,
 
     watch,
   };

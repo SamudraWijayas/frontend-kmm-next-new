@@ -9,10 +9,10 @@ import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
 import useGenerus from "./useGenerus";
 import { COLUMN_LIST_GENERUS } from "./Generus.constant";
 import { IGenerus } from "@/types/Generus";
-import AddGenerus from "./AddGenerus";
-import DeleteGenerus from "./DeleteGenerus";
-import DetailGenerus from "./DetailGenerus";
-import { IJenjang } from "@/types/Jenjang";
+import AddGenerus from "../../../ui/Modal/Caberawit/AddCaberawit";
+import DeleteGenerus from "../../../ui/Modal/Caberawit/DeleteCaberawit";
+import DetailGenerus from "../../../ui/Modal/Caberawit/DetailCaberawit";
+import { IKelasJenjang } from "@/types/KelasJenjang";
 
 const Generus = () => {
   const router = useRouter();
@@ -37,9 +37,8 @@ const Generus = () => {
 
     filter,
     setFilter,
-    dataJenjang,
+    dataKelas,
   } = useGenerus();
-  console.log("jenjang", dataJenjang);
 
   const { setUrl } = useChangeUrl();
 
@@ -92,7 +91,7 @@ const Generus = () => {
                   {generus.tgl_lahir
                     ? `${Math.floor(
                         (Date.now() - new Date(generus.tgl_lahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 365)
+                          (1000 * 60 * 60 * 24 * 365),
                       )} tahun`
                     : "-"}
                 </span>
@@ -121,7 +120,7 @@ const Generus = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )
                 : "-"}
             </span>
@@ -159,7 +158,7 @@ const Generus = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, router, setSelectedId, updateGenerus]
+    [deleteGenerus, router, setSelectedId, updateGenerus],
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
@@ -169,10 +168,10 @@ const Generus = () => {
     <section>
       {hasParams && (
         <DataTable
-          buttonTopContentLabel="Create Generus"
+          buttonTopContentLabel="Tambah Caberawit"
           columns={COLUMN_LIST_GENERUS}
           data={dataGenerus?.data || []}
-          emptyContent="Generus is empty"
+          emptyContent="Caberawit is empty"
           isLoading={isLoadingGenerus || isRefetchingGenerus}
           onClickButtonTopContent={addGenerus.onOpen}
           renderCell={renderCell}
@@ -182,7 +181,7 @@ const Generus = () => {
               {/* Filter Jenis Kelamin */}
               <div className="flex flex-col">
                 <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Gender
+                  Jenis Kelamin
                 </label>
                 <Select
                   selectedKeys={
@@ -194,6 +193,7 @@ const Generus = () => {
                       jenis_kelamin: e.target.value,
                     }))
                   }
+                  placeholder="Jenis Kelamin"
                   className="w-full sm:w-40 min-w-[100px]"
                   size="sm"
                   variant="flat"
@@ -206,24 +206,24 @@ const Generus = () => {
 
               {/* filter jenjang */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Jenjang
-                </label>
+                <label className="text-xs text-gray-500 ml-1 mb-1">Kelas</label>
                 <Select
-                  selectedKeys={filter.jenjang ? [filter.jenjang] : []}
+                  selectedKeys={
+                    filter.kelasjenjang ? [filter.kelasjenjang] : []
+                  }
                   onChange={(e) =>
                     setFilter((prev) => ({
                       ...prev,
-                      jenjang: e.target.value,
+                      kelasjenjang: e.target.value,
                     }))
                   }
                   className="w-full sm:w-40 min-w-[100px]"
                   size="sm"
-                  placeholder="Jenjang"
+                  placeholder="Kelas"
                   variant="flat"
                 >
                   <SelectItem key="">Semua</SelectItem>
-                  {dataJenjang?.map((item: IJenjang) => (
+                  {dataKelas?.map((item: IKelasJenjang) => (
                     <SelectItem key={item.id}>{item.name}</SelectItem>
                   ))}
                 </Select>

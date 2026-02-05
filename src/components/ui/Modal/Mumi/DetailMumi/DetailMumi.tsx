@@ -18,6 +18,7 @@ import { IKelompok } from "@/types/Kelompok";
 import { IJenjang } from "@/types/Jenjang";
 import InputFile from "@/components/ui/InputFile";
 import { toInputDate } from "@/utils/date";
+import { IKelasJenjang } from "@/types/KelasJenjang";
 
 interface PropTypes {
   isOpen: boolean;
@@ -28,14 +29,8 @@ interface PropTypes {
   setSelectedId: Dispatch<SetStateAction<IGenerus | null>>;
 }
 
-const DetailGenerus = (props: PropTypes) => {
-  const {
-    isOpen,
-    onClose,
-    refetchGenerus,
-    selectedId,
-    setSelectedId,
-  } = props;
+const DetailMumi = (props: PropTypes) => {
+  const { isOpen, onClose, refetchGenerus, selectedId, setSelectedId } = props;
 
   const {
     control,
@@ -59,6 +54,7 @@ const DetailGenerus = (props: PropTypes) => {
 
     selectedDesaId,
     setSelectedDesaId,
+    dataKelasJenjang,
 
     selectedDaerahId,
     setSelectedDaerahId,
@@ -80,19 +76,29 @@ const DetailGenerus = (props: PropTypes) => {
       setValueUpdateGenerus("kelompokId", `${selectedId?.kelompokId}`);
       setValueUpdateGenerus(
         "tgl_lahir",
-        toInputDate(`${selectedId?.tgl_lahir}`)
+        toInputDate(`${selectedId?.tgl_lahir}`),
       );
+
       setValueUpdateGenerus("jenjangId", `${selectedId?.jenjangId}`);
+      setValueUpdateGenerus("kelasJenjangId", `${selectedId?.kelasJenjangId}`);
       setValueUpdateGenerus("jenis_kelamin", `${selectedId?.jenis_kelamin}`);
       setValueUpdateGenerus("gol_darah", `${selectedId?.gol_darah}`);
       setValueUpdateGenerus(
         "mahasiswa",
-        selectedId?.mahasiswa === true || selectedId?.mahasiswa === "true"
+        selectedId?.mahasiswa === true || selectedId?.mahasiswa === "true",
       );
       setValueUpdateGenerus("nama_ortu", `${selectedId?.nama_ortu}`);
       setValueUpdateGenerus("foto", `${selectedId?.foto}`);
+
+      setSelectedDaerahId(selectedId?.daerahId ?? null);
+      setSelectedDesaId(selectedId?.desaId ?? null);
     }
-  }, [selectedId, setValueUpdateGenerus]);
+  }, [
+    selectedId,
+    setSelectedDaerahId,
+    setSelectedDesaId,
+    setValueUpdateGenerus,
+  ]);
 
   const disabledSubmit =
     isSuccessMutateUpdateGenerus ||
@@ -205,15 +211,23 @@ const DetailGenerus = (props: PropTypes) => {
                     name="gol_darah"
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        {...field}
+                      <Select
                         label="Golongan Darah"
-                        labelPlacement="outside"
-                        placeholder="Masukkan golongan darah"
                         variant="bordered"
+                        labelPlacement="outside"
+                        selectedKeys={field.value ? [field.value] : []}
+                        onSelectionChange={(keys) =>
+                          field.onChange(Array.from(keys)[0])
+                        }
                         isInvalid={!!errors.gol_darah}
                         errorMessage={errors.gol_darah?.message}
-                      />
+                      >
+                        <SelectItem key="A">A</SelectItem>
+                        <SelectItem key="B">B</SelectItem>
+                        <SelectItem key="AB">AB</SelectItem>
+                        <SelectItem key="O">O</SelectItem>
+                        <SelectItem key="-">-</SelectItem>
+                      </Select>
                     )}
                   />
 
@@ -275,7 +289,7 @@ const DetailGenerus = (props: PropTypes) => {
                     <Autocomplete
                       {...field}
                       selectedKey={value ?? ""}
-                      defaultItems={dataDaerah?.data.data || []}
+                      items={dataDaerah?.data.data || []}
                       label="Daerah"
                       variant="bordered"
                       onSelectionChange={(v) => {
@@ -303,7 +317,7 @@ const DetailGenerus = (props: PropTypes) => {
                       <Autocomplete
                         {...field}
                         selectedKey={value ?? ""}
-                        defaultItems={dataDesa?.data.data || []}
+                        items={dataDesa?.data.data || []}
                         label="Desa"
                         variant="bordered"
                         onSelectionChange={(v) => {
@@ -335,7 +349,7 @@ const DetailGenerus = (props: PropTypes) => {
                       <Autocomplete
                         {...field}
                         selectedKey={value ?? ""}
-                        defaultItems={dataKelompok?.data.data || []}
+                        items={dataKelompok?.data.data || []}
                         label="Kelompok"
                         variant="bordered"
                         onSelectionChange={(v) => onChange(v)}
@@ -381,6 +395,29 @@ const DetailGenerus = (props: PropTypes) => {
                     </Autocomplete>
                   )}
                 />
+                <Controller
+                  name="kelasJenjangId"
+                  control={control}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <Autocomplete
+                      {...field}
+                      selectedKey={value ?? ""}
+                      defaultItems={dataKelasJenjang?.data.data || []}
+                      label="Kelas Jenjang"
+                      variant="bordered"
+                      onSelectionChange={onChange}
+                      placeholder="Pilih jenjang..."
+                      isInvalid={!!errors.kelasJenjangId}
+                      errorMessage={errors.kelasJenjangId?.message}
+                    >
+                      {(kelasjenjang: IKelasJenjang) => (
+                        <AutocompleteItem key={kelasjenjang.id}>
+                          {kelasjenjang.name}
+                        </AutocompleteItem>
+                      )}
+                    </Autocomplete>
+                  )}
+                />
               </section>
 
               {/* Foto */}
@@ -417,4 +454,4 @@ const DetailGenerus = (props: PropTypes) => {
   );
 };
 
-export default DetailGenerus;
+export default DetailMumi;

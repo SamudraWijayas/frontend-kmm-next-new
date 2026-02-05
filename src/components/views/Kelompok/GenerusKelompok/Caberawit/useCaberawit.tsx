@@ -7,6 +7,7 @@ import jenjangServices from "@/services/jenjang.service";
 import { useParams } from "next/navigation";
 import cabrawitServices from "@/services/caberawit.service";
 import useProfile from "@/hooks/useProfile";
+import kelasJenjangServices from "@/services/kelasJenjang.service";
 
 const useCaberawit = () => {
   const { profile } = useProfile();
@@ -17,20 +18,20 @@ const useCaberawit = () => {
     jenis_kelamin: "",
     minUsia: "",
     maxUsia: "",
-    jenjang: "",
+    kelasjenjang: "",
   });
 
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
 
-  const getMumi = async () => {
+  const getCaberawit = async () => {
     let params = `limit=${currentLimit}&page=${currentPage}`;
     if (currentSearch) {
       params += `&search=${currentSearch}`;
     }
     if (filter.jenis_kelamin)
       params += `&jenis_kelamin=${filter.jenis_kelamin}`;
-    if (filter.jenjang) params += `&jenjang=${filter.jenjang}`;
+    if (filter.kelasjenjang) params += `&kelasjenjang=${filter.kelasjenjang}`;
     if (filter.minUsia) params += `&minUsia=${filter.minUsia}`;
     if (filter.maxUsia) params += `&maxUsia=${filter.maxUsia}`;
 
@@ -42,14 +43,14 @@ const useCaberawit = () => {
     return data;
   };
 
-  const getJenjang = async () => {
-    const { data } = await jenjangServices.getJenjang();
+  const getKelas = async () => {
+    const { data } = await kelasJenjangServices.getKelas();
     return data.data;
   };
 
-  const { data: dataJenjang } = useQuery({
-    queryKey: ["Jenjangs"],
-    queryFn: getJenjang,
+  const { data: dataKelas } = useQuery({
+    queryKey: ["Kelass"],
+    queryFn: getKelas,
   });
 
   const {
@@ -64,11 +65,11 @@ const useCaberawit = () => {
       currentPage,
       currentSearch,
       filter.jenis_kelamin,
-      filter.jenjang,
+      filter.kelasjenjang,
       filter.minUsia,
       filter.maxUsia,
     ],
-    queryFn: getMumi,
+    queryFn: getCaberawit,
     enabled: !!idKelompok && isParamsReady && !!currentPage && !!currentLimit,
   });
 
@@ -82,7 +83,7 @@ const useCaberawit = () => {
 
     filter,
     setFilter,
-    dataJenjang,
+    dataKelas,
   };
 };
 
