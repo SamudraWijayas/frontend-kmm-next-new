@@ -39,6 +39,7 @@ interface PropsTypes {
   withSelection?: boolean;
   dropdownContent?: ReactNode;
   totalEntries?: number;
+  searchName?: string;
 }
 
 const DataTable = (props: PropsTypes) => {
@@ -66,6 +67,7 @@ const DataTable = (props: PropsTypes) => {
     showSearch = true,
     withSelection = false,
     dropdownContent,
+    searchName = "Cari generus...",
   } = props;
 
   // state untuk baris yang dipilih
@@ -91,7 +93,7 @@ const DataTable = (props: PropsTypes) => {
                 <Input
                   isClearable
                   startContent={<Search />}
-                  placeholder="Cari generus..."
+                  placeholder={searchName}
                   className="w-full"
                   onClear={handleClearSearch}
                   onChange={handleSearch}
@@ -131,7 +133,7 @@ const DataTable = (props: PropsTypes) => {
                 startContent={<Trash2 size={16} />}
                 onPress={() =>
                   onDeleteSelected?.(
-                    Array.from(selectedKeys as Set<Key>) as string[]
+                    Array.from(selectedKeys as Set<Key>) as string[],
                   )
                 }
               >
@@ -155,23 +157,24 @@ const DataTable = (props: PropsTypes) => {
       </div>
     );
   }, [
-    showSearch,
     withSelection,
     selectedKeys,
     buttonTopContentLabel,
-    handleSearch,
+    showSearch,
+    searchName,
     handleClearSearch,
+    handleSearch,
+    dropdownContent,
     onClickButtonTopContent,
     onDeleteSelected,
     data,
-    dropdownContent,
   ]);
 
   const ButtomContent = useMemo(() => {
     const startEntry = (Number(currentPage) - 1) * Number(currentLimit) + 1;
     const endEntry = Math.min(
       Number(currentPage) * Number(currentLimit),
-      data.length
+      data.length,
     );
     return (
       <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0">

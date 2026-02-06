@@ -1,8 +1,8 @@
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { ReactNode, useCallback, useEffect } from "react";
 import { IGenerus } from "@/types/Generus";
 import DropdownAction from "@/components/commons/DropdownAction";
-import { Avatar,  Select, SelectItem, useDisclosure } from "@heroui/react";
+import { Avatar, Select, SelectItem, useDisclosure } from "@heroui/react";
 import useChangeUrl from "@/hooks/useChangeUrls";
 import DataTable from "@/components/ui/DataTable";
 import useCaberawit from "./useCaberawit";
@@ -13,6 +13,7 @@ import DeleteCaberawit from "@/components/ui/Modal/Caberawit/DeleteCaberawit/Del
 import DetailCaberawit from "@/components/ui/Modal/Caberawit/DetailCaberawit/DetailCaberawit";
 
 const Caberawit = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const getInitials = (name: string | undefined) => {
     if (!name) return "";
@@ -132,7 +133,15 @@ const Caberawit = () => {
                 setSelectedId(generus as IGenerus);
                 deleteGenerus.onOpen();
               }}
+              onClickRaport={() => {
+                router.push(`/village/raport/${generus.id}`);
+              }}
+              onClickAbsen={() => {
+                router.push(`/village/absent-caberawit/${generus.id}`);
+              }}
               textButtonDetail="Detail Generus"
+              textButtonRaport="Lihat Rapor"
+              textButtonAbsen="Lihat Absen"
               textButtonDelete="Delete Generus"
             />
           );
@@ -140,7 +149,7 @@ const Caberawit = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus],
+    [deleteGenerus, router, setSelectedId, updateGenerus],
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
@@ -149,10 +158,11 @@ const Caberawit = () => {
     <section>
       {hasParams && (
         <DataTable
-          buttonTopContentLabel="Create Generus"
+          buttonTopContentLabel="Create Caberawit"
           columns={COLUMN_LIST_GENERUS}
           data={dataGenerus?.data || []}
           emptyContent="Generus is empty"
+          searchName="Cari Caberawit by Nama"
           isLoading={isLoadingGenerus || isRefetchingGenerus}
           onClickButtonTopContent={addGenerus.onOpen}
           renderCell={renderCell}

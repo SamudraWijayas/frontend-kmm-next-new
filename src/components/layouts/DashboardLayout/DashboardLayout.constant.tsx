@@ -242,6 +242,12 @@ const SIDEBAR_KELOMPOK = [
         href: "/group/dashboard",
         icon: <LayoutDashboard />,
       },
+      {
+        key: "user",
+        label: "Users",
+        href: "/group/users",
+        icon: <User />,
+      },
     ],
   },
 
@@ -256,7 +262,7 @@ const SIDEBAR_KELOMPOK = [
       },
       {
         key: "murid",
-        label: "Students",
+        label: "Siswa",
         href: "/group/student",
         icon: <BookText />,
       },
@@ -268,13 +274,13 @@ const SIDEBAR_KELOMPOK = [
     items: [
       {
         key: "kegiatan",
-        label: "Activities",
+        label: "Kegiatan",
         href: "/group/activity",
         icon: <ActivityIcon />,
       },
       {
         key: "absen",
-        label: "Attendance",
+        label: "Kehadiran Caberawit",
         href: "/group/attendance",
         icon: <BookText />,
       },

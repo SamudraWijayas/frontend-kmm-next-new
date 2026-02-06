@@ -1,11 +1,11 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import Profile from "@/components/ui/Profile/Profile";
+import Access from "@/components/views/Kelompok/Access/Access";
 import React from "react";
 
 const ListUsersPage = () => {
   return (
-    <DashboardLayout type="ADMIN" title="Update Profile">
-      <Profile />
+    <DashboardLayout type="KELOMPOK" title="Tambah Akses">
+      <Access />
     </DashboardLayout>
   );
 };

@@ -1,11 +1,11 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import Activity from "@/components/views/Kelompok/Activity/Activity";
+import Absen from "@/components/views/Kelompok/ListAbsenCaberawit/Absen/Absen";
 import React from "react";
 
 const DashboardPage = () => {
   return (
-    <DashboardLayout type="KELOMPOK">
-      <Activity />
+    <DashboardLayout type="DESA" title="Absensi">
+      <Absen />
     </DashboardLayout>
   );
 };

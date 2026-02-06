@@ -4,20 +4,13 @@ import React, { useState } from "react";
 import {
   Input,
   Button,
-  Spinner,
   useDisclosure,
   Card,
   CardBody,
   Chip,
+  Skeleton,
 } from "@heroui/react";
-import {
-  Search,
-  Calendar,
-  MapPin,
-  Target,
-  ChevronRight,
-  Trash2,
-} from "lucide-react";
+import { Search, ChevronRight, Trash2 } from "lucide-react";
 import { IKegiatan } from "@/types/Kegiatan";
 import { useRouter } from "next/navigation";
 import AddKegiatanModal from "./AddKegiatanModal";
@@ -38,7 +31,7 @@ const statusColor: Record<
 // Tentukan status berdasarkan tanggal
 const getStatus = (
   start?: string | Date,
-  end?: string | Date
+  end?: string | Date,
 ): keyof typeof statusColor => {
   if (!start || !end) return "Akan Datang";
 
@@ -85,16 +78,37 @@ const Activity = () => {
     : [];
 
   const filteredList = kegiatanList.filter((item) =>
-    item.name?.toLowerCase().includes(search.toLowerCase())
+    item.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   if (isLoadingKegiatan) {
     return (
-      <div className="flex justify-center py-20">
-        <Spinner size="lg" label="Memuat kegiatan..." color="primary" />
+      <div className="space-y-8">
+        {/* Header Skeleton */}
+        <div className="flex flex-col sm:flex-row justify-between gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-64 rounded-md" />
+            <Skeleton className="h-4 w-80 rounded-md" />
+          </div>
+
+          <div className="flex gap-3">
+            <Skeleton className="h-10 w-72 rounded-md" />
+            <Skeleton className="h-10 w-24 rounded-md" />
+          </div>
+        </div>
+
+        {/* List Skeleton */}
+        <Card className="shadow-md border-none">
+          <CardBody className="divide-y divide-gray-100 p-0">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <ActivitySkeletonRow key={i} />
+            ))}
+          </CardBody>
+        </Card>
       </div>
     );
   }
+
   const downloadQR = (id: string, filename: string) => {
     const el = document.getElementById(`qr-${id}`);
 
@@ -140,7 +154,7 @@ const Activity = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            Aktivitas Kegiatan
+            Kegiatan Muda - Mudi
           </h1>
           <p className="text-sm text-gray-500">
             Daftar semua kegiatan dan statusnya secara real-time.
@@ -309,6 +323,40 @@ const Activity = () => {
           }
         }
       `}</style>
+    </div>
+  );
+};
+
+const ActivitySkeletonRow = () => {
+  return (
+    <div className="flex items-center justify-between gap-4 p-4">
+      {/* Left: QR placeholder */}
+      <div className="flex flex-col items-center gap-2">
+        <Skeleton className="w-[100px] h-[100px] rounded-md" />
+        <Skeleton className="w-20 h-7 rounded-md" />
+      </div>
+
+      {/* Middle: Info */}
+      <div className="flex-1 min-w-0 space-y-3">
+        <Skeleton className="h-5 w-1/2 rounded-md" />
+
+        <div className="flex gap-2">
+          <Skeleton className="h-6 w-24 rounded-md" />
+          <Skeleton className="h-6 w-20 rounded-md" />
+          <Skeleton className="h-6 w-16 rounded-full" />
+        </div>
+
+        <div className="flex gap-2">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <Skeleton className="h-6 w-32 rounded-md" />
+        </div>
+      </div>
+
+      {/* Right: Action */}
+      <div className="flex items-center gap-2">
+        <Skeleton className="w-8 h-8 rounded-md" />
+        <Skeleton className="w-5 h-5 rounded-full" />
+      </div>
     </div>
   );
 };

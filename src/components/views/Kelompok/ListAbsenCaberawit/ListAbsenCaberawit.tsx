@@ -182,15 +182,15 @@ const ListAbsenCaberawit = () => {
             <FolderPlus className="text-white w-6 h-6" />
           </div>
 
-          <h2 className="text-lg font-semibold text-black">Belum ada Murid</h2>
+          <h2 className="text-lg font-semibold text-black">Belum ada Siswa</h2>
 
           <p className="text-gray-600 mt-1 max-w-sm">
-            Kamu belum menambahkan data murid. Silakan tambahkan murid baru.
+            Kamu belum menambahkan data siswa. Silakan tambahkan murid dihalaman Siswa.
           </p>
 
-          <button className="mt-6 px-5 py-2 rounded-lg bg-blue-500 text-white font-medium cursor-pointer">
+          <Link href="/group/student" className="mt-6 px-5 py-2 rounded-lg bg-blue-500 text-white font-medium cursor-pointer">
             Tambah Murid
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

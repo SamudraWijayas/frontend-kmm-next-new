@@ -1,5 +1,5 @@
+"use client";
 import React, { ReactNode, useCallback, useEffect } from "react";
-import useAdminTab from "./useDesaTab";
 import { useSearchParams } from "next/navigation";
 import useChangeUrl from "@/hooks/useChangeUrls";
 import { useDisclosure } from "@heroui/react";
@@ -7,9 +7,10 @@ import DropdownAction from "@/components/commons/DropdownAction";
 import DataTable from "@/components/ui/DataTable";
 import { COLUMN_LIST_USER } from "./User.constants";
 import { IUser } from "@/types/User";
-import AddUserModal from "../AddUserModal";
-import DeleteUserModal from "../DeleteUserModal";
-import UpdateUserModal from "../UpdateUserModal";
+import useAccess from "./useAccess";
+import AddUserModal from "./AddUserModal";
+import DeleteUserModal from "./DeleteUserModal";
+import UpdateUserModal from "./UpdateUserModal";
 
 const AdminTab = () => {
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const AdminTab = () => {
 
     selectedId,
     setSelectedId,
-  } = useAdminTab();
+  } = useAccess();
 
   const addUserModal = useDisclosure();
   const deleteUserModal = useDisclosure();
@@ -40,8 +41,7 @@ const AdminTab = () => {
     (user: IUser, columnKey: React.Key) => {
       const cellValue = user[columnKey as keyof typeof user];
       switch (columnKey) {
-        case "desa":
-          return user.desa?.name || "-";
+
         case "actions":
           return (
             <DropdownAction
@@ -61,7 +61,7 @@ const AdminTab = () => {
           return cellValue as ReactNode;
       }
     },
-    [setSelectedId, updateUserModal, deleteUserModal]
+    [setSelectedId, updateUserModal, deleteUserModal],
   );
 
   const hasParams = searchParams.toString() !== "";
@@ -72,11 +72,8 @@ const AdminTab = () => {
         <DataTable
           buttonTopContentLabel="Create User"
           columns={COLUMN_LIST_USER}
-          data={
-            dataUsers?.data?.filter(
-              (user: IUser) => user.role === "DESA" || user.role === "SUBDESA"
-            ) || []
-          }
+          data={dataUsers?.data || []}
+          searchName="Cari Pengguna"
           emptyContent="users desa is empty"
           isLoading={isLoadingUsers || isRefetchingUsers}
           onClickButtonTopContent={addUserModal.onOpen}

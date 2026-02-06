@@ -1,11 +1,11 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import ListAbsenCaberawit from "@/components/views/Kelompok/ListAbsenCaberawit/ListAbsenCaberawit";
+import Rapor from "@/components/ui/Rapor/Rapor";
 import React from "react";
 
 const GenerusPage = () => {
   return (
-    <DashboardLayout type="KELOMPOK" title="Kehadiran">
-      <ListAbsenCaberawit />
+    <DashboardLayout type="DESA">
+      <Rapor />
     </DashboardLayout>
   );
 };

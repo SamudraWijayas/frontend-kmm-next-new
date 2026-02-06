@@ -10,9 +10,11 @@ import { EllipsisVertical } from "lucide-react";
 interface PropTypes {
   textButtonDetail: string;
   textButtonDelete?: string;
+  textButtonAbsen?: string;
   textButtonRaport?: string;
   onClickDetail: () => void;
   onClickDelete?: () => void;
+  onClickAbsen?: () => void;
   onClickRaport?: () => void;
 }
 
@@ -21,8 +23,10 @@ const DropdownAction = (props: PropTypes) => {
     textButtonDetail,
     textButtonDelete,
     textButtonRaport,
+    textButtonAbsen,
     onClickDetail,
     onClickDelete,
+    onClickAbsen,
     onClickRaport,
   } = props;
   return (
@@ -40,6 +44,11 @@ const DropdownAction = (props: PropTypes) => {
         {textButtonRaport ? (
           <DropdownItem key="raport" onPress={onClickRaport}>
             {textButtonRaport}
+          </DropdownItem>
+        ) : null}
+        {textButtonAbsen ? (
+          <DropdownItem key="absen" onPress={onClickAbsen}>
+            {textButtonAbsen}
           </DropdownItem>
         ) : null}
 

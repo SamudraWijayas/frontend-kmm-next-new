@@ -62,7 +62,7 @@ const AdminTab = () => {
           return cellValue as ReactNode;
       }
     },
-    [setSelectedId, updateUserModal, deleteUserModal]
+    [setSelectedId, updateUserModal, deleteUserModal],
   );
 
   const hasParams = searchParams.toString() !== "";
@@ -73,11 +73,8 @@ const AdminTab = () => {
         <DataTable
           buttonTopContentLabel="Create User"
           columns={COLUMN_LIST_USER}
-          data={
-            dataUsers?.data?.filter(
-              (user: IUser) => user.role === "DESA" || user.role === "SUBDESA"
-            ) || []
-          }
+          data={dataUsers?.data || []}
+          searchName="Cari Pengguna"
           emptyContent="users desa is empty"
           isLoading={isLoadingUsers || isRefetchingUsers}
           onClickButtonTopContent={addUserModal.onOpen}

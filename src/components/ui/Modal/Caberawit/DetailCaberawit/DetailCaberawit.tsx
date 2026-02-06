@@ -53,10 +53,7 @@ const DetailCaberawit = (props: PropTypes) => {
     dataJenjang,
     dataKelasJenjang,
 
-    selectedDesaId,
-    setSelectedDesaId,
 
-    selectedDaerahId,
     setSelectedDaerahId,
   } = useDetailGenerus(`${selectedId?.id}`);
 

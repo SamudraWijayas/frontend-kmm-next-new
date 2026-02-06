@@ -4,21 +4,13 @@ import React, { useState } from "react";
 import {
   Input,
   Button,
-  Spinner,
   useDisclosure,
   Card,
   CardBody,
   Chip,
   Skeleton,
 } from "@heroui/react";
-import {
-  Search,
-  Calendar,
-  MapPin,
-  Target,
-  ChevronRight,
-  Trash2,
-} from "lucide-react";
+import { Search, ChevronRight, Trash2 } from "lucide-react";
 import { IKegiatan } from "@/types/Kegiatan";
 import { useRouter } from "next/navigation";
 import AddKegiatanModal from "./AddKegiatanModal";
@@ -162,7 +154,7 @@ const Activity = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            Aktivitas Kegiatan
+            Kegiatan Muda - Mudi
           </h1>
           <p className="text-sm text-gray-500">
             Daftar semua kegiatan dan statusnya secara real-time.

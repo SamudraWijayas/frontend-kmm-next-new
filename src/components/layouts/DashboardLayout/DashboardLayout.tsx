@@ -56,8 +56,6 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
     dataProfile,
     dataKelompok,
     isLoadingKelompok,
-    isRefetchingKelompok,
-    refetchKelompok,
   } = useDashboardLayout();
   const session = useSession();
   const isLoadingSession = session.status === "loading";
@@ -167,7 +165,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
             {
               key: "profile",
               label: "Profile",
-              href: "/admin/profile",
+              href: "/village/profile",
               icon: <UserPen />,
             },
             {

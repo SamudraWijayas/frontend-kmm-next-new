@@ -8,7 +8,7 @@ import { useState } from "react";
 const useAccess = () => {
   const [selectedId, setSelectedId] = useState<IUser | null>(null);
   const { profile } = useProfile();
-  const idDesa = profile?.desaId;
+  const idKelompok = profile?.kelompokId;
 
   const { currentLimit, currentPage, currentSearch, isParamsReady } =
     useChangeUrl();
@@ -18,7 +18,7 @@ const useAccess = () => {
     if (currentSearch) {
       params += `&search=${currentSearch}`;
     }
-    const res = await userServices.getUserByDesa(idDesa, params);
+    const res = await userServices.getUserByKelompok(idKelompok, params);
     const { data } = res;
     return data;
   };
@@ -29,9 +29,9 @@ const useAccess = () => {
     isRefetching: isRefetchingUsers,
     refetch: refetchUsers,
   } = useQuery({
-    queryKey: ["Users", currentLimit, currentPage, currentSearch, idDesa],
+    queryKey: ["Users", currentLimit, currentPage, currentSearch, idKelompok],
     queryFn: getUsers,
-    enabled: isParamsReady && !!currentPage && !!currentLimit && !!idDesa,
+    enabled: isParamsReady && !!currentPage && !!currentLimit && !!idKelompok,
   });
 
   return {

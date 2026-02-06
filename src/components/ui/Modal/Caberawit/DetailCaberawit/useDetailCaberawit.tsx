@@ -1,12 +1,12 @@
 import { ToasterContext } from "@/contexts/ToasterContext";
 import useMediaHandling from "@/hooks/useMediaHandling";
+import cabrawitServices from "@/services/caberawit.service";
 import daerahServices from "@/services/daerah.service";
 import desaServices from "@/services/desa.service";
-import generusServices from "@/services/generus.service";
 import jenjangServices from "@/services/jenjang.service";
 import kelasJenjangServices from "@/services/kelasJenjang.service";
 import kelompokServices from "@/services/kelompok.service";
-import { IGenerus } from "@/types/Generus";
+import { ICaberawit } from "@/types/Caberawit";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
@@ -130,8 +130,8 @@ const useDetailGenerus = (id: string) => {
     });
   };
 
-  const updateGenerus = async (payload: IGenerus) => {
-    const res = await generusServices.updateGenerus(id, payload);
+  const updateGenerus = async (payload: ICaberawit) => {
+    const res = await cabrawitServices.updatecaberawit(id, payload);
     return res;
   };
 
@@ -155,7 +155,7 @@ const useDetailGenerus = (id: string) => {
     },
   });
 
-  const handleUpdateGenerus = (data: IGenerus) => {
+  const handleUpdateGenerus = (data: ICaberawit) => {
     mutateUpdateGenerus(data);
   };
 

@@ -4,7 +4,7 @@ import React from "react";
 
 const GenerusPage = () => {
   return (
-    <DashboardLayout type="KELOMPOK">
+    <DashboardLayout type="KELOMPOK" title="Daftar Siswa">
       <Murid />
     </DashboardLayout>
   );
