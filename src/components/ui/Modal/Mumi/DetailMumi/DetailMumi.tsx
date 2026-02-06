@@ -406,7 +406,7 @@ const DetailMumi = (props: PropTypes) => {
                       label="Kelas Jenjang"
                       variant="bordered"
                       onSelectionChange={onChange}
-                      placeholder="Pilih jenjang..."
+                      placeholder="Pilih Kelas..."
                       isInvalid={!!errors.kelasJenjangId}
                       errorMessage={errors.kelasJenjangId?.message}
                     >

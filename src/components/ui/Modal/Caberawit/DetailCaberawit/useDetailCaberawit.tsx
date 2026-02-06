@@ -4,6 +4,7 @@ import daerahServices from "@/services/daerah.service";
 import desaServices from "@/services/desa.service";
 import generusServices from "@/services/generus.service";
 import jenjangServices from "@/services/jenjang.service";
+import kelasJenjangServices from "@/services/kelasJenjang.service";
 import kelompokServices from "@/services/kelompok.service";
 import { IGenerus } from "@/types/Generus";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,6 +20,7 @@ const schema = yup.object().shape({
   kelompokId: yup.string().required("Please select kelompok"),
   tgl_lahir: yup.string().required("Please input tanggal lahir"),
   jenjangId: yup.string().required("Please select jenjang"),
+  kelasJenjangId: yup.string().required("Please select kelas Jenjang"),
   jenis_kelamin: yup.string().required("Please select jenis kelamin"),
   gol_darah: yup.string().required("Please select golongan darah"),
   nama_ortu: yup.string().required("Please input nama orang tua"),
@@ -73,27 +75,23 @@ const useDetailGenerus = (id: string) => {
     queryFn: () => jenjangServices.getJenjang(),
   });
 
+  const { data: dataKelasJenjang } = useQuery({
+    queryKey: ["KelasJenjang"],
+    queryFn: () => kelasJenjangServices.getKelas(),
+  });
+
   const { data: dataDaerah } = useQuery({
     queryKey: ["Daerah"],
     queryFn: () => daerahServices.getDaerah(),
   });
 
   const { data: dataDesa } = useQuery({
-    queryKey: ["Desa", selectedDaerahId],
-    queryFn: async () => {
-      if (!selectedDaerahId) return { data: { data: [] } };
-      return await desaServices.getDesa(`daerahId=${selectedDaerahId}`);
-    },
-    enabled: !!selectedDaerahId,
+    queryKey: ["Desa"],
+    queryFn: () => desaServices.getDesa(),
   });
-
   const { data: dataKelompok } = useQuery({
-    queryKey: ["Kelompok", selectedDesaId],
-    queryFn: async () => {
-      if (!selectedDesaId) return { data: { data: [] } };
-      return await kelompokServices.getKelompok(`desaId=${selectedDesaId}`);
-    },
-    enabled: !!selectedDesaId,
+    queryKey: ["Kelompok"],
+    queryFn: () => kelompokServices.getKelompok(),
   });
 
   const preview = watch("foto");
@@ -110,7 +108,7 @@ const useDetailGenerus = (id: string) => {
 
   const handleUploadFoto = (
     files: FileList,
-    onChange: (value: string | FileList | null | undefined) => void
+    onChange: (value: string | FileList | null | undefined) => void,
   ) => {
     handleUploadFile(files, onChange, (fileUrl: string | undefined) => {
       if (fileUrl) {
@@ -120,7 +118,7 @@ const useDetailGenerus = (id: string) => {
   };
 
   const handleDeleteFoto = (
-    onChange: (value: string | FileList | null | undefined) => void
+    onChange: (value: string | FileList | null | undefined) => void,
   ) => {
     handleDeleteFile(fileUrl, () => onChange(undefined));
   };
@@ -183,6 +181,7 @@ const useDetailGenerus = (id: string) => {
     dataDesa,
     dataKelompok,
     dataJenjang,
+    dataKelasJenjang,
 
     selectedDesaId,
     setSelectedDesaId,

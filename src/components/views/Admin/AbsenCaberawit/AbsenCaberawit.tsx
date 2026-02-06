@@ -5,9 +5,8 @@ import { IGenerus } from "@/types/Generus";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import useAbsenCaberawit from "./useAbsenCaberawit";
-import useAbsenByTanggal from "./Absen/useAbsenByTanggal";
-import { Input, Pagination, Select, SelectItem } from "@heroui/react";
-import { ChevronDown, Search } from "lucide-react";
+import { Input, Pagination, Select, SelectItem, Skeleton } from "@heroui/react";
+import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import useChangeUrl from "@/hooks/useChangeUrls";
 import { IDaerah } from "@/types/Daerah";
 import { IDesa } from "@/types/Desa";
@@ -15,7 +14,6 @@ import Link from "next/link";
 
 type StatusAbsen = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
-const STATUS_LIST: StatusAbsen[] = ["HADIR", "IZIN", "SAKIT", "ALPA"];
 
 const AbsenCaberawit = () => {
   const router = useRouter();
@@ -79,7 +77,7 @@ const AbsenCaberawit = () => {
   const onSelectDate = (day: number) => {
     const formatted = `${selectedYear}-${String(selectedMonth).padStart(
       2,
-      "0"
+      "0",
     )}-${String(day).padStart(2, "0")}`;
 
     router.push(`?tanggal=${formatted}`);
@@ -89,7 +87,7 @@ const AbsenCaberawit = () => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
       2,
-      "0"
+      "0",
     )}-${String(now.getDate()).padStart(2, "0")}`;
   };
   const getDaysInMonth = (year: number, month: number) => {
@@ -138,6 +136,51 @@ const AbsenCaberawit = () => {
   // hitung range tampil
   const from = totalEntries === 0 ? 0 : (page - 1) * limit + 1;
   const to = Math.min(page * limit, totalEntries);
+
+  if (isLoadingGenerus) {
+    return (
+      <div className="bg-gray-50 min-h-screen p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Sidebar Skeleton */}
+          <div className="lg:col-span-3">
+            <SidebarSkeleton />
+          </div>
+
+          {/* Main Content Skeleton */}
+          <section className="lg:col-span-9 space-y-4">
+            <HeaderSkeleton />
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-6 py-4 text-left">
+                      <Skeleton className="h-4 w-20 rounded-md" />
+                    </th>
+                    <th className="px-6 py-4 text-left">
+                      <Skeleton className="h-4 w-32 rounded-md" />
+                    </th>
+                    <th className="px-6 py-4 text-left">
+                      <Skeleton className="h-4 w-20 rounded-md" />
+                    </th>
+                    <th className="px-6 py-4 text-right">
+                      <Skeleton className="h-4 w-16 rounded-md ml-auto" />
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <TableRowSkeleton key={i} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -229,7 +272,7 @@ const AbsenCaberawit = () => {
                 tanggal ===
                 `${selectedYear}-${String(selectedMonth).padStart(
                   2,
-                  "0"
+                  "0",
                 )}-${String(day).padStart(2, "0")}`;
 
               return (
@@ -342,7 +385,7 @@ const AbsenCaberawit = () => {
                 </thead>
 
                 <tbody>
-                  {dataGenerus?.data.map((g: IGenerus, idx: number) => {
+                  {dataGenerus?.data.map((g: IGenerus) => {
                     if (!g.id) return null;
 
                     const current = attendance[g.id] ?? "ALPA";
@@ -374,16 +417,14 @@ const AbsenCaberawit = () => {
 
                         {/* Action */}
                         <td className="px-6 py-4 text-right">
-                          <div className="flex justify-end gap-3 text-gray-400">
+                          <div className="flex justify-end">
                             <Link
                               href={`/admin/absent-caberawit/${g.id}`}
-                              className="hover:text-blue-600 transition"
+                              className=" inline-flex items-center gap-3 px-2 py-1.5 rounded-lg text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 active:scale-95 transition-all"
                             >
-                              ✎
+                              <span>Lihat Absen</span>
+                              <ChevronRight className="w-4 h-4" />
                             </Link>
-                            <button className="hover:text-green-600 transition">
-                              📊
-                            </button>
                           </div>
                         </td>
                       </tr>
@@ -442,6 +483,56 @@ const AbsenCaberawit = () => {
           </div>
         </section>
       </div>
+    </div>
+  );
+};
+
+const SidebarSkeleton = () => {
+  return (
+    <div className="bg-white rounded-lg shadow p-4 space-y-4">
+      <Skeleton className="h-5 w-32 rounded-md" />
+
+      <div className="flex gap-2">
+        <Skeleton className="h-8 w-full rounded-md" />
+        <Skeleton className="h-8 w-full rounded-md" />
+      </div>
+
+      <div className="grid grid-cols-7 gap-2">
+        {Array.from({ length: 14 }).map((_, i) => (
+          <Skeleton key={i} className="h-6 w-full rounded-md" />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const TableRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-200">
+      <td className="px-6 py-4">
+        <Skeleton className="h-4 w-40 rounded-md" />
+      </td>
+      <td className="px-6 py-4">
+        <Skeleton className="h-6 w-20 rounded-full" />
+      </td>
+      <td className="px-6 py-4">
+        <Skeleton className="h-4 w-24 rounded-md" />
+      </td>
+      <td className="px-6 py-4 text-right">
+        <div className="flex justify-end gap-3">
+          <Skeleton className="h-4 w-4 rounded-full" />
+          <Skeleton className="h-4 w-4 rounded-full" />
+        </div>
+      </td>
+    </tr>
+  );
+};
+
+const HeaderSkeleton = () => {
+  return (
+    <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-3">
+      <Skeleton className="h-10 w-64 rounded-md" />
+      <Skeleton className="h-10 w-40 rounded-md" />
     </div>
   );
 };

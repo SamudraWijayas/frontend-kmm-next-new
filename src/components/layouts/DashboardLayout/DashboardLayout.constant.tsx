@@ -244,8 +244,9 @@ const SIDEBAR_KELOMPOK = [
       },
     ],
   },
+
   {
-    group: "Lainnya",
+    group: "DATA MANAGEMENT",
     items: [
       {
         key: "generus",
@@ -254,25 +255,38 @@ const SIDEBAR_KELOMPOK = [
         icon: <Users />,
       },
       {
+        key: "murid",
+        label: "Students",
+        href: "/group/student",
+        icon: <BookText />,
+      },
+    ],
+  },
+
+  {
+    group: "ACTIVITIES",
+    items: [
+      {
         key: "kegiatan",
-        label: "Kegiatan",
+        label: "Activities",
         href: "/group/activity",
         icon: <ActivityIcon />,
       },
       {
-        key: "murid",
-        label: "Murid",
-        href: "/group/student",
-        icon: <BookText  />,
+        key: "absen",
+        label: "Attendance",
+        href: "/group/attendance",
+        icon: <BookText />,
       },
     ],
   },
+
   {
-    group: "KEAMANAN",
+    group: "ACCOUNT",
     items: [
       {
         key: "password",
-        label: "Ubah Password",
+        label: "Change Password",
         href: "/ubah-password",
         icon: <KeyRound />,
       },

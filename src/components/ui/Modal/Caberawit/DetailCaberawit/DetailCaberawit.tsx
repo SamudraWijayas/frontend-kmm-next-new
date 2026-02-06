@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import useDetailGenerus from "./useDetailGenerus";
+import useDetailGenerus from "./useDetailCaberawit";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -18,6 +18,7 @@ import { IKelompok } from "@/types/Kelompok";
 import { IJenjang } from "@/types/Jenjang";
 import InputFile from "@/components/ui/InputFile";
 import { toInputDate } from "@/utils/date";
+import { IKelasJenjang } from "@/types/KelasJenjang";
 
 interface PropTypes {
   isOpen: boolean;
@@ -29,13 +30,7 @@ interface PropTypes {
 }
 
 const DetailCaberawit = (props: PropTypes) => {
-  const {
-    isOpen,
-    onClose,
-    refetchGenerus,
-    selectedId,
-    setSelectedId,
-  } = props;
+  const { isOpen, onClose, refetchGenerus, selectedId, setSelectedId } = props;
 
   const {
     control,
@@ -56,6 +51,7 @@ const DetailCaberawit = (props: PropTypes) => {
     dataDesa,
     dataKelompok,
     dataJenjang,
+    dataKelasJenjang,
 
     selectedDesaId,
     setSelectedDesaId,
@@ -80,14 +76,15 @@ const DetailCaberawit = (props: PropTypes) => {
       setValueUpdateGenerus("kelompokId", `${selectedId?.kelompokId}`);
       setValueUpdateGenerus(
         "tgl_lahir",
-        toInputDate(`${selectedId?.tgl_lahir}`)
+        toInputDate(`${selectedId?.tgl_lahir}`),
       );
       setValueUpdateGenerus("jenjangId", `${selectedId?.jenjangId}`);
+      setValueUpdateGenerus("kelasJenjangId", `${selectedId?.kelasJenjangId}`);
       setValueUpdateGenerus("jenis_kelamin", `${selectedId?.jenis_kelamin}`);
       setValueUpdateGenerus("gol_darah", `${selectedId?.gol_darah}`);
       setValueUpdateGenerus(
         "mahasiswa",
-        selectedId?.mahasiswa === true || selectedId?.mahasiswa === "true"
+        selectedId?.mahasiswa === true || selectedId?.mahasiswa === "true",
       );
       setValueUpdateGenerus("nama_ortu", `${selectedId?.nama_ortu}`);
       setValueUpdateGenerus("foto", `${selectedId?.foto}`);
@@ -306,16 +303,8 @@ const DetailCaberawit = (props: PropTypes) => {
                         defaultItems={dataDesa?.data.data || []}
                         label="Desa"
                         variant="bordered"
-                        onSelectionChange={(v) => {
-                          onChange(v);
-                          setSelectedDesaId(v as string);
-                        }}
-                        placeholder={
-                          !selectedDaerahId
-                            ? "Pilih daerah terlebih dahulu..."
-                            : "Pilih desa..."
-                        }
-                        isDisabled={!selectedDaerahId}
+                        onSelectionChange={onChange}
+                        placeholder="Pilih Desa..."
                         isInvalid={!!errors.desaId}
                         errorMessage={errors.desaId?.message}
                       >
@@ -327,7 +316,6 @@ const DetailCaberawit = (props: PropTypes) => {
                       </Autocomplete>
                     )}
                   />
-
                   <Controller
                     name="kelompokId"
                     control={control}
@@ -338,13 +326,8 @@ const DetailCaberawit = (props: PropTypes) => {
                         defaultItems={dataKelompok?.data.data || []}
                         label="Kelompok"
                         variant="bordered"
-                        onSelectionChange={(v) => onChange(v)}
-                        placeholder={
-                          !selectedDesaId
-                            ? "Pilih desa terlebih dahulu..."
-                            : "Pilih kelompok..."
-                        }
-                        isDisabled={!selectedDesaId}
+                        onSelectionChange={onChange}
+                        placeholder="Pilih Kelompok..."
                         isInvalid={!!errors.kelompokId}
                         errorMessage={errors.kelompokId?.message}
                       >
@@ -376,6 +359,29 @@ const DetailCaberawit = (props: PropTypes) => {
                       {(jenjang: IJenjang) => (
                         <AutocompleteItem key={jenjang.id}>
                           {jenjang.name}
+                        </AutocompleteItem>
+                      )}
+                    </Autocomplete>
+                  )}
+                />
+                <Controller
+                  name="kelasJenjangId"
+                  control={control}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <Autocomplete
+                      {...field}
+                      selectedKey={value ?? ""}
+                      defaultItems={dataKelasJenjang?.data.data || []}
+                      label="Kelas Jenjang"
+                      variant="bordered"
+                      onSelectionChange={onChange}
+                      placeholder="Pilih Kelas..."
+                      isInvalid={!!errors.kelasJenjangId}
+                      errorMessage={errors.kelasJenjangId?.message}
+                    >
+                      {(kelasjenjang: IKelasJenjang) => (
+                        <AutocompleteItem key={kelasjenjang.id}>
+                          {kelasjenjang.name}
                         </AutocompleteItem>
                       )}
                     </Autocomplete>

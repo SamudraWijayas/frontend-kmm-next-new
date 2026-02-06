@@ -1,5 +1,5 @@
 import { ToasterContext } from "@/contexts/ToasterContext";
-import generusServices from "@/services/generus.service";
+import cabrawitServices from "@/services/caberawit.service";
 import { useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
 
@@ -7,7 +7,7 @@ const useDeleteGenerus = () => {
   const { setToaster } = useContext(ToasterContext);
 
   const deleteGenerus = async (id: string) => {
-    const res = await generusServices.deleteGenerus(id);
+    const res = await cabrawitServices.deletecaberawit(id);
     return res;
   };
 

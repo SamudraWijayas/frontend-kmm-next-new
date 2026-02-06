@@ -5,8 +5,7 @@ const COLUMN_LIST_GENERUS = [
   { name: "JENIS KELAMIN", uid: "jenis_kelamin" },
   { name: "GOLONGAN DARAH", uid: "gol_darah" },
   { name: "NAMA ORANG TUA", uid: "nama_ortu" },
-  { name: "Wali Kelas", uid: "waliId" },
-  { name: "STATUS MAHASISWA", uid: "mahasiswa" },
+  { name: "Wali Kelas", uid: "wali" },
   { name: "ACTIONS", uid: "actions" },
 ];
 export { COLUMN_LIST_GENERUS };

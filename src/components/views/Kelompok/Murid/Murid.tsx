@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import useMurid from "./useMurid";
-import { EllipsisVertical, FolderPlus, Trash2 } from "lucide-react";
-import { ICaberawit, IMurid } from "@/types/Caberawit";
+import { EllipsisVertical, FolderPlus } from "lucide-react";
+import { IMurid } from "@/types/Caberawit";
 import {
   Button,
   Checkbox,
@@ -10,6 +10,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Skeleton,
   useDisclosure,
 } from "@heroui/react";
 import AddMurid from "./AddMurid/AddMurid";
@@ -20,13 +21,11 @@ const Murid = () => {
   const {
     dataMurid,
     isLoadingMurid,
-    isRefetchingMurid,
     refetchMurid,
 
     selectedIds,
     setSelectedIds,
     selectedId,
-    setSelectedId,
   } = useMurid();
   const addMurid = useDisclosure();
   const deleteMurid = useDisclosure();
@@ -34,7 +33,15 @@ const Murid = () => {
   const muridList = dataMurid?.data ?? [];
 
   if (isLoadingMurid) {
-    return <div className="p-6">Loading...</div>;
+    return (
+      <div className="p-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <MuridSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -62,21 +69,56 @@ const Murid = () => {
       ) : (
         /* ================= LIST DATA ================= */
         <div>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3 mb-6">
+            {/* Tambah Murid — always visible */}
             <button
               onClick={addMurid.onOpen}
-              className="mb-6 px-5 py-2 rounded-lg bg-blue-500 text-white font-medium cursor-pointer"
+              className="
+      inline-flex items-center gap-2
+      px-5 py-2
+      rounded-xl
+      bg-blue-600 text-white
+      font-semibold text-sm
+      hover:bg-blue-700
+      active:scale-95
+      transition-all
+    "
             >
-              Tambah Murid
+              + Tambah Murid
             </button>
-            <button
-              disabled={selectedIds.length === 0}
-              onClick={() => deleteMurid.onOpen()}
-              className="mb-6 px-5 py-2 rounded-lg bg-red-500 text-white"
-            >
-              Hapus ({selectedIds.length})
-            </button>
+
+            {/* Delete — muncul kalau ada selection */}
+            {selectedIds.length > 0 && (
+              <button
+                onClick={() => deleteMurid.onOpen()}
+                className="
+        inline-flex items-center gap-2
+        px-4 py-2
+        rounded-xl
+        bg-red-50 text-red-600
+        border border-red-200
+        font-semibold text-sm
+        hover:bg-red-100 hover:text-red-700
+        active:scale-95
+        transition-all
+        animate-in fade-in slide-in-from-left-2
+      "
+              >
+                Hapus
+                <span
+                  className="
+        px-2 py-0.5
+        rounded-full
+        bg-red-600 text-white
+        text-xs font-bold
+      "
+                >
+                  {selectedIds.length}
+                </span>
+              </button>
+            )}
           </div>
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {muridList.map((murid: IMurid) => {
               const initial = murid.nama?.charAt(0).toUpperCase();
@@ -131,19 +173,18 @@ const Murid = () => {
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Static Actions">
                           <DropdownItem key="rapot">
-                            <Link href="/group/raport?source=student-page">Lihat Rapor</Link>
+                            <Link
+                              href={`/group/raport/${murid.id}?source=student-page`}
+                            >
+                              Lihat Rapor
+                            </Link>
                           </DropdownItem>
                           <DropdownItem key="absen">
-                            <Link href="/group/attendance?source=student-page">Lihat Rapor</Link>
-                          </DropdownItem>
-                          <DropdownItem key="copy">Copy link</DropdownItem>
-                          <DropdownItem key="edit">Edit file</DropdownItem>
-                          <DropdownItem
-                            key="delete"
-                            className="text-danger"
-                            color="danger"
-                          >
-                            Delete file
+                            <Link
+                              href={`/group/absent-caberawit/${murid.id}?source=student-page`}
+                            >
+                              Lihat Absen
+                            </Link>
                           </DropdownItem>
                         </DropdownMenu>
                       </Dropdown>
@@ -182,6 +223,42 @@ const Murid = () => {
         }
         setSelectedIds={setSelectedIds}
       />
+    </div>
+  );
+};
+
+const MuridSkeleton = () => {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+      {/* HEADER */}
+      <div className="flex justify-between">
+        <div className="flex items-center gap-4">
+          <Skeleton className="w-12 h-12 rounded-full" />
+
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32 rounded-md" />
+            <Skeleton className="h-3 w-24 rounded-md" />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Skeleton className="w-5 h-5 rounded-sm" />
+          <Skeleton className="w-6 h-6 rounded-md" />
+        </div>
+      </div>
+
+      {/* BODY */}
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-16 rounded-md" />
+          <Skeleton className="h-4 w-20 rounded-md" />
+        </div>
+
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-20 rounded-md" />
+          <Skeleton className="h-4 w-24 rounded-md" />
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,9 @@
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { ReactNode, useCallback, useEffect } from "react";
 import { IGenerus } from "@/types/Generus";
 import DropdownAction from "@/components/commons/DropdownAction";
-import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
+import { Avatar, Select, SelectItem, useDisclosure } from "@heroui/react";
 import useChangeUrl from "@/hooks/useChangeUrls";
-import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import useCaberawit from "./useCaberawit";
 import { COLUMN_LIST_GENERUS } from "./Caberawit.constant";
@@ -12,9 +11,11 @@ import AddCaberawit from "@/components/ui/Modal/Caberawit/AddCaberawit/AddGeneru
 import DeleteCaberawit from "@/components/ui/Modal/Caberawit/DeleteCaberawit/DeleteCaberawit";
 import DetailCaberawit from "@/components/ui/Modal/Caberawit/DetailCaberawit/DetailCaberawit";
 import { IKelasJenjang } from "@/types/KelasJenjang";
+import { ICaberawit } from "@/types/Caberawit";
 
 const Caberawit = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const getInitials = (name: string | undefined) => {
     if (!name) return "";
     const names = name.trim().split(" ");
@@ -52,7 +53,7 @@ const Caberawit = () => {
   }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
-    (generus: IGenerus, columnKey: React.Key) => {
+    (generus: ICaberawit, columnKey: React.Key) => {
       const cellValue = generus[columnKey as keyof typeof generus];
       const initial = getInitials(generus.nama);
       switch (columnKey) {
@@ -97,6 +98,8 @@ const Caberawit = () => {
             </div>
           );
 
+        case "wali":
+          return generus.wali?.fullName || "-";
         case "daerah":
           return generus.daerah?.name || "-";
 
@@ -134,15 +137,19 @@ const Caberawit = () => {
                 setSelectedId(generus as IGenerus);
                 deleteGenerus.onOpen();
               }}
-              textButtonDetail="Detail Generus"
-              textButtonDelete="Delete Generus"
+              onClickRaport={() => {
+                router.push(`/group/raport/${generus.id}?source=list-caberawit-page`);
+              }}
+              textButtonDetail="Detail Caberawit"
+              textButtonRaport="Lihat Rapor"
+              textButtonDelete="Delete Caberawit"
             />
           );
         default:
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus],
+    [deleteGenerus, router, setSelectedId, updateGenerus],
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
@@ -189,11 +196,11 @@ const Caberawit = () => {
 
               {/* filter jenjang */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Kelas
-                </label>
+                <label className="text-xs text-gray-500 ml-1 mb-1">Kelas</label>
                 <Select
-                  selectedKeys={filter.kelasjenjang ? [filter.kelasjenjang] : []}
+                  selectedKeys={
+                    filter.kelasjenjang ? [filter.kelasjenjang] : []
+                  }
                   onChange={(e) =>
                     setFilter((prev) => ({
                       ...prev,

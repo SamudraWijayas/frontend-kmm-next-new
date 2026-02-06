@@ -58,6 +58,11 @@ interface ICaberawit {
     name?: string;
   };
   waliId?: string;
+
+  wali?: {
+    id?: string;
+    fullName?: string;
+  };
 }
 
 export type { ICaberawit, IMurid };
