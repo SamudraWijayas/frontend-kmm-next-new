@@ -12,7 +12,6 @@ import kelasJenjangServices from "@/services/kelasJenjang.service";
 const useCaberawit = () => {
   const { profile } = useProfile();
   const idKelompok = profile?.kelompokId;
-  console.log("lef", idKelompok);
   const [selectedId, setSelectedId] = useState<IGenerus | null>(null);
   const [filter, setFilter] = useState({
     jenis_kelamin: "",

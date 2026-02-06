@@ -262,7 +262,7 @@ const SIDEBAR_KELOMPOK = [
       {
         key: "murid",
         label: "Murid",
-        href: "/group/studentx",
+        href: "/group/student",
         icon: <BookText  />,
       },
     ],

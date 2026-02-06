@@ -1,13 +1,36 @@
 import { DateValue } from "@nextui-org/react";
 
+interface IMurid {
+  id: number;
+  nama?: string;
+  kelasJenjangId?: string;
+  kelasJenjang?: {
+    id?: string;
+    name?: string;
+  };
+  jenis_kelamin?: string;
+  nama_ortu?: string;
+  jenjangId?: string;
+  jenjang?: {
+    id?: string;
+    name?: string;
+  };
+  waliId?: string;
+
+  wali?: {
+    id?: string;
+    fullName?: string;
+  };
+}
+
 interface ICaberawit {
   id?: string;
   nama?: string;
   jenjangId?: string;
   tgl_lahir?: staring | DateValue;
   jenis_kelamin?: string;
-  gol_darah?: string;
   nama_ortu?: string;
+  gol_darah?: string;
   foto?: string | FileList | null | undefined;
   kelasJenjangId?: string;
   kelasJenjang?: {
@@ -37,4 +60,4 @@ interface ICaberawit {
   waliId?: string;
 }
 
-export type { ICaberawit };
+export type { ICaberawit, IMurid };

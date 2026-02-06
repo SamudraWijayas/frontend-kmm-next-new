@@ -244,7 +244,6 @@ const DataTable = (props: PropsTypes) => {
         base: "max-full ",
         wrapper: cn({ "overflow-x-hidden": isLoading }),
         td: "whitespace-nowrap overflow-hidden text-ellipsis border-b border-gray-200", // ⬅️ supaya isi cell tetap 1 baris
-        tr: "h-16", // ⬅️ kasih tinggi fix biar rapi
       }}
     >
       <TableHeader columns={columns}>
