@@ -53,7 +53,7 @@ const UpdateProfile = (props: PropTypes) => {
     >
       <form onSubmit={handleSubmitUpdateProfile(onUpdate)}>
         <ModalContent>
-          <ModalHeader>Tambah Desa</ModalHeader>
+          <ModalHeader>Update Profile</ModalHeader>
           <ModalBody>
             {/* Form fields go here */}
             <Controller
@@ -86,7 +86,7 @@ const UpdateProfile = (props: PropTypes) => {
               {isPendingUpdate ? (
                 <Spinner size="sm" color="white" />
               ) : (
-                "Tambah Desa"
+                "Update Profile"
               )}
             </Button>
           </ModalFooter>

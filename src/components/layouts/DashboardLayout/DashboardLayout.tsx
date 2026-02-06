@@ -222,8 +222,8 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
                 ) : (
                   <Avatar
                     src={
-                      dataProfile?.profilePicture
-                        ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
+                      dataProfile?.avatar
+                        ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.avatar}`
                         : undefined
                     }
                     name={initial}

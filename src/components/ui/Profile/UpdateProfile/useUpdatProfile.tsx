@@ -4,7 +4,6 @@ import * as yup from "yup";
 
 const schemaUpdateProfile = yup.object().shape({
   fullName: yup.string().required("Please insert your fullname"),
-  gender: yup.string().required("Please insert your gender"),
 });
 
 const useUpdateProfile = () => {
@@ -16,9 +15,6 @@ const useUpdateProfile = () => {
     setValue: setValueUpdateProfile,
   } = useForm({
     resolver: yupResolver(schemaUpdateProfile),
-    defaultValues: {
-      fullName: "",
-    },
   });
 
   return {

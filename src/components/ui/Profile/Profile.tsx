@@ -7,6 +7,7 @@ import { Check, X } from "lucide-react";
 import useProfile from "./useProfile";
 import { Skeleton, useDisclosure } from "@heroui/react";
 import UpdateProfile from "./UpdateProfile/UpdateProfile";
+import UpdatePassword from "./UpdatePassword/UpdatePassword";
 
 const Profile = () => {
   const {
@@ -28,6 +29,7 @@ const Profile = () => {
   } = useProfile();
 
   const updateProfile = useDisclosure();
+  const updatePassword = useDisclosure();
   const [changeAvatar, setChangeAvatar] = useState<
     ((value: FileList | undefined) => void) | null
   >(null);
@@ -73,8 +75,8 @@ const Profile = () => {
               src={
                 preview
                   ? preview
-                  : dataProfile?.photoProfile
-                  ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.photoProfile}`
+                  : dataProfile?.avatar
+                  ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.avatar}`
                   : "/images/profile.jpg"
               }
               alt="avatar"
@@ -169,6 +171,12 @@ const Profile = () => {
             >
               Update Profile
             </button>
+            <button
+              onClick={() => updatePassword.onOpen()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Update Password
+            </button>
           </div>
         </div>
       </div>
@@ -180,6 +188,7 @@ const Profile = () => {
         isSuccessUpdate={isSuccessMutateUpdateProfile}
         refetchProfile={refetchProfile}
       />
+      <UpdatePassword {...updatePassword} />
     </div>
   );
 };
