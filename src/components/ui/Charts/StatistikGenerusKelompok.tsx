@@ -1,25 +1,10 @@
 "use client";
 
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Tooltip,
-  Legend,
-);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface StatistikItem {
   jenjangId: string;
@@ -32,7 +17,7 @@ interface Props {
   loading?: boolean;
 }
 
-const StatistikGenerusKelompok = ({ data, loading }: Props) => {
+const CountStatistikGenerusDaerah = ({ data, loading }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -64,57 +49,49 @@ const StatistikGenerusKelompok = ({ data, loading }: Props) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4">
-      <Line
-        data={{
-          labels,
-          datasets: [
-            {
-              label: "Jumlah Generus",
-              data: values,
-              borderColor: "rgba(99,102,241,1)",
-              backgroundColor: "rgba(99,102,241,0.2)",
-              tension: 0.4, // garis melengkung
-              pointRadius: isMobile ? 3 : 5,
-              pointHoverRadius: 6,
-              fill: true,
-            },
-          ],
-        }}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` ${ctx.raw} generus`,
+      {/* container ukuran tetap */}
+      <div className="mx-auto w-56 h-56 sm:w-64 sm:h-64">
+        <Pie
+          data={{
+            labels,
+            datasets: [
+              {
+                label: "Jumlah Generus",
+                data: values,
+                backgroundColor: [
+                  "#6366F1",
+                  "#22C55E",
+                  "#F59E0B",
+                  "#EF4444",
+                  "#06B6D4",
+                  "#A855F7",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false, // 🔑 ini kuncinya
+            plugins: {
+              legend: {
+                position: isMobile ? "bottom" : "right",
+                labels: {
+                  font: { size: 11 },
+                  boxWidth: 12,
+                },
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => `${ctx.label}: ${ctx.raw} generus`,
+                },
               },
             },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 1,
-                font: { size: 11 },
-              },
-              grid: {
-                color: "rgba(0,0,0,0.05)",
-              },
-            },
-            x: {
-              ticks: {
-                font: { size: 11 },
-                maxRotation: isMobile ? 45 : 0,
-              },
-              grid: { display: false },
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 };
 
-export default StatistikGenerusKelompok;
+export default CountStatistikGenerusDaerah;

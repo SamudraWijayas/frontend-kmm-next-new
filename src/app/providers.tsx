@@ -27,11 +27,10 @@ const queryClient = new QueryClient({
 });
 interface Props {
   children: ReactNode;
-  session: Session | null;
 }
-export default function Providers({ children, session }: Props) {
+export default function Providers({ children }: Props) {
   return (
-    <SessionProvider session={session}>
+    <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider>
           <ToasterProvider>

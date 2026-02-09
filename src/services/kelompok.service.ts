@@ -5,6 +5,8 @@ import { IKelompok } from "@/types/Kelompok";
 const kelompokServices = {
   getKelompok: (params?: string) =>
     instance.get(`${endpoint.KELOMPOK}?${params}`),
+  getKelompokByDaerah: (daerahId: string, params?: string) =>
+    instance.get(`${endpoint.KELOMPOK}/daerah/${daerahId}?${params}`),
   getKelompokByDesa: (desaId: string) =>
     instance.get(`${endpoint.KELOMPOK}/${desaId}`),
   addKelompok: (payload: IKelompok) =>

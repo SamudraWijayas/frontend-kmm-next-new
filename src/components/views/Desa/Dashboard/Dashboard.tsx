@@ -2,7 +2,7 @@
 
 import React from "react";
 import useDashboard from "./useDashboard";
-import { MapPin, Home, Users, ArrowUpRight, User, Group } from "lucide-react";
+import { User, Group } from "lucide-react";
 import StatistikGenerusDesaByJenjang from "@/components/ui/Charts/StatistikGenerusDesaByJenjang";
 import DashboardBox from "@/components/ui/DashboardBox/DashboardBox";
 import { Skeleton } from "@heroui/react";
@@ -65,7 +65,7 @@ const Dashboard = () => {
                 )
               }
               colors={["#E14862", "#F34F7D"]}
-              icon={<Group  size={36} />}
+              icon={<Group size={36} />}
             />
           </div>
         </div>
@@ -82,7 +82,6 @@ const Dashboard = () => {
       </div>
 
       {/* Top Stats */}
-      
 
       {/* Current Tasks */}
       {/* <div className="bg-white border rounded-xl p-6">

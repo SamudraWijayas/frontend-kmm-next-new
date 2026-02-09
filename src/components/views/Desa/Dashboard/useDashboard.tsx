@@ -1,9 +1,7 @@
 import useProfile from "@/hooks/useProfile";
-import authServices from "@/services/auth.service";
 import countServices from "@/services/count.service";
 import generusServices from "@/services/generus.service";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 
 const useDashboard = () => {
   const { profile } = useProfile();
@@ -61,12 +59,13 @@ const useDashboard = () => {
 
   return {
     dataTotalCaberawit,
+    isLoadingTotalCaberawit,
+    dataTotalMumi,
+    isLoadingTotalMumi,
     dataTotalKelompok,
     isLoadingTotalKelompok,
     dataStatistikByDesa,
     isLoadingStatistikByDesa,
-    dataTotalMumi,
-    isLoadingTotalMumi,
   };
 };
 

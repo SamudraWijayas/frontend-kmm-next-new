@@ -159,8 +159,14 @@ const SIDEBAR_DAERAH = [
       {
         key: "dashboard",
         label: "Dashboard",
-        href: "/dashboard",
+        href: "/area/dashboard",
         icon: <LayoutDashboard />,
+      },
+      {
+        key: "user",
+        label: "Users",
+        href: "/area/users",
+        icon: <User />,
       },
     ],
   },
@@ -170,30 +176,46 @@ const SIDEBAR_DAERAH = [
       {
         key: "desa",
         label: "Desa",
-        href: "/dashboard/desa",
+        href: "/area/village",
         icon: <Blinds />,
       },
       {
         key: "kelompok",
         label: "Kelompok",
-        href: "/dashboard/kelompok",
+        href: "/area/group",
         icon: <Group />,
       },
     ],
   },
   {
-    group: "Lainnya",
+    group: "Generus & Kegiatan",
     items: [
       {
         key: "generus",
         label: "Generus",
-        href: "/dashboard/generus",
         icon: <Users />,
+        children: [
+          {
+            key: "muda-mudi",
+            label: "Muda - Mudi",
+            href: "/area/generus",
+          },
+          {
+            key: "caberawit",
+            label: "Caberawit",
+            href: "/area/caberawit",
+          },
+          {
+            key: "mahasiswa",
+            label: "Mahasiswa",
+            href: "/area/student",
+          },
+        ],
       },
       {
         key: "kegiatan",
         label: "Kegiatan",
-        href: "/dashboard/kegoatan",
+        href: "/area/activity",
         icon: <Activity />,
       },
     ],
@@ -203,10 +225,10 @@ const SIDEBAR_DAERAH = [
     group: "KEAMANAN",
     items: [
       {
-        key: "password",
-        label: "Ubah Password",
-        href: "/ubah-password",
-        icon: <KeyRound />,
+        key: "profile",
+        label: "Profile",
+        href: "/area/profile",
+        icon: <UserPen />,
       },
       {
         key: "logout",

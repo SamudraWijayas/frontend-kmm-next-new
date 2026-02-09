@@ -5,6 +5,8 @@ import { ICaberawit } from "@/types/Caberawit";
 const cabrawitServices = {
   getcaberawit: (params?: string) =>
     instance.get(`${endpoint.CABERAWIT}?${params}`),
+  getCaberawitByDaerah: (daerahId: string, params?: string) =>
+    instance.get(`${endpoint.CABERAWIT}/daerah/${daerahId}?${params}`),
   getCaberawitByKelompok: (kelompokId: string, params?: string) =>
     instance.get(
       `${endpoint.CABERAWIT}/${kelompokId}${params ? `?${params}` : ""}`,

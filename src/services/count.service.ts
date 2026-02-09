@@ -11,6 +11,11 @@ const countServices = {
     instance.get(`${endpoint.COUNT}/mumi?${params}`),
   CountCaberawit: (params?: string) =>
     instance.get(`${endpoint.COUNT}/caberawit?${params}`),
+
+  CountDesaByDaerah: (daerahId: string) =>
+    instance.get(`${endpoint.COUNT}/desa-bydaerah/${daerahId}`),
+  CountKelompokByDaerah: (daerahId: string) =>
+    instance.get(`${endpoint.COUNT}/kelompok-bydaerah/${daerahId}`),
 };
 
 export default countServices;
