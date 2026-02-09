@@ -27,12 +27,7 @@ interface PropTypes {
   refetchGenerus: () => void;
 }
 
-const AddMumi = ({
-  isOpen,
-  onClose,
-  onOpenChange,
-  refetchGenerus,
-}: PropTypes) => {
+const AddMumi = ({ isOpen, onClose, refetchGenerus }: PropTypes) => {
   const {
     control,
     handleSubmitForm,
@@ -75,10 +70,10 @@ const AddMumi = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60">
-      <div className="relative z-[10001] flex h-full w-full flex-col overflow-x-hidden bg-gray-100 shadow-2xl">
+    <div className="fixed inset-0 z-10000 flex items-center justify-center bg-black/60">
+      <div className="relative z-10001 flex h-full w-full flex-col overflow-x-hidden bg-gray-100 shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 z-[100] flex items-center justify-between bg-white p-4 shadow-md">
+        <div className="sticky top-0 z-100 flex items-center justify-between bg-white p-4 shadow-md">
           <h2 className="text-lg font-semibold text-gray-900">
             Tambah Generus
           </h2>
@@ -369,7 +364,7 @@ const AddMumi = ({
                     </Autocomplete>
                   )}
                 />
-                
+
                 <Controller
                   name="kelasJenjangId"
                   control={control}

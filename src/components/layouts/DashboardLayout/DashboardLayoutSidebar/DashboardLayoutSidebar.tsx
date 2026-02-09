@@ -52,7 +52,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
     <aside
       className={cn(
         "fixed z-30 flex h-screen flex-col justify-between bg-white border-r border-gray-200 px-3 py-4 transition-all duration-300",
-        collapsed ? "w-[80px]" : widthCollapsed ? widthCollapsed : "w-[260px]",
+        collapsed ? "w-20" : widthCollapsed ? widthCollapsed : "w-65",
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}
     >

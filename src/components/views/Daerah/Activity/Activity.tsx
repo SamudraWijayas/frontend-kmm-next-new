@@ -332,7 +332,7 @@ const ActivitySkeletonRow = () => {
     <div className="flex items-center justify-between gap-4 p-4">
       {/* Left: QR placeholder */}
       <div className="flex flex-col items-center gap-2">
-        <Skeleton className="w-[100px] h-[100px] rounded-md" />
+        <Skeleton className="w-25 h-25 rounded-md" />
         <Skeleton className="w-20 h-7 rounded-md" />
       </div>
 

@@ -4,7 +4,7 @@ import useRapotCaberawit from "@/components/views/Admin/RapotCaberawit/useRapotC
 import { GroupedIndikator, IndikatorItem } from "@/types/Indikator";
 import { RaporItem } from "@/types/Rapor";
 import { exportRapotStyledExcel } from "@/utils/exportRapotToExcel";
-import { Button, useDisclosure } from "@heroui/react";
+import { Button, Skeleton, useDisclosure } from "@heroui/react";
 import React from "react";
 import AddRapor from "./addRapor/addRapor";
 
@@ -91,7 +91,7 @@ const Rapor = () => {
   }, [dataRapor]);
 
   if (isLoadingGenerus || isLoadingIndikator) {
-    return <p className="text-sm text-gray-500">Loading...</p>;
+    return <RaporSkeleton />;
   }
 
   const getStatusBadge = (status?: string) => {
@@ -151,7 +151,7 @@ const Rapor = () => {
               <div
                 className="
             w-14 h-14 rounded-full
-            bg-gradient-to-br from-[#293c88] to-indigo-500
+            bg-linear-to-br from-[#293c88] to-indigo-500
             text-white flex items-center justify-center
             text-xl font-semibold shadow-md
           "
@@ -319,6 +319,57 @@ const Rapor = () => {
       </div>
 
       <AddRapor {...addRapor} refetchRapor={refetchRapor} />
+    </div>
+  );
+};
+
+const RaporSkeleton = () => {
+  return (
+    <div className="space-y-8">
+      {/* Card Info */}
+      <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-6 w-48 rounded-lg" />
+          <Skeleton className="h-5 w-16 rounded-full" />
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Skeleton className="w-14 h-14 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-40 rounded-md" />
+            <Skeleton className="h-3 w-28 rounded-md" />
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-28 rounded-lg" />
+          <Skeleton className="h-9 w-32 rounded-lg" />
+        </div>
+      </div>
+
+      {/* Rekap Absen */}
+      <div className="flex border border-gray-200 rounded-lg bg-white overflow-hidden">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="flex-1 px-4 py-3 text-center space-y-2">
+            <Skeleton className="h-3 w-16 mx-auto rounded-md" />
+            <Skeleton className="h-6 w-10 mx-auto rounded-md" />
+          </div>
+        ))}
+      </div>
+
+      {/* Table Skeleton */}
+      <div className="bg-white rounded-xl shadow-md p-4 space-y-3">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Skeleton key={i} className="h-4 w-full rounded-md" />
+        ))}
+      </div>
+
+      {/* Catatan */}
+      <div className="bg-white rounded-md p-4 space-y-3">
+        <Skeleton className="h-4 w-40 rounded-md" />
+        <Skeleton className="h-20 w-full rounded-md" />
+        <Skeleton className="h-3 w-32 ml-auto rounded-md" />
+      </div>
     </div>
   );
 };

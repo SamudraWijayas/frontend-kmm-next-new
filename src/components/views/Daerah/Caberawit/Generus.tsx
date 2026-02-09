@@ -194,7 +194,7 @@ const Generus = () => {
                     }))
                   }
                   placeholder="Jenis Kelamin"
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   variant="flat"
                 >
@@ -217,7 +217,7 @@ const Generus = () => {
                       kelasjenjang: e.target.value,
                     }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   placeholder="Kelas"
                   variant="flat"

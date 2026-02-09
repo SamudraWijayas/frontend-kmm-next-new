@@ -1,11 +1,10 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import User from "@/components/views/Daerah/User";
-import React from "react";
+import Profile from "@/components/ui/Profile/Profile";
 
 const ListUsersPage = () => {
   return (
-    <DashboardLayout type="DAERAH" title="Daftar Users">
-      <User />
+    <DashboardLayout type="KELOMPOK" title="Update Profile">
+      <Profile />
     </DashboardLayout>
   );
 };

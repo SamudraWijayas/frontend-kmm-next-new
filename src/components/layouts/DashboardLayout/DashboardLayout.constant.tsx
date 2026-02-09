@@ -313,10 +313,10 @@ const SIDEBAR_KELOMPOK = [
     group: "ACCOUNT",
     items: [
       {
-        key: "password",
-        label: "Change Password",
-        href: "/ubah-password",
-        icon: <KeyRound />,
+        key: "profile",
+        label: "Profile",
+        href: "/group/profile",
+        icon: <UserPen />,
       },
       {
         key: "logout",

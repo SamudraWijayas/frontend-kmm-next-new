@@ -49,9 +49,14 @@ const useAddUserModal = () => {
     formState: { errors },
     reset,
     watch,
-    setValue,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      fullName: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const selectedRole = watch("role");
@@ -112,7 +117,7 @@ const useAddUserModal = () => {
 
     dataDaerah,
     dataDesa,
-    dataKelompok
+    dataKelompok,
   };
 };
 
