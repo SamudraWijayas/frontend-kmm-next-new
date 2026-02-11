@@ -43,13 +43,12 @@ const useDetailKegiatan = () => {
   };
 
   const updateKegiatan = async (payload: IKegiatanForm) => {
-    // ✅ Tambah optional chaining biar aman
     const kegiatanId = dataKegiatan?.kegiatan?.id || id;
     if (!kegiatanId) throw new Error("Kegiatan ID tidak ditemukan");
 
     const { data } = await kegiatanServices.updateKegiatan(
       `${kegiatanId}`,
-      payload
+      payload,
     );
     return data.data;
   };
@@ -84,12 +83,15 @@ const useDetailKegiatan = () => {
     mutateUpdateKegiatan(payload);
   };
 
+  const handleUpdateDok = (data: IKegiatanForm) => mutateUpdateKegiatan(data);
+
   return {
     dataKegiatan,
     isLoadingKegiatan,
     isPendingMutateUpdateKegiatan,
     isSuccessMutateUpdateKegiatan,
     handleUpdateKegiatan,
+    handleUpdateDok,
   };
 };
 

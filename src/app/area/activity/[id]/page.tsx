@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import DetailKegiatan from "@/components/views/Admin/DetailKegiatan";
+import DetailKegiatan from "@/components/ui/DetailKegiatan";
 import React from "react";
 
 const DetailKegiatanPage = () => {

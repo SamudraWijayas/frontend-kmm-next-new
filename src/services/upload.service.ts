@@ -15,6 +15,8 @@ const uploadServices = {
     instance.post(`${endpoint.MEDIA}/upload-multiple`, payload, formdataHeader),
   deleteFile: (payload: IFileURL) =>
     instance.delete(`${endpoint.MEDIA}/remove`, { data: payload }),
+  deleteFileMultiple: (payload: IFileURL) =>
+    instance.delete(`${endpoint.MEDIA}/remove-multiple`, { data: payload }),
 };
 
 export default uploadServices;

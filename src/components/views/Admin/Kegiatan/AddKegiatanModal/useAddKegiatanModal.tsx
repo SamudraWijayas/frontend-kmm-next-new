@@ -33,7 +33,7 @@ const schema = yup.object({
 
   jenjangIds: yup
     .array()
-    .of(yup.string().required()) // penting!
+    .of(yup.string().required())
     .when("targetType", {
       is: "JENJANG",
       then: (schema) =>

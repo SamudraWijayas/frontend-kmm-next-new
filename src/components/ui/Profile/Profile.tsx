@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Controller } from "react-hook-form";
 import { Check, X } from "lucide-react";
 import useProfile from "./useProfile";
-import { Skeleton, useDisclosure } from "@heroui/react";
+import { Avatar, Skeleton, useDisclosure } from "@heroui/react";
 import UpdateProfile from "./UpdateProfile/UpdateProfile";
 import UpdatePassword from "./UpdatePassword/UpdatePassword";
 
@@ -76,8 +76,8 @@ const Profile = () => {
                 preview
                   ? preview
                   : dataProfile?.avatar
-                  ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.avatar}`
-                  : "/images/profile.jpg"
+                    ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.avatar}`
+                    : "/images/profile.jpg"
               }
               alt="avatar"
               className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition"
@@ -142,7 +142,6 @@ const Profile = () => {
               </div>
             )}
           </div>
-
           <div className="mt-2">
             {dataProfile?.fullName ? (
               <h1 className="text-2xl font-semibold">

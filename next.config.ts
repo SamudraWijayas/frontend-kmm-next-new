@@ -4,7 +4,15 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ["localhost"], // karena API jalan di http://localhost:3400
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5000",
+        pathname: "/uploads/**",
+      },
+    ],
+    dangerouslyAllowLocalIP: true,
   },
 };
 

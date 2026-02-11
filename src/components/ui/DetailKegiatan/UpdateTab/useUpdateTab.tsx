@@ -12,7 +12,15 @@ const schemaUpdateKegiatan = yup.object().shape({
   name: yup.string().required("Please input name"),
   startDate: yup.mixed<DateValue>().required("Please select start date"),
   endDate: yup.mixed<DateValue>().required("Please select end date"),
-  tingkat: yup.string().required("Please input tingkat"),
+  tingkat: yup
+    .string()
+    .oneOf(["DAERAH", "DESA", "KELOMPOK"])
+    .required("Tingkat wajib diisi"),
+
+  targetType: yup
+    .string()
+    .oneOf(["JENJANG", "MAHASISWA", "USIA"])
+    .required("Target wajib dipilih"),
   daerahId: yup.string(),
   desaId: yup.string(),
   kelompokId: yup.string(),
@@ -20,6 +28,22 @@ const schemaUpdateKegiatan = yup.object().shape({
     .array()
     .of(yup.string().required())
     .required("Please input jenjang"),
+
+  minUsia: yup
+    .number()
+    .nullable()
+    .when("targetType", {
+      is: "USIA",
+      then: (s) => s.required("Usia minimal wajib diisi"),
+    }),
+
+  maxUsia: yup
+    .number()
+    .nullable()
+    .when("targetType", {
+      is: "USIA",
+      then: (s) => s.required("Usia maksimal wajib diisi"),
+    }),
 });
 
 const useUpdateTab = () => {
@@ -29,6 +53,7 @@ const useUpdateTab = () => {
     formState: { errors: errorsUpdateKegiatan },
     reset: resetUpdateKegiatan,
     setValue: setValueUpdateKegiatan,
+    watch,
   } = useForm({
     resolver: yupResolver(schemaUpdateKegiatan),
   });
@@ -62,6 +87,7 @@ const useUpdateTab = () => {
     dataDesa,
     dataKelompok,
     dataJenjang,
+    watch,
   };
 };
 

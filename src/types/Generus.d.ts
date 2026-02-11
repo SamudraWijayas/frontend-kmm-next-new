@@ -3,7 +3,6 @@ import { DateValue } from "@nextui-org/react";
 interface IGenerus {
   id?: number;
   nama?: string;
-  jenjangId?: string;
   tgl_lahir?: staring | DateValue;
   jenis_kelamin?: string;
   gol_darah?: string;

@@ -37,7 +37,7 @@ const useMultipleHandling = () => {
   ) => {
     const urls = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
     const deletePromises = urls.map(async (url) => {
-      const res = await uploadServices.deleteFile({ fileUrl: url });
+      const res = await uploadServices.deleteFileMultiple({ fileUrl: url });
       return res.data.meta.status === 200;
     });
     const results = await Promise.all(deletePromises);
@@ -66,7 +66,6 @@ const useMultipleHandling = () => {
     callback: (fileUrls?: string[]) => void,
   ) => {
     if (files.length !== 0) {
-      onChange(files);
       const fileArray = Array.from(files);
       mutateUploadFiles({
         files: fileArray,

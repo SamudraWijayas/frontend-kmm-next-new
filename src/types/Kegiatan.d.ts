@@ -3,14 +3,14 @@ import { DateValue } from "@nextui-org/react";
 interface IKegiatanForm {
   id?: string;
 
-  name: string;
-  startDate: DateValue;
-  endDate: DateValue;
-  jenisKelamin: string;
+  name?: string;
+  startDate?: DateValue | null;
+  endDate?: DateValue | null;
+  jenisKelamin?: string;
 
-  tingkat: "DAERAH" | "DESA" | "KELOMPOK";
+  tingkat?: "DAERAH" | "DESA" | "KELOMPOK";
 
-  targetType: "JENJANG" | "MAHASISWA" | "USIA";
+  targetType?: "JENJANG" | "MAHASISWA" | "USIA";
 
   daerahId?: string | null;
   desaId?: string | null;
@@ -30,6 +30,7 @@ interface IKegiatanForm {
   };
 
   jenjangIds?: string[];
+  dokumentasi?: string[];
   minUsia?: number | null;
   maxUsia?: number | null;
 }
@@ -39,7 +40,9 @@ interface IKegiatan {
   name?: string;
   startDate?: string | DateValue;
   endDate?: string | DateValue;
-  tingkat?: string;
+  jenisKelamin?: string;
+  tingkat?: "DAERAH" | "DESA" | "KELOMPOK";
+  targetType?: "JENJANG" | "MAHASISWA" | "USIA";
   kelompokId?: string | null;
   kelompok?: {
     id?: string;
@@ -55,6 +58,10 @@ interface IKegiatan {
     id?: string;
     name?: string;
   };
+  jenjangIds?: string[];
+  dokumentasi?: string[];
+  minUsia?: number | null;
+  maxUsia?: number | null;
   sasaran?: {
     jenjang?: {
       id?: string;

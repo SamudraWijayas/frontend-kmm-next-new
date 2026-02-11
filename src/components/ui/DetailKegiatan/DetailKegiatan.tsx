@@ -5,6 +5,7 @@ import useDetailKegiatan from "./useDetailKegiatan";
 import { Tab, Tabs } from "@heroui/react";
 import KehadiranTab from "./KehadiranTab";
 import UpdateTab from "./UpdateTab";
+import DokumentasiTab from "./DokumentasiTab/DokumentasiTab";
 
 const DetailKegiatan = () => {
   const {
@@ -29,6 +30,11 @@ const DetailKegiatan = () => {
           onUpdate={handleUpdateKegiatan}
           isPendingUpdate={isPendingMutateUpdateKegiatan}
           isSuccessUpdate={isSuccessMutateUpdateKegiatan}
+        />
+      </Tab>
+      <Tab key="dokumentasi" title="Dokumentasi">
+        <DokumentasiTab
+          dataKegiatan={dataKegiatan}
         />
       </Tab>
     </Tabs>
