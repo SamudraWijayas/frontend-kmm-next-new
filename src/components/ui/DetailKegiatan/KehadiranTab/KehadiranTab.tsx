@@ -4,6 +4,7 @@ import React, { ReactNode, useCallback } from "react";
 import { Card, CardHeader, Chip, Avatar } from "@heroui/react";
 import { IKegiatan, Peserta } from "@/types/Kegiatan";
 import DataTable from "@/components/ui/DataTable";
+import { exportPesertaToExcel } from "@/utils/exportPesertaToExel";
 
 interface PropTypes {
   dataKegiatan: {
@@ -30,9 +31,9 @@ const KehadiranTab = ({ dataKegiatan, isLoading = false }: PropTypes) => {
   const peserta = dataKegiatan?.peserta || [];
 
   type StatusAbsen = "HADIR" | "TERLAMBAT" | "TIDAK_HADIR";
-  interface Item {
-    status: StatusAbsen;
-  }
+  // interface Item {
+  //   status: StatusAbsen;
+  // }
   // 🔹 renderCell sesuai kolom
   const renderCell = useCallback((item: Peserta, columnKey: React.Key) => {
     const cellValue = item[columnKey as keyof Peserta];
@@ -56,6 +57,7 @@ const KehadiranTab = ({ dataKegiatan, isLoading = false }: PropTypes) => {
             size="md"
             radius="full"
             color="default"
+            className="bg-blue-100 text-blue-600 border-blue-200"
           />
         );
 
@@ -110,48 +112,69 @@ const KehadiranTab = ({ dataKegiatan, isLoading = false }: PropTypes) => {
   return (
     <div className="py-6 space-y-8">
       {/* 🔹 Info Kegiatan */}
-      <Card shadow="sm" className="bg-gradient-to-br from-blue-50 to-white">
-        <CardHeader className="flex flex-col items-start gap-2">
+      <Card shadow="sm" className="bg-linear-to-br from-blue-50 to-white">
+        <CardHeader className="px-6 py-5">
           {isLoading ? (
-            <div className="space-y-2 animate-pulse">
-              <div className="h-6 w-48 bg-gray-300 rounded-lg" />
-              <div className="h-4 w-64 bg-gray-200 rounded-lg" />
-              <div className="h-4 w-40 bg-gray-200 rounded-lg" />
+            <div className="space-y-3 animate-pulse w-full">
+              <div className="h-6 w-56 bg-gray-300 rounded-lg" />
+              <div className="h-4 w-72 bg-gray-200 rounded-lg" />
+              <div className="h-4 w-48 bg-gray-200 rounded-lg" />
             </div>
           ) : kegiatan ? (
-            <>
-              <h2 className="text-2xl font-bold text-blue-700">
-                {kegiatan.name}
-              </h2>
-              <div className="text-gray-600 text-sm">
-                <p>
-                  {kegiatan.startDate
-                    ? new Date(kegiatan.startDate).toLocaleDateString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })
-                    : "-"}{" "}
-                  -{" "}
-                  {kegiatan.endDate
-                    ? new Date(kegiatan.endDate).toLocaleDateString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })
-                    : "-"}
-                </p>
+            <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              {/* LEFT SIDE */}
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-blue-700 tracking-tight">
+                  {kegiatan.name}
+                </h2>
 
-                <p>
-                  📍 Lokasi:{" "}
-                  <span className="font-medium">
-                    {kegiatan.desa?.name || "-"}
-                  </span>{" "}
-                  | 🏷️ Tingkat:{" "}
-                  <span className="font-medium">{kegiatan.tingkat}</span>
-                </p>
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p>
+                    {kegiatan.startDate
+                      ? new Date(kegiatan.startDate).toLocaleDateString(
+                          "id-ID",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )
+                      : "-"}{" "}
+                    —{" "}
+                    {kegiatan.endDate
+                      ? new Date(kegiatan.endDate).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : "-"}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="flex items-center gap-1">
+                      
+                      <span className="font-medium">
+                        {kegiatan.desa?.name || "-"}
+                      </span>
+                    </span>
+
+                    <span className="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                      {kegiatan.tingkat}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </>
+
+              {/* RIGHT SIDE */}
+              <div className="flex justify-start md:justify-end">
+                <button
+                  onClick={() => exportPesertaToExcel(peserta, kegiatan?.name)}
+                  className="px-5 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 font-medium"
+                >
+                  Export Peserta
+                </button>
+              </div>
+            </div>
           ) : (
             <p className="text-gray-500">Data kegiatan tidak ditemukan.</p>
           )}

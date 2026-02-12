@@ -4,7 +4,6 @@ import React, { ReactNode, useState } from "react";
 import {
   SIDEBAR_ADMIN,
   SIDEBAR_DAERAH,
-  SIDEBAR_DESA,
   SIDEBAR_KELOMPOK,
 } from "./DashboardLayout.constant";
 import DashboardLayoutSidebar from "./DashboardLayoutSidebar";
@@ -84,7 +83,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 
   const {
     children,
-    description = "Welcome to your dashboard",
+    // description = "Welcome to your dashboard",
     title = "Dashboard Overview",
     type = "ADMIN",
     widthCollapsed,
@@ -204,9 +203,9 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
           open
             ? "ml-0"
             : collapsed
-              ? "lg:ml-[80px]"
-              : widthHeader || "lg:ml-[260px]",
-          forceHideLabel && "lg:ml-[340px]",
+              ? "lg:ml-20"
+              : widthHeader || "lg:ml-65",
+          forceHideLabel && "lg:ml-85",
         )}
       >
         {/* Header */}

@@ -11,11 +11,7 @@ interface PropTypes {
   dataKegiatan: IDataKegiatan;
 }
 
-interface Dokumentasi {
-  id: string;
-  kegiatanId: string;
-  url: string;
-}
+
 
 const DokumentasiTab = ({ dataKegiatan }: PropTypes) => {
   const {
@@ -33,8 +29,9 @@ const DokumentasiTab = ({ dataKegiatan }: PropTypes) => {
     handleUpdateDok,
   } = useDokumentasiTab();
 
-  const currentDokUrls: Dokumentasi[] = dataKegiatan?.kegiatan
-    .dokumentasi as unknown as Dokumentasi[];
+  const currentDokUrls = dataKegiatan?.kegiatan?.dokumentasi ?? [];
+
+  console.log("img", currentDokUrls);
 
   return (
     <div className="space-y-6">

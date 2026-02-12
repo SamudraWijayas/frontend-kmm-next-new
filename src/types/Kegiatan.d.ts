@@ -59,7 +59,6 @@ interface IKegiatan {
     name?: string;
   };
   jenjangIds?: string[];
-  dokumentasi?: string[];
   minUsia?: number | null;
   maxUsia?: number | null;
   sasaran?: {
@@ -71,6 +70,13 @@ interface IKegiatan {
       keterangan?: string;
     };
   }[];
+  dokumentasi: IDokumentasi[];
+}
+
+interface IDokumentasi {
+  id: string;
+  kegiatanId: string;
+  url: string;
 }
 
 interface Peserta {
