@@ -18,8 +18,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         try {
           const res = await authServices.login({
-            identifier: credentials.identifier,
-            password: credentials.password,
+            identifier: credentials.identifier as string,
+            password: credentials.password as string,
           });
 
           if (res.status !== 200) {
@@ -41,6 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           };
         } catch (err) {
           console.error("Login error:", err);
+
           return null;
         }
       },
