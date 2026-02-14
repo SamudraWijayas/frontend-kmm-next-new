@@ -1,10 +1,9 @@
 "use client";
 
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback } from "react";
 import useChangeUrl from "@/hooks/useChangeUrls";
 import DataTable from "@/components/ui/DataTable";
-import {  COLUMN_LIST_KELAS } from "./KelasJenjang.constant";
-import { useSearchParams } from "next/navigation";
+import { COLUMN_LIST_KELAS } from "./KelasJenjang.constant";
 import DropdownAction from "@/components/commons/DropdownAction";
 import { useDisclosure } from "@heroui/react";
 import useListKelasJenjang from "./useKelasJenjang";
@@ -12,8 +11,6 @@ import { IKelasJenjang } from "@/types/KelasJenjang";
 import AddKelasJenjang from "./AddKelasJenjang";
 
 const ListKelasJenjang = () => {
-  const searchParams = useSearchParams();
-
   const {
     dataKelasJenjang,
     isLoadingKelasJenjang,
@@ -29,19 +26,16 @@ const ListKelasJenjang = () => {
   const deleteKelasJenjang = useDisclosure();
   const updateKelasJenjang = useDisclosure();
 
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
+  // ✅ Jalankan setUrl langsung tanpa searchParams
+  React.useEffect(() => {
+    setUrl();
+  }, [setUrl]);
 
   const renderCell = useCallback(
     (kelas: IKelasJenjang, columnKey: React.Key) => {
       const cellValue = kelas[columnKey as keyof typeof kelas];
       switch (columnKey) {
         case "jenjang":
-          // ✅ ambil nama daerah
           return kelas.jenjang?.name || "-";
         case "actions":
           return (
@@ -62,11 +56,11 @@ const ListKelasJenjang = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteKelasJenjang, setSelectedId, updateKelasJenjang]
+    [deleteKelasJenjang, setSelectedId, updateKelasJenjang],
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
+  // ✅ Selalu tampilkan DataTable karena tidak ada searchParams
+  const hasParams = true;
 
   return (
     <section>
@@ -82,8 +76,13 @@ const ListKelasJenjang = () => {
           totalPages={0}
         />
       )}
-      <AddKelasJenjang {...addKelasJenjang} refetchKelasJenjang={refetchKelasJenjang} />
-      {/* <DeleteKelasJenjang
+      <AddKelasJenjang
+        {...addKelasJenjang}
+        refetchKelasJenjang={refetchKelasJenjang}
+      />
+      {/* Uncomment jika butuh Delete / Update */}
+      {/* 
+      <DeleteKelasJenjang
         {...deleteKelasJenjang}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
@@ -94,7 +93,8 @@ const ListKelasJenjang = () => {
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchKelasJenjang={refetchKelasJenjang}
-      /> */}
+      /> 
+      */}
     </section>
   );
 };

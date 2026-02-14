@@ -1,11 +1,9 @@
 "use client";
 
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback } from "react";
 import useListKelompok from "./useListKelompok";
-import useChangeUrl from "@/hooks/useChangeUrls";
 import DataTable from "@/components/ui/DataTable";
 import { COLUMN_LIST_KELOMPOK } from "./ListKelompok.constant";
-import { useSearchParams } from "next/navigation";
 import DropdownAction from "@/components/commons/DropdownAction";
 
 import { IKelompok } from "@/types/Kelompok";
@@ -14,8 +12,6 @@ import AddKelompok from "./AddKelompok";
 import DeleteKelompok from "./DeleteKelompok";
 
 const ListKelompok = () => {
-  const searchParams = useSearchParams();
-
   const {
     dataKelompok,
     isLoadingKelompok,
@@ -25,18 +21,9 @@ const ListKelompok = () => {
     setSelectedId,
   } = useListKelompok();
 
-  const { setUrl } = useChangeUrl();
-
   const addKelompok = useDisclosure();
   const deleteKelompok = useDisclosure();
   const updateKelompok = useDisclosure();
-
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (kelompok: IKelompok, columnKey: React.Key) => {
@@ -44,10 +31,8 @@ const ListKelompok = () => {
       switch (columnKey) {
         case "daerah":
           return kelompok.daerah?.name || "-";
-
         case "desa":
           return kelompok.desa?.name || "-";
-
         case "actions":
           return (
             <DropdownAction
@@ -67,11 +52,11 @@ const ListKelompok = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteKelompok, setSelectedId, updateKelompok]
+    [deleteKelompok, setSelectedId, updateKelompok],
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
+  // langsung render DataTable tanpa searchParams
+  const hasParams = true;
 
   return (
     <section>

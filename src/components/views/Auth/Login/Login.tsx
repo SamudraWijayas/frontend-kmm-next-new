@@ -18,7 +18,6 @@ const Login = () => {
     isPendingLogin,
     errors,
   } = useLogin();
-  const env = process.env.NEXT_PUBLIC_API_URL;
 
   return (
     <section className="flex min-h-screen p-6">

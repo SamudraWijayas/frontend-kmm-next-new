@@ -4,11 +4,25 @@ import { ToasterContext } from "@/contexts/ToasterContext";
 import kegiatanServices from "@/services/kegiatan.service";
 import { DateValue } from "@internationalized/date";
 
-import { IDataKegiatan, IKegiatanForm } from "@/types/Kegiatan";
+import { IDataKegiatan, IKegiatan, IKegiatanForm } from "@/types/Kegiatan";
 import { toDateStandard } from "@/utils/date";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useContext } from "react";
+
+const defaultKegiatan: IKegiatan = {
+  id: "",
+  name: "",
+  startDate: "",
+  endDate: "",
+  jenisKelamin: "",
+  tingkat: "DESA",
+  targetType: "JENJANG",
+  kelompokId: null,
+  desaId: null,
+  daerahId: null,
+  dokumentasi: [],
+};
 
 const useDetailKegiatan = () => {
   const { setToaster } = useContext(ToasterContext);
@@ -38,9 +52,9 @@ const useDetailKegiatan = () => {
 
   // ✅ Kasih default biar gak undefined (fix error "undefined not assignable")
   const dataKegiatan: IDataKegiatan = dataKegiatanRaw ?? {
-    kegiatan: {},
+    kegiatan: defaultKegiatan,
     peserta: [],
-  };
+  };  
 
   const updateKegiatan = async (payload: IKegiatanForm) => {
     const kegiatanId = dataKegiatan?.kegiatan?.id || id;

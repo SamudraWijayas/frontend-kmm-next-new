@@ -1,0 +1,85 @@
+version: "3.9"
+
+services:
+  # Frontend Application (Next.js)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend-app
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      NEXT_PUBLIC_IMAGE: http://localhost:3000
+      NEXTAUTH_SECRET: your-super-secret-key-change-in-production
+      NEXTAUTH_URL: http://localhost:3001
+      NODE_ENV: production
+    volumes:
+      - ./public:/app/public:ro
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  # Backend Application (Express)
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: backend-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql://backend:backendpassword@db:3306/backend
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      PORT: 3000
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../backend/uploads:/app/uploads
+    networks:
+      - app-network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: backend-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: backend
+      MYSQL_USER: backend
+      MYSQL_PASSWORD: backendpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-prootpassword",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

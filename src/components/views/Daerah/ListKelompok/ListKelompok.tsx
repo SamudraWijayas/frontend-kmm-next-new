@@ -1,11 +1,9 @@
 "use client";
 
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback } from "react";
 import useListKelompok from "./useListKelompok";
-import useChangeUrl from "@/hooks/useChangeUrls";
 import DataTable from "@/components/ui/DataTable";
 import { COLUMN_LIST_KELOMPOK } from "./ListKelompok.constant";
-import { useSearchParams } from "next/navigation";
 import DropdownAction from "@/components/commons/DropdownAction";
 
 import { IKelompok } from "@/types/Kelompok";
@@ -14,8 +12,6 @@ import AddKelompok from "./AddKelompok";
 import DeleteKelompok from "./DeleteKelompok";
 
 const ListKelompok = () => {
-  const searchParams = useSearchParams();
-
   const {
     dataKelompok,
     isLoadingKelompok,
@@ -25,18 +21,9 @@ const ListKelompok = () => {
     setSelectedId,
   } = useListKelompok();
 
-  const { setUrl } = useChangeUrl();
-
   const addKelompok = useDisclosure();
   const deleteKelompok = useDisclosure();
   const updateKelompok = useDisclosure();
-
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (kelompok: IKelompok, columnKey: React.Key) => {
@@ -67,27 +54,26 @@ const ListKelompok = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteKelompok, setSelectedId, updateKelompok]
+    [deleteKelompok, setSelectedId, updateKelompok],
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
+  // ✅ Langsung render DataTable tanpa searchParams
+  const kelompokData = dataKelompok?.data || [];
 
   return (
     <section>
-      {hasParams && (
-        <DataTable
-          buttonTopContentLabel="Tambah Kelompok"
-          columns={COLUMN_LIST_KELOMPOK}
-          data={dataKelompok?.data || []}
-          emptyContent="Kelompok Kosong"
-          searchName="Cari Nama Kelompok"
-          isLoading={isLoadingKelompok || isRefetchingKelompok}
-          onClickButtonTopContent={addKelompok.onOpen}
-          renderCell={renderCell}
-          totalPages={dataKelompok?.pagination.totalPages || 0}
-        />
-      )}
+      <DataTable
+        buttonTopContentLabel="Tambah Kelompok"
+        columns={COLUMN_LIST_KELOMPOK}
+        data={kelompokData}
+        emptyContent="Kelompok Kosong"
+        searchName="Cari Nama Kelompok"
+        isLoading={isLoadingKelompok || isRefetchingKelompok}
+        onClickButtonTopContent={addKelompok.onOpen}
+        renderCell={renderCell}
+        totalPages={dataKelompok?.pagination.totalPages || 0}
+      />
+
       <AddKelompok {...addKelompok} refetchKelompok={refetchKelompok} />
       <DeleteKelompok
         {...deleteKelompok}

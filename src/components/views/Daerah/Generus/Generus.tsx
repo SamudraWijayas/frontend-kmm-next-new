@@ -1,9 +1,7 @@
 "use client";
 
-import React, { ReactNode, useCallback, useEffect } from "react";
-import useChangeUrl from "@/hooks/useChangeUrls";
+import React, { ReactNode, useCallback } from "react";
 import DataTable from "@/components/ui/DataTable";
-import { useSearchParams } from "next/navigation";
 import DropdownAction from "@/components/commons/DropdownAction";
 import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
 import useGenerus from "./useGenerus";
@@ -17,7 +15,6 @@ import DeleteMumi from "@/components/ui/Modal/Mumi/DeleteMumi/DeleteMumi";
 import AddMumi from "@/components/ui/Modal/Mumi/AddMumi/AddMumi";
 
 const Generus = () => {
-  const searchParams = useSearchParams();
   const getInitials = (name: string | undefined) => {
     if (!name) return "";
     const names = name.trim().split(" ");
@@ -35,26 +32,16 @@ const Generus = () => {
     refetchGenerus,
     selectedId,
     setSelectedId,
-
     filter,
     setFilter,
     dataJenjang,
     dataDesa,
   } = useGenerus();
-  console.log("jenjang", dataJenjang);
 
-  const { setUrl } = useChangeUrl();
 
   const addGenerus = useDisclosure();
   const deleteGenerus = useDisclosure();
   const updateGenerus = useDisclosure();
-
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (generus: IGenerus, columnKey: React.Key) => {
@@ -64,17 +51,6 @@ const Generus = () => {
         case "nama":
           return (
             <div className="flex items-center gap-3 max-w-full">
-              {/* <Image
-                src={
-                  generus.foto
-                    ? `${process.env.NEXT_PUBLIC_IMAGE}${generus.foto}`
-                    : "/images/default-avatar.png" // fallback lokal
-                }
-                alt={generus.nama || "Foto Generus"}
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-full object-cover flex-shrink-0"
-              /> */}
               <Avatar
                 src={
                   generus.foto
@@ -83,9 +59,8 @@ const Generus = () => {
                 }
                 name={initial}
                 showFallback
-                className={`cursor-pointer bg-blue-100 text-blue-700 text-xl font-bold md:text-2xl`}
+                className="cursor-pointer bg-blue-100 text-blue-700 text-xl font-bold md:text-2xl"
               />
-
               <div className="flex flex-col overflow-hidden">
                 <span className="font-medium text-gray-800 truncate">
                   {generus.nama}
@@ -110,6 +85,7 @@ const Generus = () => {
 
         case "kelompok":
           return generus.kelompok?.name || "-";
+
         case "tgl_lahir":
           return (
             <span className="text-gray-700">
@@ -125,6 +101,7 @@ const Generus = () => {
                 : "-"}
             </span>
           );
+
         case "mahasiswa":
           return (
             <Chip
@@ -135,6 +112,7 @@ const Generus = () => {
               {cellValue === true ? "Aktif" : "Tidak Aktif"}
             </Chip>
           );
+
         case "actions":
           return (
             <DropdownAction
@@ -150,6 +128,7 @@ const Generus = () => {
               textButtonDelete="Delete Generus"
             />
           );
+
         default:
           return cellValue as ReactNode;
       }
@@ -157,8 +136,8 @@ const Generus = () => {
     [deleteGenerus, setSelectedId, updateGenerus],
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
+  // ✅ tidak pakai searchParams → langsung render
+  const hasParams = true;
 
   return (
     <section>
@@ -190,7 +169,7 @@ const Generus = () => {
                     }))
                   }
                   placeholder="Jenis Kelamin"
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   variant="flat"
                 >
@@ -200,7 +179,7 @@ const Generus = () => {
                 </Select>
               </div>
 
-              {/* filter jenjang */}
+              {/* Filter Jenjang */}
               <div className="flex flex-col">
                 <label className="text-xs text-gray-500 ml-1 mb-1">
                   Jenjang
@@ -208,12 +187,9 @@ const Generus = () => {
                 <Select
                   selectedKeys={filter.jenjang ? [filter.jenjang] : []}
                   onChange={(e) =>
-                    setFilter((prev) => ({
-                      ...prev,
-                      jenjang: e.target.value,
-                    }))
+                    setFilter((prev) => ({ ...prev, jenjang: e.target.value }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   placeholder="Jenjang"
                   variant="flat"
@@ -224,22 +200,18 @@ const Generus = () => {
                   ))}
                 </Select>
               </div>
-              {/* filter desa */}
+
+              {/* Filter Desa */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Desa
-                </label>
+                <label className="text-xs text-gray-500 ml-1 mb-1">Desa</label>
                 <Select
                   selectedKeys={filter.desa ? [filter.desa] : []}
                   onChange={(e) =>
-                    setFilter((prev) => ({
-                      ...prev,
-                      desa: e.target.value,
-                    }))
+                    setFilter((prev) => ({ ...prev, desa: e.target.value }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
-                  placeholder="Desa "
+                  placeholder="Desa"
                   variant="flat"
                 >
                   <SelectItem key="">Semua</SelectItem>
@@ -268,7 +240,6 @@ const Generus = () => {
                     }
                   />
                 </div>
-
                 <div className="flex flex-col w-[48%] sm:w-auto">
                   <label className="text-xs text-gray-500 ml-1 mb-1">
                     Usia Max

@@ -146,7 +146,7 @@ const Absen: React.FC = () => {
         <AbsenTableSkeleton />
       ) : (
         <div className="overflow-x-auto bg-white rounded-xl shadow">
-          <table className="w-full min-w-[700px]">
+          <table className="w-full min-w-175">
             <thead className="bg-gray-50 text-sm text-gray-600">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Nama</th>
@@ -256,7 +256,7 @@ const AbsenRowSkeleton = () => {
 const AbsenTableSkeleton = () => {
   return (
     <div className="overflow-x-auto bg-white rounded-xl shadow">
-      <table className="w-full min-w-[700px]">
+      <table className="w-full min-w-175">
         <thead className="bg-gray-50">
           <tr>
             <th className="px-4 py-3 text-left">

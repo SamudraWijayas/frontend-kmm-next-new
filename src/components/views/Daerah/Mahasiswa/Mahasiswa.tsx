@@ -1,11 +1,9 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { IGenerus } from "@/types/Generus";
 import DropdownAction from "@/components/commons/DropdownAction";
 import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
-import useChangeUrl from "@/hooks/useChangeUrls";
 import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import useMahasiswa from "./useMahasiswa";
@@ -14,7 +12,6 @@ import DeleteMumi from "@/components/ui/Modal/Mumi/DeleteMumi/DeleteMumi";
 import DetailMumi from "@/components/ui/Modal/Mumi/DetailMumi/DetailMumi";
 
 const Mahasiswa = () => {
-  const searchParams = useSearchParams();
   const getInitials = (name: string | undefined) => {
     if (!name) return "";
     const names = name.trim().split(" ");
@@ -32,24 +29,14 @@ const Mahasiswa = () => {
     refetchGenerus,
     selectedId,
     setSelectedId,
-
     filter,
     setFilter,
     dataJenjang,
   } = useMahasiswa();
 
-  const { setUrl } = useChangeUrl();
-
-  const addGenerus = useDisclosure();
   const deleteGenerus = useDisclosure();
   const updateGenerus = useDisclosure();
-
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
+  const addGenerus = useDisclosure(); // optional jika pakai tombol tambah
 
   const renderCell = useCallback(
     (generus: IGenerus, columnKey: React.Key) => {
@@ -59,17 +46,6 @@ const Mahasiswa = () => {
         case "nama":
           return (
             <div className="flex items-center gap-3 max-w-full">
-              {/* <Image
-                src={
-                  generus.foto
-                    ? `${process.env.NEXT_PUBLIC_IMAGE}${generus.foto}`
-                    : "/images/default-avatar.png" // fallback lokal
-                }
-                alt={generus.nama || "Foto Generus"}
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-full object-cover flex-shrink-0"
-              /> */}
               <Avatar
                 src={
                   generus.foto
@@ -78,9 +54,8 @@ const Mahasiswa = () => {
                 }
                 name={initial}
                 showFallback
-                className={`cursor-pointer bg-blue-100 text-blue-700 text-xl font-bold md:text-2xl`}
+                className="cursor-pointer bg-blue-100 text-blue-700 text-xl font-bold md:text-2xl"
               />
-
               <div className="flex flex-col overflow-hidden">
                 <span className="font-medium text-gray-800 truncate">
                   {generus.nama}
@@ -89,20 +64,17 @@ const Mahasiswa = () => {
                   {generus.tgl_lahir
                     ? `${Math.floor(
                         (Date.now() - new Date(generus.tgl_lahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 365)
+                          (1000 * 60 * 60 * 24 * 365),
                       )} tahun`
                     : "-"}
                 </span>
               </div>
             </div>
           );
-
         case "daerah":
           return generus.daerah?.name || "-";
-
         case "desa":
           return generus.desa?.name || "-";
-
         case "kelompok":
           return generus.kelompok?.name || "-";
         case "tgl_lahir":
@@ -115,7 +87,7 @@ const Mahasiswa = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )
                 : "-"}
             </span>
@@ -149,11 +121,12 @@ const Mahasiswa = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus]
+    [deleteGenerus, setSelectedId, updateGenerus],
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
+  // langsung render DataTable tanpa searchParams
+  const hasParams = true;
+
   return (
     <section>
       {hasParams && (
@@ -182,7 +155,7 @@ const Mahasiswa = () => {
                       jenis_kelamin: e.target.value,
                     }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   variant="flat"
                   placeholder="Jenis Kelamin"
@@ -193,7 +166,7 @@ const Mahasiswa = () => {
                 </Select>
               </div>
 
-              {/* filter jenjang */}
+              {/* Filter Jenjang */}
               <div className="flex flex-col">
                 <label className="text-xs text-gray-500 ml-1 mb-1">
                   Jenjang
@@ -201,12 +174,9 @@ const Mahasiswa = () => {
                 <Select
                   selectedKeys={filter.jenjang ? [filter.jenjang] : []}
                   onChange={(e) =>
-                    setFilter((prev) => ({
-                      ...prev,
-                      jenjang: e.target.value,
-                    }))
+                    setFilter((prev) => ({ ...prev, jenjang: e.target.value }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   placeholder="Jenjang"
                   variant="flat"
@@ -237,7 +207,6 @@ const Mahasiswa = () => {
                     }
                   />
                 </div>
-
                 <div className="flex flex-col w-[48%] sm:w-auto">
                   <label className="text-xs text-gray-500 ml-1 mb-1">
                     Usia Max

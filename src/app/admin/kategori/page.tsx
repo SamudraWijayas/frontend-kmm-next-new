@@ -1,3 +1,4 @@
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import KategoriIndikator from "@/components/views/Admin/KategoriIndikator";
 import React from "react";

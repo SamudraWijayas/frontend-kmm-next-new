@@ -107,8 +107,8 @@ const DetailMumi = (props: PropTypes) => {
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60">
-      <div className="relative z-[10001] flex h-full w-full flex-col overflow-x-hidden bg-gray-100 shadow-2xl">
+    <div className="fixed inset-0 z-10000 flex items-center justify-center bg-black/60">
+      <div className="relative z-10001 flex h-full w-full flex-col overflow-x-hidden bg-gray-100 shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4 shadow-md">
           <h2 className="text-lg font-semibold text-gray-900">

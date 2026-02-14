@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Mapel from "@/components/views/Admin/Mapel";
 import React from "react";

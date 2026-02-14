@@ -4,9 +4,9 @@ interface IUser {
   username?: string;
   role?: string;
   avatar?: string;
-  daerahId?: string | null;
-  desaId?: string | null;
-  kelompokId?: string | null;
+  daerahId?: string | number;
+  desaId?: string | number;
+  kelompokId?: string | number;
   daerah?: { id: string; name: string } | null;
   desa?: { id: string; name: string } | null;
   kelompok?: { id: string; name: string } | null;
