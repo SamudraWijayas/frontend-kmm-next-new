@@ -19,4 +19,4 @@ services:
 networks:
   backend-network:
     external: true
-    name: ppg_backend-network
+    name: backend-kmm-new_backend-network
