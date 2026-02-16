@@ -11,7 +11,7 @@ services:
       NEXT_PUBLIC_API_URL: http://backend-app:5000/api/
       NEXT_PUBLIC_IMAGE: http://backend-app:5000
       NEXTAUTH_SECRET: kmm-EOMKRZ9OdkEs5B3MYnvm7A==
-      NEXTAUTH_URL: http://76.13.187.228:3000
+      NEXTAUTH_URL: https://ppgbdl.com
       NODE_ENV: production
     networks:
       - backend-network
