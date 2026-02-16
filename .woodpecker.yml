@@ -13,7 +13,6 @@ steps:
         - cd /home/ppg/frontend-kmm-next-new
         - git pull origin main
         - docker compose down
-        - docker builder prune -a
         - docker compose up -d --build
         - docker image prune -f
     when:

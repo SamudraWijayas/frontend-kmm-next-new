@@ -53,13 +53,13 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
       className={cn(
         "fixed z-30 flex h-screen flex-col justify-between bg-white border-r border-gray-200 px-3 py-4 transition-all duration-300",
         collapsed ? "w-20" : widthCollapsed ? widthCollapsed : "w-65",
-        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       )}
     >
       {/* LOGO */}
       <div className="mb-6 flex items-center gap-2 px-2">
         <Image
-          src="/images/logo/logo-light.png"
+          src="/images/logo/logo-ppg.png"
           alt="logo"
           width={100}
           height={100}
@@ -80,7 +80,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
               className={cn(
                 "flex flex-col space-y-1",
                 collapsed && "items-center",
-                forceHideLabel && "items-center"
+                forceHideLabel && "items-center",
               )}
             >
               {section.items.map((item) => {
@@ -103,7 +103,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                 // ======================
                 if (hasChildren) {
                   const isActiveSub = item.children?.some((sub) =>
-                    pathname.startsWith(sub.href)
+                    pathname.startsWith(sub.href),
                   );
 
                   const isOpen = openMenu === item.key || isActiveSub;
@@ -113,7 +113,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                       <button
                         onClick={() => toggleMenu(item.key)}
                         className={cn(
-                          "flex w-full items-center gap-3 rounded-sm px-3 py-2 text-[13px] font-medium transition-colors text-blue-900/90 hover:bg-gray-50"
+                          "flex w-full items-center gap-3 rounded-sm px-3 py-2 text-[13px] font-medium transition-colors text-black hover:bg-gray-50",
                         )}
                       >
                         <span className="text-sm">{item.icon}</span>
@@ -133,19 +133,19 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                       <div
                         className={cn(
                           "ml-6 mt-1 overflow-hidden transition-all duration-500",
-                          isOpen ? "max-h-96" : "max-h-0"
+                          isOpen ? "max-h-96" : "max-h-0",
                         )}
                       >
                         <div className="relative flex flex-col pl-4">
                           {/* Vertical line root */}
                           <span
                             className={cn(
-                              "absolute left-0 top-0 w-4 h-14 border-l border-b border-gray-300 rounded-bl-md"
+                              "absolute left-0 top-0 w-4 h-14 border-l border-b border-gray-300 rounded-bl-md",
                             )}
                           ></span>
                           <span
                             className={cn(
-                              "absolute left-0 top-0 w-4 h-5 border-l border-b border-gray-300 rounded-bl-md"
+                              "absolute left-0 top-0 w-4 h-5 border-l border-b border-gray-300 rounded-bl-md",
                             )}
                           ></span>
 
@@ -155,9 +155,9 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                                 key={sub.key}
                                 href={sub.href}
                                 className={cn(
-                                  "relative py-2 pl-5 pr-3 text-[13px] rounded-md font-medium transition-colors hover:bg-blue-50 text-blue-900/90",
+                                  "relative py-2 pl-5 pr-3 text-[13px] rounded-md font-medium transition-colors hover:bg-green-50 ",
                                   pathname.startsWith(sub.href) &&
-                                    "bg-blue-100 text-blue-700"
+                                    "bg-green-50 text-green-900",
                                 )}
                               >
                                 {/* Branch connector */}
@@ -180,10 +180,10 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                     key={item.key}
                     href={item.href || "#"}
                     className={cn(
-                      "flex items-center gap-3 rounded-sm px-3 py-2 text-[13px] font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors",
                       item.href && pathname.startsWith(item.href)
-                        ? "border border-blue-400/50 bg-blue-200/50 text-blue-800"
-                        : "text-blue-900/90 hover:bg-gray-50"
+                        ? "bg-green-50 text-green-900"
+                        : "text-black hover:bg-gray-50",
                     )}
                   >
                     <span className="text-sm">{item.icon}</span>
