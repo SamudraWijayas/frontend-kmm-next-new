@@ -9,28 +9,23 @@ export default function Home() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:60px_60px] opacity-40 pointer-events-none" />
 
       {/* Navbar */}
-      <header className="relative z-10 flex items-center justify-between px-10 py-6">
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 md:py-6">
         <Image
           src="/images/logo/logo-ppg.png"
           alt="logo"
           width={100}
           height={100}
-          className="w-26 h-auto"
+          className="w-20 sm:w-24 md:w-26 h-auto"
         />
 
-        {/* <nav className="hidden md:flex gap-8 text-sm text-gray-700">
-          <a href="#">Solutions</a>
-          <a href="#">Customers</a>
-          <a href="#">Pricing</a>
-        </nav> */}
-
-        <div className="flex gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link
-            href="auth/login"
-            className="text-sm px-4 py-2 rounded-lg border border-gray-300"
+            href="/auth/login"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg border border-gray-300"
           >
             Log in
           </Link>
+
           <PWAInstallButton />
         </div>
       </header>

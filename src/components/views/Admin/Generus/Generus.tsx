@@ -12,6 +12,7 @@ import { IDesa } from "@/types/Desa";
 import DetailMumi from "@/components/ui/Modal/Mumi/DetailMumi/DetailMumi";
 import DeleteMumi from "@/components/ui/Modal/Mumi/DeleteMumi/DeleteMumi";
 import AddMumi from "@/components/ui/Modal/Mumi/AddMumi/AddMumi";
+import { exportGenerusToExcel } from "@/utils/exportGenerus";
 
 const Generus = () => {
   const getInitials = (name: string | undefined) => {
@@ -132,6 +133,13 @@ const Generus = () => {
 
   return (
     <section>
+      <button
+        onClick={() => exportGenerusToExcel(dataGenerus?.data || [])}
+        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm"
+      >
+        Export Excel
+      </button>
+
       {hasParams && (
         <DataTable
           buttonTopContentLabel="Tambah Muda Mudi"

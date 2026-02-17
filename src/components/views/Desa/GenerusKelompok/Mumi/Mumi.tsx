@@ -11,7 +11,7 @@ import { COLUMN_LIST_GENERUS } from "./Mumi.constant";
 import AddMumi from "@/components/ui/Modal/Mumi/AddMumi/AddMumi";
 import DeleteMumi from "@/components/ui/Modal/Mumi/DeleteMumi/DeleteMumi";
 import DetailMumi from "@/components/ui/Modal/Mumi/DetailMumi/DetailMumi";
-
+import { exportGenerusToExcel } from "@/utils/exportGenerus";
 
 const Mumi = () => {
   const searchParams = useSearchParams();
@@ -89,7 +89,7 @@ const Mumi = () => {
                   {generus.tgl_lahir
                     ? `${Math.floor(
                         (Date.now() - new Date(generus.tgl_lahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 365)
+                          (1000 * 60 * 60 * 24 * 365),
                       )} tahun`
                     : "-"}
                 </span>
@@ -115,7 +115,7 @@ const Mumi = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )
                 : "-"}
             </span>
@@ -149,13 +149,19 @@ const Mumi = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus]
+    [deleteGenerus, setSelectedId, updateGenerus],
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
   const hasParams = searchParams.toString() !== "";
   return (
     <section>
+      <button
+        onClick={() => exportGenerusToExcel(dataGenerus?.data || [])}
+        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm"
+      >
+        Export Excel
+      </button>
       {hasParams && (
         <DataTable
           buttonTopContentLabel="Create Generus"

@@ -3,6 +3,7 @@ const LIMIT_LIST = [
   { label: "12", value: 12 },
   { label: "16", value: 16 },
   { label: "50", value: 50 },
+  { label: "99999", value: 99999 },
 ];
 
 const LIMIT_DEFAULT = LIMIT_LIST[0].value;
