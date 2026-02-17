@@ -1,3 +1,4 @@
+import PWAInstallButton from "@/components/ui/PWAInstallButton/PWAInstallButton";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -30,6 +31,7 @@ export default function Home() {
           >
             Log in
           </Link>
+          <PWAInstallButton />
         </div>
       </header>
 
