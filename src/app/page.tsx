@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f8faf9] relative overflow-hidden">
       {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:60px_60px] opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-size-[60px_60px] opacity-40 pointer-events-none" />
 
       {/* Navbar */}
       <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 md:py-6">

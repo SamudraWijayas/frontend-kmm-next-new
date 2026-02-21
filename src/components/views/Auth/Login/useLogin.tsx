@@ -50,7 +50,7 @@ const useLogin = () => {
     onError: () => {
       setToaster({
         type: "error",
-        message: "Email atau password salah",
+        message: "Username atau password salah",
       });
     },
     onSuccess: () => {
