@@ -237,8 +237,6 @@ const AddUserModal = ({
                       disallowEmptySelection
                     >
                       {[
-                        "SUPERADMIN",
-                        "ADMIN",
                         "DAERAH",
                         "SUBDAERAH",
                         "DESA",

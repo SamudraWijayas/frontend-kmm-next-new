@@ -107,6 +107,14 @@ interface IUpdatePassword {
   confirmPassword: string;
 }
 
+interface PushSubscribePayload {
+  endpoint?: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+}
+
 export type {
   IRegister,
   IActivation,
@@ -116,4 +124,5 @@ export type {
   ILogin,
   IProfile,
   IUpdatePassword,
+  PushSubscribePayload,
 };

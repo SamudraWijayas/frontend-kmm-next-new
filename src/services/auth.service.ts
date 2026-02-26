@@ -6,6 +6,7 @@ import {
   IProfile,
   IRegister,
   IUpdatePassword,
+  PushSubscribePayload,
 } from "@/types/Auth";
 
 const authServices = {
@@ -27,10 +28,12 @@ const authServices = {
   updateProfile: (payload: IProfile) =>
     instance.put(`${endpoint.AUTH}/update-profile`, payload),
 
-  
   updatePassword: (payload: IUpdatePassword) =>
     instance.put(`${endpoint.AUTH}/update-password`, payload),
   // reset password
+
+  pushNotification: (data: PushSubscribePayload) =>
+    instance.post(`${endpoint.PUSH}/subscribe`, data),
 };
 
 export default authServices;

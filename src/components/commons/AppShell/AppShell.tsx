@@ -14,7 +14,6 @@ const AppShell = ({ children }: PropTypes) => {
 
   useEffect(() => {
     if (toaster.type !== "" && toaster.message) {
-      console.log("AppShell: Calling addToast with:", toaster);
       addToast({
         title:
           toaster.type === "success"

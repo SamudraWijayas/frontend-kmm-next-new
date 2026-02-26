@@ -1,4 +1,3 @@
-// components/ClientProviders.tsx
 "use client";
 
 import { ReactNode } from "react";
@@ -34,7 +33,8 @@ export default function Providers({ children }: Props) {
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider>
           <ToasterProvider>
-            {/* jika session client */}
+            {/* <PushNotification /> */}
+
             <AppShell>{children}</AppShell>
           </ToasterProvider>
         </HeroUIProvider>

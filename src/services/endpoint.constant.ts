@@ -18,6 +18,7 @@ const endpoint = {
   KATE: "/kategori-indikator",
   ABSEN: "/absen",
   CATATAN: "/catatan-wali",
+  PUSH: "/push",
 };
 
 export default endpoint;
