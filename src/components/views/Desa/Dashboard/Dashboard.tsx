@@ -5,7 +5,6 @@ import useDashboard from "./useDashboard";
 import { User, Group } from "lucide-react";
 import StatistikGenerusDesaByJenjang from "@/components/ui/Charts/StatistikGenerusDesaByJenjang";
 import DashboardBox from "@/components/ui/DashboardBox/DashboardBox";
-import { Skeleton } from "@heroui/react";
 
 const Dashboard = () => {
   const {
@@ -15,6 +14,8 @@ const Dashboard = () => {
     isLoadingStatistikByDesa,
     dataTotalMumi,
     isLoadingTotalMumi,
+    isLoadingTotalCaberawit,
+    isLoadingTotalKelompok,
   } = useDashboard();
   console.log("statistik", dataStatistikByDesa);
 
@@ -31,39 +32,24 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full flex-1">
             <DashboardBox
               title="Total Muda-Mudi"
-              count={
-                isLoadingTotalMumi ? (
-                  <Skeleton className="h-6 w-20 rounded-md" />
-                ) : (
-                  totalMumi
-                )
-              }
+              count={totalMumi}
+              loading={isLoadingTotalMumi}
               colors={["#16325B", "#4066B8"]}
               icon={<User size={36} />}
             />
 
             <DashboardBox
               title="Total Caberawit"
-              count={
-                isLoadingTotalMumi ? (
-                  <Skeleton className="h-6 w-20 rounded-md" />
-                ) : (
-                  totalCaberawit
-                )
-              }
+              count={totalCaberawit}
+              loading={isLoadingTotalCaberawit}
               colors={["#E1AE3E", "#F6CD46"]}
               icon={<User size={36} />}
             />
 
             <DashboardBox
               title="Total Kelompok"
-              count={
-                isLoadingTotalMumi ? (
-                  <Skeleton className="h-6 w-20 rounded-md" />
-                ) : (
-                  totalKelompok
-                )
-              }
+              count={totalKelompok}
+              loading={isLoadingTotalKelompok}
               colors={["#E14862", "#F34F7D"]}
               icon={<Group size={36} />}
             />

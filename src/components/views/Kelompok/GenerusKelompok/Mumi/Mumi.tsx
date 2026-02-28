@@ -37,18 +37,11 @@ const Mumi = () => {
     dataJenjang,
   } = useMumi();
 
-  const { setUrl } = useChangeUrl();
 
   const addGenerus = useDisclosure();
   const deleteGenerus = useDisclosure();
   const updateGenerus = useDisclosure();
 
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (generus: IGenerus, columnKey: React.Key) => {
@@ -144,11 +137,9 @@ const Mumi = () => {
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
   return (
     <section>
-      {hasParams && (
-        <DataTable
+   <DataTable
           buttonTopContentLabel="Create Generus"
           columns={COLUMN_LIST_GENERUS}
           data={dataGenerus?.data || []}
@@ -251,7 +242,6 @@ const Mumi = () => {
             </div>
           }
         />
-      )}
       <AddMumi {...addGenerus} refetchGenerus={refetchGenerus} />
       <DeleteMumi
         {...deleteGenerus}

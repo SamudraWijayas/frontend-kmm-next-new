@@ -1,6 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Generus from "@/components/views/Daerah/Generus";
-import React from "react";
+
 
 const ListGenerusPage = () => {
   return (

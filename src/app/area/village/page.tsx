@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import ListDesa from "@/components/views/Daerah/ListDesa";
 import React from "react";

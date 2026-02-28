@@ -13,11 +13,11 @@ const generusServices = {
     ),
   getGenerusByMahasiswaDesa: (desaId: string, params?: string) =>
     instance.get(
-      `${endpoint.GENERUS}/${desaId}/mahasiswa${params ? `?${params}` : ""}`,
+      `${endpoint.GENERUS}/${desaId}/mahasiswa/desa${params ? `?${params}` : ""}`,
     ),
   getGenerusByMahasiswaDaerah: (daerahId: string, params?: string) =>
     instance.get(
-      `${endpoint.GENERUS}/${daerahId}/mahasiswa${params ? `?${params}` : ""}`,
+      `${endpoint.GENERUS}/${daerahId}/mahasiswa/daerah${params ? `?${params}` : ""}`,
     ),
   getGenerusByMahasiswaKelompok: (kelompokId: string, params?: string) =>
     instance.get(

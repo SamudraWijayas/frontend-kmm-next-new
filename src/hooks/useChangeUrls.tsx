@@ -1,35 +1,33 @@
 "use client";
 
 import { DELAY, LIMIT_DEFAULT, PAGE_DEFAULT } from "@/constants/list.constants";
-import { useRouter, usePathname } from "next/navigation";
-import { ChangeEvent } from "react";
-import { useCallback } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { ChangeEvent, useCallback } from "react";
 import useDebounce from "./useDebounce";
 
 const useChangeUrl = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const debounce = useDebounce();
 
-  // Ambil params dari window.location.search
-  const getCurrentParams = () => {
-    if (typeof window === "undefined") return new URLSearchParams();
-    return new URLSearchParams(window.location.search);
-  };
+  // ✅ Ambil params langsung dari useSearchParams (reactive & stabil)
+  const currentLimit = searchParams.get("limit") ?? String(LIMIT_DEFAULT);
 
-  const currentParams = getCurrentParams();
+  const currentPage = searchParams.get("page") ?? String(PAGE_DEFAULT);
 
-  const currentLimit = currentParams.get("limit") || String(LIMIT_DEFAULT);
-  const currentPage = currentParams.get("page") || String(PAGE_DEFAULT);
-  const currentSearch = currentParams.get("search") || "";
-  const currentCategory = currentParams.get("category") || "";
-  const currentIsOnline = currentParams.get("isOnline") || "";
-  const currentIsFeatured = currentParams.get("isFeatured") || "";
+  const currentSearch = searchParams.get("search") ?? "";
 
-  // helper buat update URL
+  const currentCategory = searchParams.get("category") ?? "";
+
+  const currentIsOnline = searchParams.get("isOnline") ?? "";
+
+  const currentIsFeatured = searchParams.get("isFeatured") ?? "";
+
+  // ✅ Helper update URL yang aman
   const setParams = useCallback(
     (newParams: Record<string, string | number | null>) => {
-      const params = getCurrentParams();
+      const params = new URLSearchParams(searchParams.toString());
 
       Object.entries(newParams).forEach(([key, value]) => {
         if (value === null || value === "") {
@@ -40,42 +38,19 @@ const useChangeUrl = () => {
       });
 
       const newUrl = `${pathname}?${params.toString()}`;
-      const currentUrl = `${pathname}${window.location.search}`;
+      const currentUrl = `${pathname}?${searchParams.toString()}`;
 
       if (newUrl !== currentUrl) {
         router.replace(newUrl);
       }
     },
-    [pathname, router]
+    [pathname, router, searchParams],
   );
 
-  // URL updater utama
-  const setUrl = useCallback(() => {
-    setParams({
-      limit: currentLimit || LIMIT_DEFAULT,
-      page: currentPage || PAGE_DEFAULT,
-      search: currentSearch || "",
-    });
-  }, [setParams, currentLimit, currentPage, currentSearch]);
-
-  const setUrlExplore = useCallback(() => {
-    setParams({
-      limit: currentLimit || LIMIT_DEFAULT,
-      page: currentPage || PAGE_DEFAULT,
-      category: currentCategory || "",
-      isOnline: currentIsOnline || "",
-      isFeatured: currentIsFeatured || "",
-    });
-  }, [
-    setParams,
-    currentLimit,
-    currentPage,
-    currentCategory,
-    currentIsOnline,
-    currentIsFeatured,
-  ]);
-
+  // =========================
   // Handlers
+  // =========================
+
   const handleChangePage = (page: number) => {
     setParams({ page });
   };
@@ -99,6 +74,7 @@ const useChangeUrl = () => {
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
+
     debounce(() => {
       setParams({ search, page: PAGE_DEFAULT });
     }, DELAY);
@@ -117,9 +93,6 @@ const useChangeUrl = () => {
     currentCategory,
     currentIsOnline,
     currentIsFeatured,
-
-    setUrl,
-    setUrlExplore,
 
     handleChangePage,
     handleChangeLimit,

@@ -54,7 +54,6 @@ const ListKate = () => {
     [deleteKate, setSelectedId, updateKate]
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
 
   return (
     <section>

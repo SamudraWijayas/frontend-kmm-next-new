@@ -27,18 +27,11 @@ const Indikator = () => {
     dataKate,
   } = useIndikator();
 
-  const { setUrl } = useChangeUrl();
 
   const addIndikator = useDisclosure();
   const deleteIndikator = useDisclosure();
   const updateIndikator = useDisclosure();
 
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (indikator: IIndikator, columnKey: React.Key) => {
@@ -72,12 +65,9 @@ const Indikator = () => {
     [deleteIndikator, setSelectedId, updateIndikator]
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
 
   return (
     <section>
-      {hasParams && (
         <DataTable
           buttonTopContentLabel="Tambah Indikator"
           columns={COLUMN_LIST_INDIKATOR}
@@ -88,7 +78,6 @@ const Indikator = () => {
           renderCell={renderCell}
           totalPages={0}
         />
-      )}
 
       <AddIndikator {...addIndikator} refetchIndikator={refetchIndikator} />
       {/* 

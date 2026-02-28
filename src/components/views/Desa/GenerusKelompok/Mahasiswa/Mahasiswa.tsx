@@ -1,18 +1,15 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { IGenerus } from "@/types/Generus";
 import DropdownAction from "@/components/commons/DropdownAction";
 import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
-import useChangeUrl from "@/hooks/useChangeUrls";
 import { IJenjang } from "@/types/Jenjang";
 import DataTable from "@/components/ui/DataTable";
 import useMahasiswa from "./useMahasiswa";
 import { COLUMN_LIST_GENERUS } from "./Mahasiswa.constant";
 
 const Mahasiswa = () => {
-  const searchParams = useSearchParams();
   const getInitials = (name: string | undefined) => {
     if (!name) return "";
     const names = name.trim().split(" ");
@@ -27,8 +24,7 @@ const Mahasiswa = () => {
     dataGenerus,
     isLoadingGenerus,
     isRefetchingGenerus,
-    refetchGenerus,
-    selectedId,
+
     setSelectedId,
 
     filter,
@@ -36,18 +32,9 @@ const Mahasiswa = () => {
     dataJenjang,
   } = useMahasiswa();
 
-  const { setUrl } = useChangeUrl();
-
   const addGenerus = useDisclosure();
   const deleteGenerus = useDisclosure();
   const updateGenerus = useDisclosure();
-
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (generus: IGenerus, columnKey: React.Key) => {
@@ -87,7 +74,7 @@ const Mahasiswa = () => {
                   {generus.tgl_lahir
                     ? `${Math.floor(
                         (Date.now() - new Date(generus.tgl_lahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 365)
+                          (1000 * 60 * 60 * 24 * 365),
                       )} tahun`
                     : "-"}
                 </span>
@@ -113,7 +100,7 @@ const Mahasiswa = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )
                 : "-"}
             </span>
@@ -147,11 +134,11 @@ const Mahasiswa = () => {
           return cellValue as ReactNode;
       }
     },
-    [deleteGenerus, setSelectedId, updateGenerus]
+    [deleteGenerus, setSelectedId, updateGenerus],
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
+  const hasParams = true;
+
   return (
     <section>
       {hasParams && (
@@ -181,7 +168,7 @@ const Mahasiswa = () => {
                       jenis_kelamin: e.target.value,
                     }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25"
                   size="sm"
                   variant="flat"
                   placeholder="Jenis Kelamin"
@@ -205,7 +192,7 @@ const Mahasiswa = () => {
                       jenjang: e.target.value,
                     }))
                   }
-                  className="w-full sm:w-40 min-w-[100px]"
+                  className="w-full sm:w-40 min-w-25[100px]"
                   size="sm"
                   placeholder="Jenjang"
                   variant="flat"

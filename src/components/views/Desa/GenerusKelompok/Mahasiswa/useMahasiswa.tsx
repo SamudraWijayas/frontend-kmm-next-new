@@ -5,7 +5,6 @@ import generusServices from "@/services/generus.service";
 import { useQuery } from "@tanstack/react-query";
 import jenjangServices from "@/services/jenjang.service";
 import { useParams } from "next/navigation";
-import authServices from "@/services/auth.service";
 
 const useMahasiswa = () => {
   const [isReady, setIsReady] = useState(false);

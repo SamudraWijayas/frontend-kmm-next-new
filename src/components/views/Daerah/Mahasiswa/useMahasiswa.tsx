@@ -1,11 +1,9 @@
 import useChangeUrl from "@/hooks/useChangeUrls";
 import { IGenerus } from "@/types/Generus";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import generusServices from "@/services/generus.service";
 import { useQuery } from "@tanstack/react-query";
 import jenjangServices from "@/services/jenjang.service";
-import { useParams } from "next/navigation";
-import authServices from "@/services/auth.service";
 import useProfile from "@/hooks/useProfile";
 
 const useMahasiswa = () => {

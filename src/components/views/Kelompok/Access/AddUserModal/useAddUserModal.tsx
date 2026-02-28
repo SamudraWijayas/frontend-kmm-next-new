@@ -4,9 +4,11 @@ import { ToasterContext } from "@/contexts/ToasterContext";
 import useProfile from "@/hooks/useProfile";
 
 import userServices from "@/services/user.service";
+import { ErrorResponse } from "@/types/Response";
 import { IUserForm } from "@/types/User";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -37,6 +39,12 @@ const useAddUserModal = () => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      fullName: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const selectedRole = watch("role");
@@ -52,11 +60,22 @@ const useAddUserModal = () => {
     isSuccess: isSuccessMutateAddUser,
   } = useMutation({
     mutationFn: addUser,
-    onError: (error) => {
-      setToaster({
-        type: "error",
-        message: error.message,
-      });
+    onError: (error: AxiosError<ErrorResponse>) => {
+      const data = error?.response?.data?.data;
+
+      if (data) {
+        const firstError = Object.values(data)[0]; // ambil error pertama
+
+        setToaster({
+          type: "error",
+          message: firstError || "Gagal set password",
+        });
+      } else {
+        setToaster({
+          type: "error",
+          message: "Gagal set password",
+        });
+      }
     },
     onSuccess: () => {
       setToaster({

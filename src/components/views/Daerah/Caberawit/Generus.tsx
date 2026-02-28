@@ -1,9 +1,8 @@
 "use client";
 
-import React, { ReactNode, useCallback, useEffect } from "react";
-import useChangeUrl from "@/hooks/useChangeUrls";
+import React, { ReactNode, useCallback } from "react";
 import DataTable from "@/components/ui/DataTable";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import DropdownAction from "@/components/commons/DropdownAction";
 import { Avatar, Chip, Select, SelectItem, useDisclosure } from "@heroui/react";
 import useGenerus from "./useGenerus";
@@ -16,7 +15,6 @@ import { IKelasJenjang } from "@/types/KelasJenjang";
 
 const Generus = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const getInitials = (name: string | undefined) => {
     if (!name) return "";
     const names = name.trim().split(" ");
@@ -40,18 +38,9 @@ const Generus = () => {
     dataKelas,
   } = useGenerus();
 
-  const { setUrl } = useChangeUrl();
-
   const addGenerus = useDisclosure();
   const deleteGenerus = useDisclosure();
   const updateGenerus = useDisclosure();
-
-  // ✅ App Router tidak punya isReady, jadi cek param lewat searchParams
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (generus: IGenerus, columnKey: React.Key) => {
@@ -162,115 +151,110 @@ const Generus = () => {
   );
 
   // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
-  const hasParams = searchParams.toString() !== "";
 
   return (
     <section>
-      {hasParams && (
-        <DataTable
-          buttonTopContentLabel="Tambah Caberawit"
-          columns={COLUMN_LIST_GENERUS}
-          data={dataGenerus?.data || []}
-          emptyContent="Caberawit is empty"
-          isLoading={isLoadingGenerus || isRefetchingGenerus}
-          onClickButtonTopContent={addGenerus.onOpen}
-          renderCell={renderCell}
-          totalPages={dataGenerus?.pagination.totalPages || 0}
-          dropdownContent={
-            <div className="flex flex-wrap items-end gap-3 sm:gap-4">
-              {/* Filter Jenis Kelamin */}
-              <div className="flex flex-col">
+      <DataTable
+        buttonTopContentLabel="Tambah Caberawit"
+        columns={COLUMN_LIST_GENERUS}
+        data={dataGenerus?.data || []}
+        emptyContent="Caberawit is empty"
+        isLoading={isLoadingGenerus || isRefetchingGenerus}
+        onClickButtonTopContent={addGenerus.onOpen}
+        renderCell={renderCell}
+        totalPages={dataGenerus?.pagination.totalPages || 0}
+        dropdownContent={
+          <div className="flex flex-wrap items-end gap-3 sm:gap-4">
+            {/* Filter Jenis Kelamin */}
+            <div className="flex flex-col">
+              <label className="text-xs text-gray-500 ml-1 mb-1">
+                Jenis Kelamin
+              </label>
+              <Select
+                selectedKeys={
+                  filter.jenis_kelamin ? [filter.jenis_kelamin] : []
+                }
+                onChange={(e) =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    jenis_kelamin: e.target.value,
+                  }))
+                }
+                placeholder="Jenis Kelamin"
+                className="w-full sm:w-40 min-w-25"
+                size="sm"
+                variant="flat"
+              >
+                <SelectItem key="">Semua</SelectItem>
+                <SelectItem key="Laki-laki">Laki-laki</SelectItem>
+                <SelectItem key="Perempuan">Perempuan</SelectItem>
+              </Select>
+            </div>
+
+            {/* filter jenjang */}
+            <div className="flex flex-col">
+              <label className="text-xs text-gray-500 ml-1 mb-1">Kelas</label>
+              <Select
+                selectedKeys={filter.kelasjenjang ? [filter.kelasjenjang] : []}
+                onChange={(e) =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    kelasjenjang: e.target.value,
+                  }))
+                }
+                className="w-full sm:w-40 min-w-25"
+                size="sm"
+                placeholder="Kelas"
+                variant="flat"
+              >
+                <SelectItem key="">Semua</SelectItem>
+                {dataKelas?.map((item: IKelasJenjang) => (
+                  <SelectItem key={item.id}>{item.name}</SelectItem>
+                ))}
+              </Select>
+            </div>
+
+            {/* Filter Usia */}
+            <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full sm:w-auto">
+              <div className="flex flex-col w-[48%] sm:w-auto">
                 <label className="text-xs text-gray-500 ml-1 mb-1">
-                  Jenis Kelamin
+                  Usia Min
                 </label>
-                <Select
-                  selectedKeys={
-                    filter.jenis_kelamin ? [filter.jenis_kelamin] : []
-                  }
+                <input
+                  type="number"
+                  placeholder="Min"
+                  className="border border-gray-300 rounded-md px-3 py-1.5 w-full sm:w-24 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                  value={filter.minUsia || ""}
                   onChange={(e) =>
                     setFilter((prev) => ({
                       ...prev,
-                      jenis_kelamin: e.target.value,
+                      minUsia: e.target.value,
                     }))
                   }
-                  placeholder="Jenis Kelamin"
-                  className="w-full sm:w-40 min-w-25"
-                  size="sm"
-                  variant="flat"
-                >
-                  <SelectItem key="">Semua</SelectItem>
-                  <SelectItem key="Laki-laki">Laki-laki</SelectItem>
-                  <SelectItem key="Perempuan">Perempuan</SelectItem>
-                </Select>
+                />
               </div>
 
-              {/* filter jenjang */}
-              <div className="flex flex-col">
-                <label className="text-xs text-gray-500 ml-1 mb-1">Kelas</label>
-                <Select
-                  selectedKeys={
-                    filter.kelasjenjang ? [filter.kelasjenjang] : []
-                  }
+              <div className="flex flex-col w-[48%] sm:w-auto">
+                <label className="text-xs text-gray-500 ml-1 mb-1">
+                  Usia Max
+                </label>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  className="border border-gray-300 rounded-md px-3 py-1.5 w-full sm:w-24 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                  value={filter.maxUsia || ""}
                   onChange={(e) =>
                     setFilter((prev) => ({
                       ...prev,
-                      kelasjenjang: e.target.value,
+                      maxUsia: e.target.value,
                     }))
                   }
-                  className="w-full sm:w-40 min-w-25"
-                  size="sm"
-                  placeholder="Kelas"
-                  variant="flat"
-                >
-                  <SelectItem key="">Semua</SelectItem>
-                  {dataKelas?.map((item: IKelasJenjang) => (
-                    <SelectItem key={item.id}>{item.name}</SelectItem>
-                  ))}
-                </Select>
-              </div>
-
-              {/* Filter Usia */}
-              <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full sm:w-auto">
-                <div className="flex flex-col w-[48%] sm:w-auto">
-                  <label className="text-xs text-gray-500 ml-1 mb-1">
-                    Usia Min
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    className="border border-gray-300 rounded-md px-3 py-1.5 w-full sm:w-24 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
-                    value={filter.minUsia || ""}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        minUsia: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="flex flex-col w-[48%] sm:w-auto">
-                  <label className="text-xs text-gray-500 ml-1 mb-1">
-                    Usia Max
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    className="border border-gray-300 rounded-md px-3 py-1.5 w-full sm:w-24 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
-                    value={filter.maxUsia || ""}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        maxUsia: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
+                />
               </div>
             </div>
-          }
-        />
-      )}
+          </div>
+        }
+      />
       <AddGenerus {...addGenerus} refetchGenerus={refetchGenerus} />
       <DeleteGenerus
         {...deleteGenerus}

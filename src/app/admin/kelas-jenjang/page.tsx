@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import KelasJenjang from "@/components/views/Admin/KelasJenjang";
 import React from "react";

@@ -2,13 +2,13 @@
 
 import { ToasterContext } from "@/contexts/ToasterContext";
 import authServices from "@/services/auth.service";
-import daerahServices from "@/services/daerah.service";
-import desaServices from "@/services/desa.service";
-import kelompokServices from "@/services/kelompok.service";
+
 import userServices from "@/services/user.service";
+import { ErrorResponse } from "@/types/Response";
 import { IUserForm } from "@/types/User";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -54,6 +54,12 @@ const useAddUserModal = () => {
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      fullName: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const selectedRole = watch("role");
@@ -69,11 +75,22 @@ const useAddUserModal = () => {
     isSuccess: isSuccessMutateAddUser,
   } = useMutation({
     mutationFn: addUser,
-    onError: (error) => {
-      setToaster({
-        type: "error",
-        message: error.message,
-      });
+    onError: (error: AxiosError<ErrorResponse>) => {
+      const data = error?.response?.data?.data;
+
+      if (data) {
+        const firstError = Object.values(data)[0]; // ambil error pertama
+
+        setToaster({
+          type: "error",
+          message: firstError || "Gagal set password",
+        });
+      } else {
+        setToaster({
+          type: "error",
+          message: "Gagal set password",
+        });
+      }
     },
     onSuccess: () => {
       setToaster({

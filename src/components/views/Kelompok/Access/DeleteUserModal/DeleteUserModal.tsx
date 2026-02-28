@@ -54,7 +54,7 @@ const DeleteUserModal = (props: PropTypes) => {
       <ModalContent className="m-4">
         <ModalHeader>Delete User</ModalHeader>
         <ModalBody>
-          <p>Are you sure </p>
+          <p>Anda yakin ingin menghapus user ini?</p>
         </ModalBody>
         <ModalFooter>
           <Button

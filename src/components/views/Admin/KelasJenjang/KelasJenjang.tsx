@@ -16,20 +16,13 @@ const ListKelasJenjang = () => {
     isLoadingKelasJenjang,
     isRefetchingKelasJenjang,
     refetchKelasJenjang,
-    selectedId,
     setSelectedId,
   } = useListKelasJenjang();
-
-  const { setUrl } = useChangeUrl();
 
   const addKelasJenjang = useDisclosure();
   const deleteKelasJenjang = useDisclosure();
   const updateKelasJenjang = useDisclosure();
 
-  // ✅ Jalankan setUrl langsung tanpa searchParams
-  React.useEffect(() => {
-    setUrl();
-  }, [setUrl]);
 
   const renderCell = useCallback(
     (kelas: IKelasJenjang, columnKey: React.Key) => {
@@ -60,11 +53,9 @@ const ListKelasJenjang = () => {
   );
 
   // ✅ Selalu tampilkan DataTable karena tidak ada searchParams
-  const hasParams = true;
 
   return (
     <section>
-      {hasParams && (
         <DataTable
           buttonTopContentLabel="Tambah KelasJenjang"
           columns={COLUMN_LIST_KELAS}
@@ -75,7 +66,6 @@ const ListKelasJenjang = () => {
           renderCell={renderCell}
           totalPages={0}
         />
-      )}
       <AddKelasJenjang
         {...addKelasJenjang}
         refetchKelasJenjang={refetchKelasJenjang}

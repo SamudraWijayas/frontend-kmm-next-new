@@ -29,19 +29,10 @@ const AdminTab = () => {
   const deleteUserModal = useDisclosure();
   const updateUserModal = useDisclosure();
 
-  const { setUrl } = useChangeUrl();
-
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
-
   const renderCell = useCallback(
     (user: IUser, columnKey: React.Key) => {
       const cellValue = user[columnKey as keyof typeof user];
       switch (columnKey) {
-
         case "actions":
           return (
             <DropdownAction
@@ -64,23 +55,19 @@ const AdminTab = () => {
     [setSelectedId, updateUserModal, deleteUserModal],
   );
 
-  const hasParams = searchParams.toString() !== "";
-
   return (
     <section>
-      {hasParams && (
-        <DataTable
-          buttonTopContentLabel="Create User"
-          columns={COLUMN_LIST_USER}
-          data={dataUsers?.data || []}
-          searchName="Cari Pengguna"
-          emptyContent="users desa is empty"
-          isLoading={isLoadingUsers || isRefetchingUsers}
-          onClickButtonTopContent={addUserModal.onOpen}
-          renderCell={renderCell}
-          totalPages={dataUsers?.pagination.totalPages || 0}
-        />
-      )}
+      <DataTable
+        buttonTopContentLabel="Create User"
+        columns={COLUMN_LIST_USER}
+        data={dataUsers?.data || []}
+        searchName="Cari Pengguna"
+        emptyContent="users desa is empty"
+        isLoading={isLoadingUsers || isRefetchingUsers}
+        onClickButtonTopContent={addUserModal.onOpen}
+        renderCell={renderCell}
+        totalPages={dataUsers?.pagination.totalPages || 0}
+      />
       <AddUserModal refetchUser={refetchUsers} {...addUserModal} />
       <DeleteUserModal
         refetchUsers={refetchUsers}

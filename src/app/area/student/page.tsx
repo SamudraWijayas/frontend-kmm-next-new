@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Mahasiswa from "@/components/views/Daerah/Mahasiswa/Mahasiswa";
 import React from "react";

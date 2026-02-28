@@ -2,10 +2,8 @@
 
 import React from "react";
 import useDashboard from "./useDashboard";
-import { MapPin, Home, Users, ArrowUpRight, User, Group } from "lucide-react";
-import StatistikGenerusDesaByJenjang from "@/components/ui/Charts/StatistikGenerusDesaByJenjang";
+import { User, Group } from "lucide-react";
 import DashboardBox from "@/components/ui/DashboardBox/DashboardBox";
-import { Skeleton } from "@heroui/react";
 import StatistikGenerusKelompok from "@/components/ui/Charts/StatistikGenerusKelompok";
 
 const Dashboard = () => {

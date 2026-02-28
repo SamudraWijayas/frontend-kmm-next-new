@@ -1,6 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Caberawit from "@/components/views/Admin/Caberawit";
-import React from "react";
 
 const ListGenerusPage = () => {
   return (

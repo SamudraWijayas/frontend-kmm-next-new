@@ -28,13 +28,7 @@ const AdminTab = () => {
   const deleteUserModal = useDisclosure();
   const updateUserModal = useDisclosure();
 
-  const { setUrl } = useChangeUrl();
 
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
 
   const renderCell = useCallback(
     (user: IUser, columnKey: React.Key) => {
@@ -64,11 +58,9 @@ const AdminTab = () => {
     [setSelectedId, updateUserModal, deleteUserModal]
   );
 
-  const hasParams = searchParams.toString() !== "";
 
   return (
     <section>
-      {hasParams && (
         <DataTable
           buttonTopContentLabel="Create User"
           columns={COLUMN_LIST_USER}
@@ -84,7 +76,6 @@ const AdminTab = () => {
           renderCell={renderCell}
           totalPages={dataUsers?.pagination.totalPages || 0}
         />
-      )}
       <AddUserModal refetchUser={refetchUsers} {...addUserModal} />
       <DeleteUserModal
         refetchUsers={refetchUsers}

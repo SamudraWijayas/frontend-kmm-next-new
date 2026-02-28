@@ -1,4 +1,4 @@
-import React, {  ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback, useEffect } from "react";
 import useAdminTab from "./useKelompokTab";
 import { useSearchParams } from "next/navigation";
 import useChangeUrl from "@/hooks/useChangeUrls";
@@ -28,19 +28,11 @@ const AdminTab = () => {
   const deleteUserModal = useDisclosure();
   const updateUserModal = useDisclosure();
 
-  const { setUrl } = useChangeUrl();
-
-  useEffect(() => {
-    if (searchParams) {
-      setUrl();
-    }
-  }, [searchParams, setUrl]);
-
   const renderCell = useCallback(
     (user: IUser, columnKey: React.Key) => {
       const cellValue = user[columnKey as keyof typeof user];
       switch (columnKey) {
-         case "kelompok":
+        case "kelompok":
           return user.kelompok?.name || "-";
         case "actions":
           return (
@@ -61,30 +53,27 @@ const AdminTab = () => {
           return cellValue as ReactNode;
       }
     },
-    [setSelectedId, updateUserModal, deleteUserModal]
+    [setSelectedId, updateUserModal, deleteUserModal],
   );
 
-  const hasParams = searchParams.toString() !== "";
 
   return (
     <section>
-      {hasParams && (
-        <DataTable
-          buttonTopContentLabel="Create User"
-          columns={COLUMN_LIST_USER}
-          data={
-            dataUsers?.data?.filter(
-              (user: IUser) =>
-                user.role === "KELOMPOK" || user.role === "SUBKELOMPOK"
-            ) || []
-          }
-          emptyContent="users kelompok is empty"
-          isLoading={isLoadingUsers || isRefetchingUsers}
-          onClickButtonTopContent={addUserModal.onOpen}
-          renderCell={renderCell}
-          totalPages={dataUsers?.pagination.totalPages || 0}
-        />
-      )}
+      <DataTable
+        buttonTopContentLabel="Create User"
+        columns={COLUMN_LIST_USER}
+        data={
+          dataUsers?.data?.filter(
+            (user: IUser) =>
+              user.role === "KELOMPOK" || user.role === "SUBKELOMPOK",
+          ) || []
+        }
+        emptyContent="users kelompok is empty"
+        isLoading={isLoadingUsers || isRefetchingUsers}
+        onClickButtonTopContent={addUserModal.onOpen}
+        renderCell={renderCell}
+        totalPages={dataUsers?.pagination.totalPages || 0}
+      />
       <AddUserModal refetchUser={refetchUsers} {...addUserModal} />
       <DeleteUserModal
         refetchUsers={refetchUsers}

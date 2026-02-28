@@ -1,10 +1,8 @@
 "use client";
 
-import React, { ReactNode, useCallback, useEffect } from "react";
-import useChangeUrl from "@/hooks/useChangeUrls";
+import React, { ReactNode, useCallback } from "react";
 import DataTable from "@/components/ui/DataTable";
 import { COLUMN_LIST_MAPEL } from "./Mapel.constant";
-import { useSearchParams } from "next/navigation";
 import DropdownAction from "@/components/commons/DropdownAction";
 import { useDisclosure } from "@heroui/react";
 
@@ -15,7 +13,6 @@ import DeleteMapel from "./DeleteMapel";
 import UpdateMapel from "./UpdateMapel";
 
 const Mapel = () => {
-  const searchParams = useSearchParams();
 
   const {
     dataMapel,
@@ -58,7 +55,6 @@ const Mapel = () => {
     [deleteMapel, setSelectedId, updateMapel]
   );
 
-  // ✅ Ganti Object.keys(query).length > 0 → searchParams.toString() !== ""
 
   return (
     <section>

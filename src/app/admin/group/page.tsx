@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import ListKelompok from "@/components/views/Admin/ListKelompok";
 import React from "react";

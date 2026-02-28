@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Murid from "@/components/views/Kelompok/Murid/Murid";
 import React from "react";
